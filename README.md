@@ -11,7 +11,7 @@
 [![Oracle Database](https://img.shields.io/badge/Oracle_DB-19c-F80000?style=for-the-badge&logo=oracle&logoColor=white)](https://www.oracle.com/database/)
 
 <p align="center">
-  <b>Uma aplicação web moderna inspirada na estética Apple Pro Dark, projetada com foco em engenharia de software de alto padrão, arquitetura limpa, alta performance e interatividade técnica profunda.</b>
+  <b>Uma aplicação web ultra-clean inspirada na estética Apple Pro Dark, projetada com foco em minimalismo sofisticado, respiro visual, alta performance e interatividade técnica profunda.</b>
 </p>
 
 [Visualizar Demonstração](#-como-executar-o-projeto-localmente) • [Diferenciais de Engenharia](#-diferenciais-e-funcionalidades) • [Arquitetura](#-estrutura-do-projeto) • [Contato](#-contato)
@@ -58,7 +58,9 @@ Categorização em 4 pilares:
 3. **Frontend & Mobile**: React, React Native, TypeScript, Tailwind CSS.
 4. **DevOps & Cloud**: Docker (multi-stage builds), Azure Cloud, Git & GitHub CI/CD.
 
-### 5. Contato em 1 Clique & Suporte Bilíngue
+### 5. Contato Direto em 1 Clique & Minimalismo
+- Interface ultra-clean: eliminamos formulários pesados em favor de 4 cards de ação direta (WhatsApp, E-mail, LinkedIn e GitHub).
+- Acesso instantâneo com botão de copiar dados em 1 clique.
 * Alternância instantânea de idioma (**Português 🇧🇷 / Inglês 🇺🇸**) com persistência em `localStorage`.
 * Alternância de tema (**Dark OLED / Light Mode**).
 * Botão de WhatsApp direto com mensagem personalizada pré-carregada.
