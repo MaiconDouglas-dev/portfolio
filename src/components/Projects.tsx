@@ -83,57 +83,29 @@ export default function Projects() {
           </div>
         </div>
 
-        {/* Secondary Projects Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* FoodFlow */}
-          <div className="p-6 rounded-2xl border border-white/[0.08] bg-black/50 backdrop-blur-2xl space-y-4 flex flex-col justify-between hover:border-white/20 transition-all duration-300 shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
-            <div className="space-y-2">
-              <span className="text-[11px] font-mono font-bold text-neutral-400">JAVA & SPRING BOOT</span>
-              <h4 className="text-lg font-bold text-white">FoodFlow — Delivery Core</h4>
-              <p className="text-xs sm:text-sm text-neutral-400 leading-relaxed">
-                {lang === 'pt'
-                  ? 'Motor de pedidos com máquina de estados finita, idempotência de pagamentos e cache Redis para alta concorrência.'
-                  : 'Delivery engine with finite state machines, payment idempotency, and Redis caching for high throughput.'}
-              </p>
-            </div>
-            <MagneticButton strength={0.25} className="pt-2">
-              <a
-                href="https://github.com/MaiconDouglas-dev/FoodFlow"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-xs font-semibold text-appleRed-400 hover:text-appleRed-300 transition-colors"
-              >
-                <Github size={14} />
-                <span>{lang === 'pt' ? 'Ver no GitHub' : 'View on GitHub'}</span>
-                <ArrowRight size={12} />
-              </a>
-            </MagneticButton>
+        {/* Secondary Project: FoodFlow */}
+        <div className="p-6 sm:p-7 rounded-2xl border border-white/[0.08] bg-black/50 backdrop-blur-2xl space-y-4 flex flex-col sm:flex-row sm:items-center justify-between hover:border-white/20 transition-all duration-300 shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
+          <div className="space-y-1.5 max-w-2xl">
+            <span className="text-[11px] font-mono font-bold text-neutral-400">JAVA & SPRING BOOT</span>
+            <h4 className="text-lg font-bold text-white">FoodFlow — Delivery Core</h4>
+            <p className="text-xs sm:text-sm text-neutral-400 leading-relaxed">
+              {lang === 'pt'
+                ? 'Motor de pedidos com máquina de estados finita, idempotência de pagamentos e cache Redis para alta concorrência.'
+                : 'Delivery engine with finite state machines, payment idempotency, and Redis caching for high throughput.'}
+            </p>
           </div>
-
-          {/* Customer BFF API */}
-          <div className="p-6 rounded-2xl border border-white/[0.08] bg-black/50 backdrop-blur-2xl space-y-4 flex flex-col justify-between hover:border-white/20 transition-all duration-300 shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
-            <div className="space-y-2">
-              <span className="text-[11px] font-mono font-bold text-neutral-400">.NET & CLOUD ARCHITECTURE</span>
-              <h4 className="text-lg font-bold text-white">Customer BFF API</h4>
-              <p className="text-xs sm:text-sm text-neutral-400 leading-relaxed">
-                {lang === 'pt'
-                  ? 'Camada Backend For Frontend (.NET / C#) para agregação de dados móveis, otimizando latência de round-trip.'
-                  : 'Backend For Frontend (.NET / C#) orchestrating multi-service payloads for mobile efficiency.'}
-              </p>
-            </div>
-            <MagneticButton strength={0.25} className="pt-2">
-              <a
-                href="https://github.com/MaiconDouglas-dev/Customer-BFF-API"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-xs font-semibold text-appleRed-400 hover:text-appleRed-300 transition-colors"
-              >
-                <Github size={14} />
-                <span>{lang === 'pt' ? 'Ver no GitHub' : 'View on GitHub'}</span>
-                <ArrowRight size={12} />
-              </a>
-            </MagneticButton>
-          </div>
+          <MagneticButton strength={0.25} className="pt-2 sm:pt-0 shrink-0">
+            <a
+              href="https://github.com/MaiconDouglas-dev/FoodFlow"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/[0.06] hover:bg-white/[0.1] border border-white/[0.08] text-xs font-semibold text-appleRed-400 hover:text-white transition-all"
+            >
+              <Github size={14} />
+              <span>{lang === 'pt' ? 'Ver no GitHub' : 'View on GitHub'}</span>
+              <ArrowRight size={12} />
+            </a>
+          </MagneticButton>
         </div>
 
       </div>

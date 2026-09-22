@@ -82,40 +82,6 @@ export const projects: Project[] = [
       'Idempotency key enforcement on financial checkouts.',
       'Redis caching layer for high-throughput menu lookups.'
     ]
-  },
-  {
-    id: 'tmrs-bff',
-    featured: false,
-    number: '03',
-    badgePt: 'ARQUITETURA • MICROSERVICES',
-    badgeEn: 'ARCHITECTURE • MICROSERVICES',
-    titlePt: 'Customer BFF API — Orquestração & Mobile Backend',
-    titleEn: 'Customer BFF API — Mobile Orchestration Layer',
-    subtitlePt: 'Camada intermediária BFF para orquestração de microsserviços e consumo em React Native',
-    subtitleEn: 'Backend-For-Frontend aggregation layer orchestrating microservices for React Native clients',
-    descPt: 'Serviço intermediário construído para resolver o problema de over-fetching e under-fetching em aplicações mobile. Consolida dados de múltiplos serviços internos em payloads compactos, reduzindo a latência e o consumo de dados da rede celular.',
-    descEn: 'Intermediary backend service engineered to eliminate over-fetching and under-fetching on mobile devices. Aggregates data from multiple underlying enterprise services into compact payloads, optimizing cellular latency for mobile apps.',
-    tags: [
-      '.NET / C#',
-      'TypeScript',
-      'BFF Pattern',
-      'Docker',
-      'Azure API Mgmt',
-      'REST APIs'
-    ],
-    githubUrl: 'https://github.com/MaiconDouglas-dev/tmrs-costumerbff-api',
-    hasSwaggerModal: false,
-    hasArchitectureModal: false,
-    architectureHighlightsPt: [
-      'Padrão Backend-For-Frontend (BFF) desacoplando a experiência mobile dos microsserviços centrais.',
-      'Tratamento centralizado de erros e resiliência com circuit breakers.',
-      'Integração facilitada em contêineres Docker no Azure.'
-    ],
-    architectureHighlightsEn: [
-      'Backend-For-Frontend (BFF) decoupling mobile user experience from core services.',
-      'Centralized error handling and circuit breaker resilience.',
-      'Ready for containerized deployment in Azure Docker environments.'
-    ]
   }
 ];
 

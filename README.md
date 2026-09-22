@@ -79,7 +79,6 @@ API corporativa de telemedicina e gestão clínica veterinária desenvolvida par
 
 ### 3. Projetos Complementares Autênticos
 * **FoodFlow — Delivery Core & State Machine**: Sistema corporativo de pedidos com ciclo de vida em State Machine, pagamentos com chave de idempotência, Redis e PostgreSQL.
-* **Customer BFF API**: Camada Backend-For-Frontend em .NET e TypeScript para agregação de microsserviços e consumo mobile leve.
 
 ### 4. Arsenal Técnico (Skills)
 Categorização em 4 pilares:

@@ -66,10 +66,6 @@ export const translations = {
     'foodflow.title': 'FoodFlow — Delivery Core & State Machine',
     'foodflow.desc': 'Sistema corporativo de delivery e pedidos inspirado no modelo iFood. Desenvolvido para aplicar padrões de State Machine no ciclo de vida de pedidos, idempotência de pagamentos e regras dinâmicas de cupons e precificação.',
 
-    // Customer BFF
-    'bff.title': 'Customer BFF & Orquestração Mobile',
-    'bff.desc': 'Camada Backend-For-Frontend em .NET e TypeScript para agregação e transformação de dados de múltiplos microsserviços, otimizando o consumo de rede para aplicações mobile React Native.',
-
     // Modals
     'modal.swagger.title': 'Console Interativo de Endpoints • API Clyvo',
     'modal.swagger.desc': 'Simulador e documentação dos principais contratos e schemas da API Clyvo consumidos pelo app.',
@@ -186,10 +182,6 @@ export const translations = {
     // FoodFlow Project
     'foodflow.title': 'FoodFlow — Delivery Core & State Machine',
     'foodflow.desc': 'Enterprise food delivery system inspired by market leaders. Built to practice Order Lifecycle State Machines, payment idempotency, and dynamic pricing rules.',
-
-    // Customer BFF
-    'bff.title': 'Customer BFF & Mobile Orchestration',
-    'bff.desc': 'Backend-For-Frontend layer implemented in .NET and TypeScript for data aggregation across microservices, optimizing payload transfer for React Native mobile clients.',
 
     // Modals
     'modal.swagger.title': 'Interactive Endpoint Console • Clyvo API',
