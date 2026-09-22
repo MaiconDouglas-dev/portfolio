@@ -5,16 +5,17 @@
 
 [![Next.js](https://img.shields.io/badge/Next.js-14.2-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178c6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Three.js](https://img.shields.io/badge/Three.js-WebGL-000000?style=for-the-badge&logo=three.js&logoColor=white)](https://threejs.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38bdf8?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![Java](https://img.shields.io/badge/Java-21%20%2F%2025%20LTS-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)](https://openjdk.org/)
 [![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.3+-6DB33F?style=for-the-badge&logo=spring&logoColor=white)](https://spring.io/projects/spring-boot)
 [![Oracle Database](https://img.shields.io/badge/Oracle_DB-19c-F80000?style=for-the-badge&logo=oracle&logoColor=white)](https://www.oracle.com/database/)
 
 <p align="center">
-  <b>Uma aplicação web ultra-clean inspirada na estética Apple Pro Dark, projetada com foco em minimalismo sofisticado, respiro visual, alta performance e interatividade técnica profunda.</b>
+  <b>Uma experiência interativa de alta tecnologia inspirada na excelência visual da Lusion.co e no minimalismo sofisticado da Apple Pro Dark, projetada para destacar engenharia de software corporativa de alta performance.</b>
 </p>
 
-[Visualizar Demonstração](#-como-executar-o-projeto-localmente) • [Diferenciais de Engenharia](#-diferenciais-e-funcionalidades) • [Arquitetura](#-estrutura-do-projeto) • [Contato](#-contato)
+[Visualizar Demonstração](#-como-executar-o-projeto-localmente) • [Diferenciais de Engenharia](#-diferenciais-e-funcionalidades) • [Inovações Criativas (Lusion-Inspired)](#-inovações-criativas-lusion-inspired) • [Arquitetura](#-estrutura-do-projeto) • [Contato](#-contato)
 
 </div>
 
@@ -24,7 +25,7 @@
 
 O portfólio foi desenhado com ergonomia visual e contraste refinado:
 
-* **Preto Profundo & OLED (`#000000` / `#0c0c11`)**: Zero cinza-azulado genérico; superfície escura cinematográfica que economiza energia e não agride os olhos.
+* **Preto Profundo & OLED (`#000000`)**: Superfície escura cinematográfica que economiza energia e não agride os olhos.
 * **Gradiente de Keynote Apple**: Transição vibrante e harmoniosa:
   $$\text{Vermelho Carmesim (\#ff2d55)} \longrightarrow \text{Rubi (\#e11d48)} \longrightarrow \text{Violeta (\#8b5cf6)} \longrightarrow \text{Azul Elétrico (\#0a84ff)}$$
 * **Apple System Green (`#30d158`)**: Aplicado estrategicamente em badges de status ativo (*"Disponível para Projetos"*), uptime de servidores, checagens de integridade e WhatsApp.
@@ -32,7 +33,36 @@ O portfólio foi desenhado com ergonomia visual e contraste refinado:
 
 ---
 
-## ⚡ Diferenciais e Funcionalidades
+## ✨ Inovações Criativas (Lusion-Inspired)
+
+Inspirado nas técnicas de **Creative Development** do premiado estúdio **[Lusion.co](https://lusion.co/)**, o portfólio integra soluções visuais e físicas avançadas que traduzem conceitos de backend em arte interativa:
+
+1. **Universo 3D WebGL / Three.js (`LusionBackground`)**:
+   - Canvas tridimensional full-viewport simulando uma malha viva de microsserviços, nós de dados (Spring Boot, Oracle, Kafka, Azure) e pacotes luminosos trafegando em circuitos de alta velocidade.
+   - **Perturbação Fluida do Mouse**: O cursor emite um campo de gravidade/repulsão que distorce suavemente nós e partículas com amortecimento exponencial (`damp / lerp`).
+   - **Câmera 3D Guiada por Scroll**: À medida que a página é rolada, a câmera mergulha através dos níveis de profundidade da arquitetura de backend.
+
+2. **Tipografia Cinética Mascarada (`KineticText`)**:
+   - Títulos divididos em caracteres individuais envolvidos em máscaras de corte (`overflow: hidden`).
+   - Animação de entrada escalonada com curva cúbica de alta tensão (`cubic-bezier(0.16, 1, 0.3, 1)`) e elevação elástica interativa ao passar o mouse.
+
+3. **Cursor Dinâmico Magnético (`CustomCursor`)**:
+   - Cursor duplo com ponto central imediato e anel externo de aura com atraso fluido (*spring physics*).
+   - Inversão inteligente de cores em tempo real via `mix-blend-mode: difference` e expansão de foco ao sobrepor elementos interativos.
+
+4. **Botões com Atração Magnética (`MagneticButton`)**:
+   - Botões que se atraem fisicamente em direção ao cursor quando o mouse se aproxima do seu raio de ação, retornando elastiamente ao centro ao sair.
+
+5. **Visualizador e Sintetizador de Áudio Procedural (`AudioEqualizer`)**:
+   - Mini canvas 2D no header com barras de equalização animadas em harmônicos senoidais.
+   - Integração com a **Web Audio API** gerando feedback sonoro acústico sutil ao alternar o áudio.
+
+6. **Rolagem Inercial com Lenis Smooth Scroll (`SmoothScroll`)**:
+   - Momentum scroll suave e sem atritos, garantindo 60-120fps tanto em desktops quanto em trackpads e dispositivos móveis.
+
+---
+
+## ⚡ Diferenciais de Engenharia
 
 ### 1. Terminal Interativo de Backend (`TerminalCard`)
 No topo da página, um terminal interativo simula a execução de requisições HTTP/2 REST reais da aplicação com comandos clicáveis:
@@ -51,20 +81,17 @@ API corporativa de telemedicina e gestão clínica veterinária desenvolvida par
 * **FoodFlow — Delivery Core & State Machine**: Sistema corporativo de pedidos com ciclo de vida em State Machine, pagamentos com chave de idempotência, Redis e PostgreSQL.
 * **Customer BFF API**: Camada Backend-For-Frontend em .NET e TypeScript para agregação de microsserviços e consumo mobile leve.
 
-### 4. Arsenal Técnico Filtrável (Skills)
+### 4. Arsenal Técnico (Skills)
 Categorização em 4 pilares:
-1. **Backend & APIs**: Java 21/25, Spring Boot 3, .NET / C#, OAuth 2.0, JWT, RESTful Semantic APIs.
+1. **Backend Core**: Java 21/25, Spring Boot 3, .NET / C#, OAuth 2.0, JWT, RESTful Semantic APIs, Virtual Threads.
 2. **Bancos de Dados & Persistência**: Oracle Database 19c, PL/SQL (Procedures & Triggers), Flyway Migrations (`ddl-auto=validate`), PostgreSQL.
 3. **Frontend & Mobile**: React, React Native, TypeScript, Tailwind CSS.
 4. **DevOps & Cloud**: Docker (multi-stage builds), Azure Cloud, Git & GitHub CI/CD.
 
-### 5. Contato Direto em 1 Clique & Minimalismo
-- Interface ultra-clean: eliminamos formulários pesados em favor de 4 cards de ação direta (WhatsApp, E-mail, LinkedIn e GitHub).
-- Acesso instantâneo com botão de copiar dados em 1 clique.
-* Alternância instantânea de idioma (**Português 🇧🇷 / Inglês 🇺🇸**) com persistência em `localStorage`.
-* Alternância de tema (**Dark OLED / Light Mode**).
-* Botão de WhatsApp direto com mensagem personalizada pré-carregada.
-* Ação de copiar telefone `(11) 93718-4412` e e-mail `maicondouglasdev1@gmail.com` com feedback visual imediato.
+### 5. Contato Direto & Acessibilidade
+- 4 canais de ação imediata: WhatsApp, E-mail, LinkedIn e GitHub com atração magnética e cópia em 1 clique.
+- Alternância instantânea de idioma (**Português 🇧🇷 / Inglês 🇺🇸**) com persistência em `localStorage`.
+- Alternância de tema (**Dark OLED / Light Mode**).
 
 ---
 
@@ -73,35 +100,41 @@ Categorização em 4 pilares:
 ```text
 maicon-portfolio/
 ├── public/
-│   ├── favicon.svg             # Ícone vetorial com monograma "MD"
-│   └── og-image.svg            # Card de compartilhamento social para WhatsApp/LinkedIn
+│   ├── favicon.svg               # Ícone vetorial com monograma "MD"
+│   └── og-image.svg              # Card de compartilhamento social para WhatsApp/LinkedIn
 ├── src/
 │   ├── app/
-│   │   ├── globals.css         # Diretivas Tailwind, animações e paleta Apple
-│   │   ├── layout.tsx          # RootLayout com metadados Open Graph e fontes
-│   │   └── page.tsx            # Composição principal das seções
+│   │   ├── globals.css           # Estilos globais, kinetic keyframes e classes de tema
+│   │   ├── layout.tsx            # RootLayout com Lenis SmoothScroll e CustomCursor
+│   │   └── page.tsx              # Composição principal com LusionBackground (z-0) e UI (z-10)
 │   ├── components/
-│   │   ├── Navbar.tsx          # Menu fixo com blur, switch PT/EN e tema
-│   │   ├── Hero.tsx            # Apresentação, badges e CTAs de conversão
-│   │   ├── TerminalCard.tsx    # Terminal interativo com simulação de endpoints
-│   │   ├── About.tsx           # Trajetória, engenharia limpa e métricas reais
-│   │   ├── Projects.tsx        # Bento Grid com Clyvo M-Vet em destaque
-│   │   ├── ArchitectureModal.tsx # Diagrama interativo do ecossistema Clyvo
-│   │   ├── ApiSwaggerModal.tsx # Console Swagger para teste de requisições
-│   │   ├── Skills.tsx          # Abas técnicas com níveis de domínio
-│   │   ├── Contact.tsx         # Cards de contato rápido e formulário direto
-│   │   └── Footer.tsx          # Rodapé minimalista com status do sistema
+│   │   ├── LusionBackground.tsx  # Canvas WebGL/Three.js com nós de backend e física do mouse
+│   │   ├── CustomCursor.tsx      # Cursor duplo com física de inércia e mix-blend-mode
+│   │   ├── MagneticButton.tsx    # Atração física vetorial para botões e links
+│   │   ├── KineticText.tsx       # Tipografia cinética com máscara e revelação escalonada
+│   │   ├── AudioEqualizer.tsx    # Mini equalizador em canvas 2D com Web Audio API
+│   │   ├── SmoothScroll.tsx      # Provedor Lenis para momentum scrolling
+│   │   ├── Navbar.tsx            # Header com áudio, idioma, tema e botão magnético
+│   │   ├── Hero.tsx              # Hero com títulos cinéticos, CTAs e TerminalCard
+│   │   ├── TerminalCard.tsx      # Terminal interativo com simulação de endpoints
+│   │   ├── About.tsx             # Trajetória, princípios e cards translúcidos
+│   │   ├── Projects.tsx          # Projetos em destaque com Swagger e Arquitetura
+│   │   ├── ArchitectureModal.tsx # Diagrama interativo da API Clyvo
+│   │   ├── ApiSwaggerModal.tsx   # Swagger interativo para teste de endpoints
+│   │   ├── Skills.tsx            # Arsenal técnico categorizado
+│   │   ├── Contact.tsx           # Canais diretos com cópia em 1 clique
+│   │   └── Footer.tsx            # Rodapé minimalista com status do sistema
 │   ├── context/
-│   │   └── AppContext.tsx      # Gerenciamento de tema (Dark/Light) e i18n
+│   │   └── AppContext.tsx        # Gerenciamento de tema (Dark/Light) e i18n
 │   ├── data/
-│   │   ├── projects.ts         # Metadados de projetos e mocks de API
-│   │   ├── skills.ts           # Dicionário de habilidades técnicas
-│   │   └── translations.ts     # Traduções completas PT-BR e EN-US
+│   │   ├── projects.ts           # Metadados de projetos e mocks de API
+│   │   ├── skills.ts             # Dicionário de habilidades técnicas
+│   │   └── translations.ts       # Traduções completas PT-BR e EN-US
 │   └── types/
-│       └── index.ts            # Interfaces TypeScript
-├── tailwind.config.js          # Configuração das cores AppleDark, AppleRed, etc.
-├── tsconfig.json               # Configurações estritas de compilação
-└── package.json
+│       └── index.ts              # Interfaces TypeScript
+├── tailwind.config.js            # Cores personalizadas (AppleDark, AppleRed, etc.)
+├── tsconfig.json                 # Configuração rigorosa do TypeScript
+└── package.json                  # Dependências do ecossistema Next.js, Three.js e Lenis
 ```
 
 ---
@@ -109,7 +142,7 @@ maicon-portfolio/
 ## 🛠 Como Executar o Projeto Localmente
 
 ### Pré-requisitos
-* **Node.js**: Versão 18 ou superior instalada.
+* **Node.js**: Versão 18 ou superior.
 * **npm** ou **yarn / pnpm**.
 
 ### Passo a Passo
@@ -129,12 +162,12 @@ maicon-portfolio/
    npm run dev
    ```
 
-4. Abra no seu navegador:
+4. Acesse no navegador:
    ```text
    http://localhost:3000
    ```
 
-5. Para gerar e testar a build de produção otimizada:
+5. Para gerar a build de produção:
    ```bash
    npm run build
    npm run start
@@ -142,12 +175,9 @@ maicon-portfolio/
 
 ---
 
-## 🌐 Deploy em Produção (Vercel)
+## 🌐 Deploy Contínuo (Vercel & GitHub)
 
-O projeto está 100% otimizado para deploy instantâneo na **[Vercel](https://vercel.com)**:
-1. Conecte sua conta do GitHub na Vercel.
-2. Importe o repositório `portfolio`.
-3. Clique em **Deploy** (o framework `Next.js` é detectado automaticamente).
+O projeto está conectado ao GitHub via repositório [MaiconDouglas-dev/portfolio](https://github.com/MaiconDouglas-dev/portfolio). Cada push na branch `main` dispara automaticamente o build e deploy na Vercel.
 
 ---
 

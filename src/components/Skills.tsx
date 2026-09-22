@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { useApp } from '@/context/AppContext';
+import KineticText from './KineticText';
 
 export default function Skills() {
   const { lang } = useApp();
@@ -26,23 +27,26 @@ export default function Skills() {
   ];
 
   return (
-    <section id="skills" className="py-20 border-t border-neutral-200/60 dark:border-white/[0.06]">
+    <section id="skills" className="py-24 border-t border-white/[0.06] relative">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
         
         <div className="space-y-1">
           <span className="text-xs font-mono font-bold text-appleRed-500 uppercase tracking-widest">
             {lang === 'pt' ? 'STACK & TECNOLOGIAS' : 'STACK & TECH'}
           </span>
-          <h2 className="text-2xl sm:text-3xl font-bold text-neutral-900 dark:text-white">
-            {lang === 'pt' ? 'Arsenal Técnico de Engenharia' : 'Technical Stack'}
-          </h2>
+          <KineticText
+            text={lang === 'pt' ? 'Arsenal Técnico de Engenharia' : 'Technical Engineering Stack'}
+            as="h2"
+            staggerDelayMs={18}
+            className="text-2xl sm:text-3xl font-bold text-white tracking-tight"
+          />
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {groups.map((group, idx) => (
             <div
               key={idx}
-              className="p-5 rounded-2xl border border-neutral-200/80 dark:border-white/[0.06] bg-white dark:bg-[#0c0c11] space-y-3"
+              className="p-5 rounded-2xl border border-white/[0.08] bg-black/50 backdrop-blur-2xl space-y-3 hover:border-white/20 transition-all duration-300 shadow-[0_4px_20px_rgba(0,0,0,0.5)]"
             >
               <h3 className="text-xs font-mono font-bold text-neutral-400 uppercase tracking-wider">
                 {group.title}
@@ -51,7 +55,7 @@ export default function Skills() {
                 {group.skills.map((s) => (
                   <span
                     key={s}
-                    className="px-2.5 py-1 rounded-lg text-xs font-medium bg-neutral-100 dark:bg-white/[0.05] text-neutral-800 dark:text-neutral-200 border border-neutral-200/50 dark:border-white/[0.06]"
+                    className="px-2.5 py-1 rounded-lg text-xs font-medium bg-white/[0.05] text-neutral-200 border border-white/[0.06] hover:border-appleRed-500/40 hover:text-white transition-all cursor-default"
                   >
                     {s}
                   </span>

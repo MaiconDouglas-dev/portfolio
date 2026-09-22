@@ -8,7 +8,36 @@
   }
 
   body {
-    @apply bg-[#f8f9fa] dark:bg-black text-neutral-900 dark:text-[#f5f5f7] antialiased font-sans transition-colors duration-300;
+    @apply bg-black text-[#f5f5f7] antialiased font-sans transition-colors duration-300;
+  }
+}
+
+/* Lenis Smooth Scrolling */
+html.lenis, html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* Kinetic Typography Entrance */
+@keyframes kineticReveal {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 115%, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
   }
 }
 
@@ -24,9 +53,9 @@
 }
 
 .apple-card {
-  background: rgba(18, 18, 24, 0.65);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: rgba(10, 10, 14, 0.72);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 

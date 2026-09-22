@@ -2,7 +2,9 @@
 
 import React, { useState } from 'react';
 import { useApp } from '@/context/AppContext';
-import { MessageSquare, Mail, Phone, Linkedin, Github, Copy, Check, ArrowUpRight } from 'lucide-react';
+import { Mail, Phone, Linkedin, Github, Copy, Check, ArrowUpRight } from 'lucide-react';
+import KineticText from './KineticText';
+import MagneticButton from './MagneticButton';
 
 export default function Contact() {
   const { lang } = useApp();
@@ -54,24 +56,27 @@ export default function Contact() {
   ];
 
   return (
-    <section id="contact" className="py-20 border-t border-neutral-200/60 dark:border-white/[0.06]">
+    <section id="contact" className="py-24 border-t border-white/[0.06] relative">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-8">
         
         <div className="space-y-2">
           <span className="text-xs font-mono font-bold text-appleRed-500 uppercase tracking-widest">
             {lang === 'pt' ? 'CONTATO' : 'CONTACT'}
           </span>
-          <h2 className="text-3xl sm:text-4xl font-bold text-neutral-900 dark:text-white">
-            {lang === 'pt' ? 'Vamos conversar sobre o próximo projeto?' : "Let's talk about your next project"}
-          </h2>
-          <p className="text-sm text-neutral-600 dark:text-neutral-400">
+          <KineticText
+            text={lang === 'pt' ? 'Vamos conversar sobre o próximo projeto?' : "Let's build your next system together."}
+            as="h2"
+            staggerDelayMs={18}
+            className="text-3xl sm:text-4xl font-bold text-white tracking-tight"
+          />
+          <p className="text-sm text-neutral-400">
             {lang === 'pt'
               ? 'Disponível para contratação, projetos corporativos e consultoria de backend.'
               : 'Available for full-time opportunities, consulting, and backend architecture.'}
           </p>
         </div>
 
-        {/* 4 Clean Action Pills */}
+        {/* 4 Clean Action Pills with Magnetic Touch */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-4">
           {channels.map((c) => {
             const Icon = c.icon;
@@ -79,7 +84,7 @@ export default function Contact() {
             return (
               <div
                 key={c.key}
-                className="p-5 rounded-2xl border border-neutral-200/80 dark:border-white/[0.06] bg-white dark:bg-[#0c0c11] text-left space-y-3 flex flex-col justify-between"
+                className="p-5 rounded-2xl border border-white/[0.08] bg-black/50 backdrop-blur-2xl text-left space-y-3 flex flex-col justify-between hover:border-white/20 transition-all duration-300 shadow-[0_4px_20px_rgba(0,0,0,0.5)] group"
               >
                 <div>
                   <div className="flex items-center justify-between">
@@ -87,24 +92,26 @@ export default function Contact() {
                     <button
                       onClick={() => handleCopy(c.copy, c.key)}
                       title="Copiar"
-                      className="text-neutral-400 hover:text-white cursor-pointer p-1"
+                      className="text-neutral-400 hover:text-white cursor-pointer p-1 transition-colors"
                     >
                       {isCopied ? <Check size={14} className="text-appleGreen-500" /> : <Copy size={14} />}
                     </button>
                   </div>
                   <p className="text-[11px] font-mono text-neutral-400 mt-2">{c.label}</p>
-                  <p className="text-xs font-semibold text-neutral-900 dark:text-white truncate">{c.val}</p>
+                  <p className="text-xs font-semibold text-white truncate">{c.val}</p>
                 </div>
 
-                <a
-                  href={c.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full text-center py-2 px-3 rounded-lg bg-neutral-100 dark:bg-white/[0.06] hover:bg-appleRed-600 dark:hover:bg-appleRed-600 text-neutral-800 dark:text-neutral-200 hover:text-white text-xs font-semibold transition-all inline-flex items-center justify-center gap-1"
-                >
-                  <span>Abrir</span>
-                  <ArrowUpRight size={12} />
-                </a>
+                <MagneticButton strength={0.25} className="w-full">
+                  <a
+                    href={c.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-between w-full text-xs font-semibold text-neutral-300 group-hover:text-appleRed-400 transition-colors pt-2"
+                  >
+                    <span>{lang === 'pt' ? 'Acessar canal' : 'Open link'}</span>
+                    <ArrowUpRight size={13} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                  </a>
+                </MagneticButton>
               </div>
             );
           })}
