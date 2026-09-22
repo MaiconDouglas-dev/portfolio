@@ -1,7 +1,7 @@
 <div align="center">
 
 # 🚀 Maicon Douglas — Portfólio Profissional
-### *Desenvolvedor Backend & Full Stack | Java 21/25 • Spring Boot 3 • .NET • Oracle (PL/SQL) • React Native*
+### *Desenvolvedor Backend Java | Java 21/25 • Spring Boot 3 • Oracle (PL/SQL) • Docker • Azure*
 
 [![Next.js](https://img.shields.io/badge/Next.js-14.2-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178c6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
@@ -15,9 +15,23 @@
   <b>Uma experiência interativa de alta tecnologia inspirada na excelência visual da Lusion.co e no minimalismo sofisticado da Apple Pro Dark, projetada para destacar engenharia de software corporativa de alta performance.</b>
 </p>
 
-[Visualizar Demonstração](#-como-executar-o-projeto-localmente) • [Diferenciais de Engenharia](#-diferenciais-e-funcionalidades) • [Inovações Criativas (Lusion-Inspired)](#-inovações-criativas-lusion-inspired) • [Arquitetura](#-estrutura-do-projeto) • [Contato](#-contato)
+[Visualizar Demonstração](#-como-executar-o-projeto-localmente) • [Perfil Profissional](#-perfil-profissional--formação) • [Diferenciais de Engenharia](#-diferenciais-de-engenharia) • [Contato](#-contato)
 
 </div>
+
+---
+
+## 👨‍💻 Perfil Profissional & Formação
+
+Sou desenvolvedor Backend Java em formação, cursando Análise e Desenvolvimento de Sistemas, com foco no desenvolvimento de aplicações utilizando Java e Spring Boot.
+
+Ao longo da graduação, construí uma base em programação orientada a objetos, desenvolvimento de APIs REST, persistência de dados, segurança, bancos de dados relacionais, versionamento e fundamentos de DevOps e Cloud.
+
+* **Ecossistema Java**: Minha principal área de estudo e aprofundamento, trabalhando com conceitos como POO, Collections, tratamento de exceções, JDBC, Spring Boot, Spring MVC, Spring Security, JPA, DTOs, validações, tratamento de exceções e desenvolvimento de APIs.
+* **Banco de Dados**: Conhecimentos em bancos de dados relacionais, principalmente SQL, Oracle e PL/SQL, incluindo modelagem relacional, normalização, consultas, relacionamentos e objetos de banco como procedures, functions e triggers.
+* **Infraestrutura e Entrega**: Experiência acadêmica e prática com Git, GitHub, Linux, Docker, Docker Compose e Microsoft Azure, incluindo containerização de aplicações Spring Boot, integração com bancos de dados e fundamentos de deploy e CI/CD.
+* **Visão Multidisciplinar**: Durante a graduação também tive contato com outras áreas e tecnologias, como C#/.NET, React, React Native, Python, Inteligência Artificial, Machine Learning e IoT. Esses conhecimentos fazem parte da minha formação acadêmica, mas atualmente meu desenvolvimento profissional está direcionado ao Backend com Java.
+* 🎯 **Objetivo**: Consolidar cada vez mais os fundamentos de desenvolvimento de software e adquirir autonomia para projetar, desenvolver, testar e entregar aplicações backend de forma consistente.
 
 ---
 

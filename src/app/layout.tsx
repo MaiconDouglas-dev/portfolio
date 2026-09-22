@@ -6,8 +6,8 @@ import CustomCursor from '@/components/CustomCursor';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://maicondouglas-dev.vercel.app'),
-  title: 'Maicon Douglas — Backend & Full Stack Developer | Java, Spring Boot, .NET, Oracle',
-  description: 'Portfólio profissional de Maicon Douglas, desenvolvedor backend especializado em Java (Spring Boot), .NET, Oracle Database (PL/SQL), Docker, Azure e ecossistema React / React Native. Conheça o projeto Clyvo M-Vet.',
+  title: 'Maicon Douglas — Desenvolvedor Backend Java | Spring Boot, Oracle, Docker, Azure',
+  description: 'Portfólio de Maicon Douglas, desenvolvedor backend Java em formação (Análise e Desenvolvimento de Sistemas), focado no ecossistema Java, Spring Boot, Oracle Database (PL/SQL), Docker e Microsoft Azure.',
   keywords: [
     'Maicon Douglas',
     'Backend Developer',
