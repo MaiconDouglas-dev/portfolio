@@ -80,12 +80,26 @@ API corporativa de telemedicina e gestão clínica veterinária desenvolvida par
 ### 3. Projetos Complementares Autênticos
 * **FoodFlow — Delivery Core & State Machine**: Sistema corporativo de pedidos com ciclo de vida em State Machine, pagamentos com chave de idempotência, Redis e PostgreSQL.
 
-### 4. Arsenal Técnico (Skills)
-Categorização em 4 pilares:
-1. **Backend Core**: Java 21/25, Spring Boot 3, .NET / C#, OAuth 2.0, JWT, RESTful Semantic APIs, Virtual Threads.
-2. **Bancos de Dados & Persistência**: Oracle Database 19c, PL/SQL (Procedures & Triggers), Flyway Migrations (`ddl-auto=validate`), PostgreSQL.
-3. **Frontend & Mobile**: React, React Native, TypeScript, Tailwind CSS.
-4. **DevOps & Cloud**: Docker (multi-stage builds), Azure Cloud, Git & GitHub CI/CD.
+### 4. Tecnologias & Competências de Engenharia
+Categorização completa em 6 pilares de especialização:
+1. **Backend Java & Spring (Stack Principal)**:
+   - *Java*: Programação Orientada a Objetos (Encapsulamento, Herança, Polimorfismo), Collections, Generics, Tratamento de Exceções, JDBC, Estruturas de Dados e Algoritmos, Java 21 / 25 LTS, Virtual Threads e Records.
+   - *Spring Framework*: Spring Boot 3, Spring MVC, Spring Security (OAuth 2.0 / JWT), Spring Data JPA, APIs RESTful, DTOs & Mappers, Bean Validation, Global Exception Handling, Paginação, Swagger / OpenAPI, HATEOAS e Arquitetura de Microsserviços.
+2. **Banco de Dados & Persistência**:
+   - *Oracle Database 19c & PL/SQL*: SQL (DDL, DML, DQL), Stored Procedures, Functions, Packages, Triggers, Cursors, Sequences, JOINs complexos, Modelagem (Conceitual, Lógica, Relacional), Normalização e Cardinalidade.
+   - *NoSQL & Migrations*: MongoDB, Flyway Migration Versioning, PostgreSQL e estratégias de indexação.
+3. **DevOps, Cloud & Linux**:
+   - *Docker*: Containers, Dockerfile (multi-stage), Docker Compose, Volumes, Redes e integração de banco em containers.
+   - *Microsoft Azure*: Azure CLI, VMs, VNET e Subnets, Azure DevOps, ACR, ACI, Azure SQL Database, Azure App Service, Pipelines CI/CD e Linux.
+4. **Git, Engenharia de Software & Qualidade**:
+   - *Git & Versionamento*: Git, GitHub, Branches, Repositórios Locais e Remotos, Git Flow, Commits Semânticos e PRs.
+   - *Engenharia & Testes*: JUnit, Pirâmide de Testes, Shift-Left Testing, SQA/SQC, CMMI/TMMI, Scrum, Waterfall, Backlog, Requisitos e Diagramas UML (Casos de Uso e Atividade).
+5. **Frontend & Mobile**:
+   - *Web*: HTML5, CSS3, JavaScript ES6+, React, Vite, Tailwind CSS, React Hooks, React Hook Form, Zod e consumo de APIs REST.
+   - *Mobile*: React Native, Context API, AsyncStorage, TanStack Query, JWT, Firebase Authentication e Firebase Firestore.
+6. **.NET, Python, Inteligência Artificial & IoT**:
+   - *Frameworks & Dados*: C#, ASP.NET Core, Web API, Entity Framework Core, Python, Manipulação de Arquivos (JSON, XML, CSV), Pandas.
+   - *IA & IoT*: Fundamentos de IA, Machine Learning (Classificação e Regressão), LLMs, Prompt Engineering, Embeddings, RAG, NLU, STT/TTS, Arduino, Sensores/Atuadores, Protocolo MQTT, Node-RED, UART, I2C, SPI e Edge Computing.
 
 ### 5. Contato Direto & Acessibilidade
 - 4 canais de ação imediata: WhatsApp, E-mail, LinkedIn e GitHub com atração magnética e cópia em 1 clique.

@@ -1,151 +1,249 @@
-import { SkillCategory } from '@/types';
+export interface SkillGroup {
+  id: string;
+  categoryPt: string;
+  categoryEn: string;
+  badgePt: string;
+  badgeEn: string;
+  summaryPt: string;
+  summaryEn: string;
+  topics: {
+    titlePt: string;
+    titleEn: string;
+    items: string[];
+  }[];
+}
 
-export const skillCategories: SkillCategory[] = [
+export const detailedSkillsData: SkillGroup[] = [
   {
-    id: 'backend',
-    titlePt: 'Backend & APIs Corporativas',
-    titleEn: 'Backend & Enterprise APIs',
-    descriptionPt: 'Desenvolvimento de microsserviços, segurança em nível de camada e regras de negócio complexas.',
-    descriptionEn: 'Microservices engineering, layered security, and complex transactional domain rules.',
-    items: [
+    id: 'backend-java',
+    categoryPt: 'Backend Java & Spring Framework',
+    categoryEn: 'Backend Java & Spring Framework',
+    badgePt: 'STACK PRINCIPAL',
+    badgeEn: 'CORE STACK',
+    summaryPt: 'Minha principal área de atuação, desenvolvida na graduação em ADS e projetos práticos: da POO à arquitetura de APIs RESTful, segurança e persistência.',
+    summaryEn: 'My primary development domain, built through academic training and production projects: from OOP foundations to secure REST APIs and persistence.',
+    topics: [
       {
-        name: 'Java 21 / 25 / 25',
-        level: 'Especialista',
-        iconName: 'Cpu',
-        descriptionPt: 'Records, Pattern Matching, Virtual Threads, Sequenced Collections e preparação para Java 25.',
-        descriptionEn: 'Modern Java, Records, Pattern Matching, Virtual Threads, and roadmap to Java 25.'
+        titlePt: 'Java Core & Fundamentos',
+        titleEn: 'Java Core & Fundamentals',
+        items: [
+          'Programação Orientada a Objetos',
+          'Encapsulamento, Herança e Polimorfismo',
+          'Collections Framework & Generics',
+          'Tratamento de Exceções',
+          'JDBC',
+          'Estruturas de Dados e Algoritmos',
+          'Java 21 / 25 LTS',
+          'Virtual Threads & Records'
+        ]
       },
       {
-        name: 'Spring Boot 3',
-        level: 'Avançado',
-        iconName: 'Server',
-        descriptionPt: 'Spring MVC, Data JPA, Security, Actuator, Flyway e Testcontainers.',
-        descriptionEn: 'Spring MVC, Data JPA, Security, Actuator, Flyway and Testcontainers.'
-      },
-      {
-        name: '.NET / C#',
-        level: 'Intermediário / Prático',
-        iconName: 'Terminal',
-        descriptionPt: 'ASP.NET Core Web APIs, Entity Framework Core e injeção de dependência.',
-        descriptionEn: 'ASP.NET Core Web APIs, Entity Framework Core and Dependency Injection.'
-      },
-      {
-        name: 'OAuth 2.0 & JWT',
-        level: 'Avançado',
-        iconName: 'ShieldCheck',
-        descriptionPt: 'Autenticação stateless, controle RBAC por Roles e proteção contra brechas.',
-        descriptionEn: 'Stateless authentication, RBAC authorization, and token lifecycle management.'
-      },
-      {
-        name: 'RESTful Architecture',
-        level: 'Avançado',
-        iconName: 'Network',
-        descriptionPt: 'Design semântico de contratos, idempotência, DTOs e versionamento de endpoints.',
-        descriptionEn: 'Semantic contract design, idempotency, DTO mapping, and endpoint versioning.'
+        titlePt: 'Ecossistema Spring',
+        titleEn: 'Spring Ecosystem',
+        items: [
+          'Spring Boot 3',
+          'Spring MVC',
+          'Spring Security & OAuth 2.0 / JWT',
+          'Spring Data JPA / Hibernate',
+          'APIs RESTful Semânticas',
+          'DTOs & Mappers',
+          'Bean Validation',
+          'Global Exception Handling',
+          'Paginação & Ordenação',
+          'Swagger / OpenAPI',
+          'HATEOAS',
+          'Arquitetura de Microsserviços'
+        ]
       }
     ]
   },
   {
     id: 'database',
-    titlePt: 'Bancos de Dados & Persistência',
-    titleEn: 'Databases & Persistence',
-    descriptionPt: 'Modelagem relacional, tuning, integridade transacional e controle de versões via migrations.',
-    descriptionEn: 'Relational data modeling, query tuning, ACID integrity, and migration versioning.',
-    items: [
+    categoryPt: 'Banco de Dados & Persistência',
+    categoryEn: 'Databases & Persistence',
+    badgePt: 'RELACIONAL & NOSQL',
+    badgeEn: 'RELATIONAL & NOSQL',
+    summaryPt: 'Modelagem rigorosa, desenvolvimento de rotinas em PL/SQL e integridade transacional ACID com foco no ecossistema Oracle e NoSQL com MongoDB.',
+    summaryEn: 'Rigorous data modeling, PL/SQL routine development, and ACID transactional integrity centered on Oracle Database and MongoDB NoSQL.',
+    topics: [
       {
-        name: 'Oracle Database 19c',
-        level: 'Avançado',
-        iconName: 'Database',
-        descriptionPt: 'Modelagem corporativa, tabelas intermediárias, sequences e constraints.',
-        descriptionEn: 'Enterprise relational modeling, join tables, sequences, and foreign key constraints.'
+        titlePt: 'Oracle Database & PL/SQL',
+        titleEn: 'Oracle Database & PL/SQL',
+        items: [
+          'Oracle Database 19c',
+          'SQL (DDL, DML, DQL)',
+          'PL/SQL',
+          'Stored Procedures & Functions',
+          'Packages & Triggers',
+          'Cursors & Sequences',
+          'JOINs Complexos & Subqueries',
+          'Modelagem Conceitual, Lógica e Relacional',
+          'Normalização & Cardinalidade',
+          'Integridade Referencial & Constraints'
+        ]
       },
       {
-        name: 'PL/SQL',
-        level: 'Prático',
-        iconName: 'Code2',
-        descriptionPt: 'Stored procedures, packages, triggers e rotinas de automação no banco.',
-        descriptionEn: 'Stored procedures, database packages, triggers, and automated database routines.'
-      },
-      {
-        name: 'Flyway Migrations',
-        level: 'Avançado',
-        iconName: 'GitBranch',
-        descriptionPt: 'Controle de versão de DDL/DML automatizado com ddl-auto=validate.',
-        descriptionEn: 'Automated DDL/DML version control with ddl-auto=validate in production.'
-      },
-      {
-        name: 'PostgreSQL',
-        level: 'Avançado',
-        iconName: 'Layers',
-        descriptionPt: 'Modelagem relacional, índices, JSONB e persistência de alto volume.',
-        descriptionEn: 'Relational modeling, indexing strategies, JSONB, and high-volume persistence.'
-      }
-    ]
-  },
-  {
-    id: 'frontend-mobile',
-    titlePt: 'Frontend & Mobile',
-    titleEn: 'Frontend & Mobile',
-    descriptionPt: 'Construção de clientes responsivos, rápidos e integrados com a camada de APIs.',
-    descriptionEn: 'Building responsive, high-performance user interfaces consuming REST backends.',
-    items: [
-      {
-        name: 'React',
-        level: 'Avançado',
-        iconName: 'Layout',
-        descriptionPt: 'React 18+, Hooks personalizados, Context API, Tailwind e consumo de APIs.',
-        descriptionEn: 'Modern React, custom Hooks, Context API, Tailwind CSS, and REST data fetching.'
-      },
-      {
-        name: 'TypeScript',
-        level: 'Avançado',
-        iconName: 'FileCode',
-        descriptionPt: 'Tipagem estrita de contratos, interfaces de domínio e garantia de integridade.',
-        descriptionEn: 'Strict typing for API contracts, domain entities, and runtime safety.'
-      },
-      {
-        name: 'React Native',
-        level: 'Prático',
-        iconName: 'Smartphone',
-        descriptionPt: 'Desenvolvimento de apps mobile para iOS e Android integrados ao backend.',
-        descriptionEn: 'Cross-platform mobile apps for iOS & Android directly communicating with APIs.'
-      },
-      {
-        name: 'Tailwind CSS',
-        level: 'Especialista',
-        iconName: 'Palette',
-        descriptionPt: 'Design systems modernos, temas dinâmicos (dark/light) e responsividade.',
-        descriptionEn: 'Modern design systems, dynamic themes (dark/light), and pixel-perfect responsiveness.'
+        titlePt: 'NoSQL & Migrations',
+        titleEn: 'NoSQL & Migrations',
+        items: [
+          'MongoDB (Coleções & Documentos)',
+          'Flyway Migration Versioning',
+          'PostgreSQL',
+          'Estratégias de Indexação'
+        ]
       }
     ]
   },
   {
     id: 'devops-cloud',
-    titlePt: 'DevOps & Cloud',
-    titleEn: 'DevOps & Cloud',
-    descriptionPt: 'Contêineres, automação e esteiras de entrega contínua.',
-    descriptionEn: 'Containers, automation, and continuous delivery pipelines.',
-    items: [
+    categoryPt: 'DevOps, Cloud & Linux',
+    categoryEn: 'DevOps, Cloud & Linux',
+    badgePt: 'INFRAESTRUTURA MODERNA',
+    badgeEn: 'MODERN INFRASTRUCTURE',
+    summaryPt: 'Containerização, esteiras de entrega contínua, infraestrutura em nuvem na Microsoft Azure e administração de ambientes Linux.',
+    summaryEn: 'Containerization, continuous integration/deployment, Microsoft Azure cloud infrastructure, and Linux server management.',
+    topics: [
       {
-        name: 'Docker',
-        level: 'Avançado',
-        iconName: 'Box',
-        descriptionPt: 'Dockerfile multi-stage para Java/Spring, Docker Compose para testes e serviços.',
-        descriptionEn: 'Multi-stage Dockerfiles for Spring Boot, Docker Compose for local development.'
+        titlePt: 'Docker & Containers',
+        titleEn: 'Docker & Containers',
+        items: [
+          'Containers & Imagens',
+          'Dockerfile (Multi-stage builds)',
+          'Docker Compose',
+          'Volumes & Redes',
+          'Containerização de aplicações Spring Boot',
+          'Integração de aplicação e banco em containers'
+        ]
       },
       {
-        name: 'Microsoft Azure',
-        level: 'Prático',
-        iconName: 'Cloud',
-        descriptionPt: 'App Services, Container Apps, bancos gerenciados e monitoramento de logs.',
-        descriptionEn: 'App Services, Container Apps, managed databases, and cloud logging.'
+        titlePt: 'Microsoft Azure & Linux',
+        titleEn: 'Microsoft Azure & Linux',
+        items: [
+          'Azure CLI',
+          'Máquinas Virtuais (VMs)',
+          'VNET e Subnets',
+          'Azure DevOps & Pipelines CI/CD',
+          'Azure Container Registry (ACR)',
+          'Azure Container Instances (ACI)',
+          'Azure SQL Database',
+          'Azure App Service',
+          'Deploy de Aplicações em Nuvem',
+          'Linux (Linha de Comando & Ambientes Cloud)'
+        ]
+      }
+    ]
+  },
+  {
+    id: 'engineering-qa',
+    categoryPt: 'Engenharia de Software, Git & Qualidade',
+    categoryEn: 'Software Engineering, Git & QA',
+    badgePt: 'BOAS PRÁTICAS & MÉTODOS',
+    badgeEn: 'BEST PRACTICES & METHODS',
+    summaryPt: 'Processos de desenvolvimento ágil, versionamento colaborativo, documentação com UML e garantia de qualidade com testes automatizados.',
+    summaryEn: 'Agile development methodologies, collaborative versioning, UML modeling, and automated testing quality assurance.',
+    topics: [
+      {
+        titlePt: 'Git & Versionamento',
+        titleEn: 'Git & Versioning',
+        items: [
+          'Git & GitHub',
+          'Branches & Merges',
+          'Repositórios Locais e Remotos',
+          'Git Flow',
+          'Organização e Commits Semânticos',
+          'Desenvolvimento Colaborativo & PRs'
+        ]
       },
       {
-        name: 'Git & GitHub',
-        level: 'Avançado',
-        iconName: 'GitCommit',
-        descriptionPt: 'Git flow, Pull Requests, code review e automações com GitHub Actions.',
-        descriptionEn: 'Git flow, Pull Requests, collaborative code reviews, and GitHub Actions CI/CD.'
+        titlePt: 'Engenharia & Testes',
+        titleEn: 'Engineering & Testing',
+        items: [
+          'JUnit & Testes Unitários',
+          'Pirâmide de Testes',
+          'Shift-Left Testing',
+          'SQA & SQC (Garantia e Controle de Qualidade)',
+          'Modelos de Maturidade CMMI e TMMI',
+          'Scrum & Waterfall',
+          'Backlog de Produto & Sprint Planning',
+          'Requisitos Funcionais e Não Funcionais',
+          'UML (Casos de Uso e Diagramas de Atividade)'
+        ]
+      }
+    ]
+  },
+  {
+    id: 'frontend-mobile',
+    categoryPt: 'Frontend & Mobile',
+    categoryEn: 'Frontend & Mobile',
+    badgePt: 'EXPERIÊNCIA DE USUÁRIO',
+    badgeEn: 'USER EXPERIENCE',
+    summaryPt: 'Criação de aplicações web e aplicativos mobile cross-platform que consomem APIs REST com alta performance e gerenciamento de estado previsível.',
+    summaryEn: 'Building high-performance web applications and cross-platform mobile apps consuming REST APIs with predictable state management.',
+    topics: [
+      {
+        titlePt: 'Desenvolvimento Web',
+        titleEn: 'Web Development',
+        items: [
+          'HTML5 & CSS3 Moderno',
+          'JavaScript (ES6+)',
+          'React & Vite',
+          'Tailwind CSS',
+          'React Hooks',
+          'React Hook Form',
+          'Zod (Validação de Schema)',
+          'Consumo e Tratamento de APIs REST'
+        ]
+      },
+      {
+        titlePt: 'Desenvolvimento Mobile',
+        titleEn: 'Mobile Development',
+        items: [
+          'React Native',
+          'Context API',
+          'AsyncStorage',
+          'TanStack Query',
+          'Autenticação JWT',
+          'Firebase Authentication',
+          'Firebase Firestore'
+        ]
+      }
+    ]
+  },
+  {
+    id: 'emerging-tech',
+    categoryPt: '.NET, Python, Inteligência Artificial & IoT',
+    categoryEn: '.NET, Python, Artificial Intelligence & IoT',
+    badgePt: 'VISÃO MULTIDISCIPLINAR',
+    badgeEn: 'MULTIDISCIPLINARY PERSPECTIVE',
+    summaryPt: 'Formação acadêmica expandida explorando frameworks corporativos alternativos, análise de dados em Python, IA generativa e sistemas embarcados.',
+    summaryEn: 'Expanded foundation covering alternative enterprise frameworks, Python data analysis, generative AI, and embedded IoT systems.',
+    topics: [
+      {
+        titlePt: '.NET & Python',
+        titleEn: '.NET & Python',
+        items: [
+          'C# & ASP.NET Core',
+          'Web API & Entity Framework Core',
+          'Python & Estruturas de Dados',
+          'Manipulação de Arquivos (JSON, XML, CSV)',
+          'Pandas para Análise de Dados',
+          'Consumo e Criação de APIs em Python'
+        ]
+      },
+      {
+        titlePt: 'Inteligência Artificial & IoT',
+        titleEn: 'Artificial Intelligence & IoT',
+        items: [
+          'Fundamentos de IA & Ciência de Dados',
+          'Machine Learning (Classificação & Regressão)',
+          'LLMs & Prompt Engineering',
+          'Embeddings & Arquitetura RAG',
+          'NLU, STT e TTS',
+          'Arduino, Sensores e Atuadores',
+          'Protocolo MQTT & Node-RED',
+          'Comunicação Serial (UART, I2C, SPI)',
+          'Edge Computing & Integração IoT com Cloud'
+        ]
       }
     ]
   }

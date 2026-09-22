@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useApp } from '@/context/AppContext';
-import { CheckCircle2 } from 'lucide-react';
+import { CheckCircle2, GraduationCap, Server, Database, Cloud } from 'lucide-react';
 import KineticText from './KineticText';
 
 export default function About() {
@@ -10,22 +10,25 @@ export default function About() {
 
   const highlights = [
     {
-      title: 'Java 21 / 25 & Spring Boot 3',
+      icon: Server,
+      title: 'Backend Java & Spring Boot',
       desc: lang === 'pt'
-        ? 'Records, Virtual Threads, Spring Security com JWT e controle de autoridades por perfil (RBAC).'
-        : 'Records, Virtual Threads, Spring Security with JWT, and Role-Based Access Control.'
+        ? 'POO sólida, Collections, tratamento de exceções, APIs RESTful semânticas, Spring Security com JWT/OAuth2 e microsserviços.'
+        : 'Solid OOP, Collections, exception handling, semantic RESTful APIs, Spring Security with JWT/OAuth2, and microservices.'
     },
     {
-      title: 'Oracle Database 19c & PL/SQL',
+      icon: Database,
+      title: 'Oracle Database, PL/SQL & NoSQL',
       desc: lang === 'pt'
-        ? 'Modelagem relacional sólida, integridade referencial e migrations automatizadas via Flyway.'
-        : 'Relational modeling, data integrity, and automated schema migrations via Flyway.'
+        ? 'Modelagem conceitual, lógica e relacional, procedures, packages, triggers, sequences, integridade ACID e MongoDB.'
+        : 'Conceptual, logical and relational modeling, procedures, packages, triggers, sequences, ACID integrity, and MongoDB.'
     },
     {
-      title: 'Frontend & Mobile Integration',
+      icon: Cloud,
+      title: 'DevOps, Azure Cloud & Qualidade',
       desc: lang === 'pt'
-        ? 'Design de APIs limpas e previsíveis consumidas com alta performance por apps em React Native.'
-        : 'Clean, predictable API contracts tailored for smooth React Native consumption.'
+        ? 'Docker multi-stage, VMs, Azure App Service/SQL, pipelines CI/CD, Linux, Git Flow e testes automatizados com JUnit.'
+        : 'Multi-stage Docker, VMs, Azure App Service/SQL, CI/CD pipelines, Linux, Git Flow, and automated testing with JUnit.'
     }
   ];
 
@@ -34,39 +37,55 @@ export default function About() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         
         {/* Header */}
-        <div className="space-y-2">
-          <span className="text-xs font-mono font-bold text-appleRed-500 uppercase tracking-widest">
-            {lang === 'pt' ? 'SOBRE MIM' : 'ABOUT ME'}
-          </span>
+        <div className="space-y-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-appleRed-500/20 bg-appleRed-500/10">
+            <GraduationCap size={13} className="text-appleRed-400" />
+            <span className="text-xs font-mono font-bold text-appleRed-400 uppercase tracking-widest">
+              {lang === 'pt' ? 'TRAJETÓRIA & FORMAÇÃO' : 'BACKGROUND & EDUCATION'}
+            </span>
+          </div>
+
           <KineticText
-            text={lang === 'pt' ? 'Engenharia com foco em resiliência e alta concorrência.' : 'Engineering focused on resilience and high throughput.'}
+            text={lang === 'pt' ? 'Engenharia de Software com Foco em Backend' : 'Software Engineering with Backend Focus'}
             as="h2"
             staggerDelayMs={18}
-            className="text-2xl sm:text-3xl font-bold text-white tracking-tight"
+            className="text-2xl sm:text-4xl font-black text-white tracking-tight"
           />
-          <p className="text-sm sm:text-base text-neutral-400 max-w-3xl leading-relaxed pt-2">
+
+          <p className="text-sm sm:text-base text-neutral-400 max-w-3xl leading-relaxed pt-1">
             {lang === 'pt'
-              ? 'Desenvolvedor focado em arquitetura de microsserviços e APIs REST. Atualmente liderando a evolução da API Clyvo (M-Vet), um ecossistema veterinário com agendamentos sem colisão de horários, autorizações de prontuário e integração direta com aplicativo móvel.'
-              : 'Software engineer focused on microservice architectures and RESTful APIs. Currently spearheading the Clyvo (M-Vet) API, a veterinary platform with conflict-free scheduling, medical record permissions, and React Native mobile integration.'}
+              ? 'Minha principal área de desenvolvimento é Backend com Java, construída ao longo da graduação em Análise e Desenvolvimento de Sistemas e através de projetos práticos. Durante minha formação, avancei dos fundamentos da programação e Programação Orientada a Objetos até o desenvolvimento de APIs completas, persistência de dados em Oracle DB, autenticação e autorização stateless, testes automatizados, containerização com Docker e deploy em nuvem na Microsoft Azure.'
+              : 'My primary focus is Java Backend Engineering, established throughout my Systems Analysis and Development degree and through production projects. Across my formation, I advanced from programming fundamentals and OOP to designing complete RESTful APIs, relational persistence with Oracle DB, stateless authentication/authorization, automated testing with JUnit, Docker containerization, and Microsoft Azure cloud deployment.'}
           </p>
         </div>
 
-        {/* 3 Clean Horizontal Translucent Cards */}
+        {/* 3 Pillars Bento Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
-          {highlights.map((item, idx) => (
-            <div
-              key={idx}
-              className="p-6 rounded-2xl border border-white/[0.08] bg-black/50 backdrop-blur-2xl hover:border-white/20 transition-all duration-300 space-y-2 group shadow-[0_4px_20px_rgba(0,0,0,0.5)]"
-            >
-              <h3 className="text-sm font-bold text-white flex items-center gap-2 group-hover:text-appleRed-400 transition-colors">
-                <CheckCircle2 size={16} className="text-appleGreen-500 shrink-0" />
-                {item.title}
-              </h3>
-              <p className="text-xs text-neutral-400 leading-relaxed pl-6">
-                {item.desc}
-              </p>
-            </div>
-          ))}
+          {highlights.map((item, idx) => {
+            const Icon = item.icon;
+            return (
+              <div
+                key={idx}
+                className="p-6 rounded-3xl border border-white/[0.08] bg-black/60 backdrop-blur-2xl hover:border-white/20 transition-all duration-300 space-y-3 group shadow-[0_4px_24px_rgba(0,0,0,0.6)] flex flex-col justify-between"
+              >
+                <div className="space-y-2">
+                  <div className="w-9 h-9 rounded-xl bg-white/[0.05] border border-white/[0.08] flex items-center justify-center text-appleRed-400 group-hover:scale-110 transition-transform">
+                    <Icon size={18} />
+                  </div>
+                  <h3 className="text-base font-bold text-white group-hover:text-appleRed-400 transition-colors">
+                    {item.title}
+                  </h3>
+                  <p className="text-xs text-neutral-400 leading-relaxed">
+                    {item.desc}
+                  </p>
+                </div>
+                <div className="pt-2 flex items-center gap-1.5 text-[11px] font-mono text-appleGreen-500">
+                  <CheckCircle2 size={13} />
+                  <span>{lang === 'pt' ? 'Prática comprovada' : 'Proven practice'}</span>
+                </div>
+              </div>
+            );
+          })}
         </div>
 
       </div>
