@@ -6,29 +6,27 @@ import CustomCursor from '@/components/CustomCursor';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://maicondouglas-dev.vercel.app'),
-  title: 'Maicon Douglas — Desenvolvedor Backend Java | Spring Boot, Oracle, Docker, Azure',
-  description: 'Portfólio de Maicon Douglas, desenvolvedor backend Java em formação (Análise e Desenvolvimento de Sistemas), focado no ecossistema Java, Spring Boot, Oracle Database (PL/SQL), Docker e Microsoft Azure.',
+  title: 'Maicon Douglas — Desenvolvedor Backend Java em Formação',
+  description: 'Portfólio de Maicon Douglas, desenvolvedor backend Java em formação (Análise e Desenvolvimento de Sistemas). Foco em Java, Spring Boot, APIs REST, Oracle Database (PL/SQL), Docker e Microsoft Azure.',
   keywords: [
     'Maicon Douglas',
-    'Backend Developer',
-    'Java',
+    'Desenvolvedor Backend Java',
+    'Java Backend Developer',
+    'Java 21',
     'Spring Boot',
-    '.NET',
+    'Spring Security',
+    'Spring Data JPA',
     'Oracle Database',
     'PL/SQL',
-    'Flyway',
     'Docker',
     'Azure',
-    'React',
-    'React Native',
-    'Clyvo M-Vet',
-    'OAuth 2.0',
-    'REST APIs'
+    'REST APIs',
+    'Clyvo'
   ],
   authors: [{ name: 'Maicon Douglas' }],
   openGraph: {
-    title: 'Maicon Douglas — Backend & Full Stack Developer',
-    description: 'Especialista em ecossistemas corporativos Java, Spring Boot, .NET, Oracle e React. Conheça o ecossistema Clyvo M-Vet.',
+    title: 'Maicon Douglas — Desenvolvedor Backend Java em Formação',
+    description: 'Foco no ecossistema Java, Spring Boot, APIs REST, Oracle Database (PL/SQL), Docker e Microsoft Azure.',
     type: 'website',
     locale: 'pt_BR',
     siteName: 'Maicon Douglas Portfolio',
@@ -37,14 +35,14 @@ export const metadata: Metadata = {
         url: '/og-image.svg',
         width: 1200,
         height: 630,
-        alt: 'Maicon Douglas — Backend & Full Stack Developer'
+        alt: 'Maicon Douglas — Desenvolvedor Backend Java em Formação'
       }
     ]
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Maicon Douglas — Backend & Full Stack Developer',
-    description: 'Especialista em Java (Spring Boot), .NET, Oracle e React Native.',
+    title: 'Maicon Douglas — Desenvolvedor Backend Java em Formação',
+    description: 'Foco no ecossistema Java, Spring Boot, APIs REST, Oracle Database (PL/SQL), Docker e Microsoft Azure.',
     images: ['/og-image.svg']
   },
   icons: {

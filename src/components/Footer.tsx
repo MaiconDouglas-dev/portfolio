@@ -16,7 +16,7 @@ export default function Footer() {
         </div>
 
         <div className="flex items-center gap-3">
-          <span>Java 21 / 25 • Spring Boot 3+ • Oracle 19c • React Native</span>
+          <span>Java 21 • Spring Boot 3 • Oracle Database • Docker</span>
         </div>
       </div>
     </footer>

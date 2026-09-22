@@ -148,7 +148,7 @@ export default function ArchitectureModal({ isOpen, onClose }: Props) {
                 Migrations Flyway em Oracle SQL
               </p>
               <p className="text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                Substituição de instruções Postgres (como UUIDs, `gen_random_uuid()` e tipos booleanos) por tipos compatíveis com Oracle (como `RAW(16)` ou `SYS_GUID()`, `NUMBER(1)` e constraints adequadas), mantendo `ddl-auto=validate` em produção.
+                Substituição de instruções Postgres (como UUIDs, `gen_random_uuid()` e tipos booleanos) por tipos compatíveis com Oracle (como `RAW(16)` ou `SYS_GUID()`, `NUMBER(1)` e constraints adequadas), mantendo `ddl-auto=validate` na aplicação.
               </p>
             </div>
 

@@ -14,7 +14,7 @@ export default function About() {
       titlePt: 'Ecossistema Java (Foco Principal)',
       titleEn: 'Java Ecosystem (Core Focus)',
       descPt: 'Minha principal área de estudo e aprofundamento é o ecossistema Java, trabalhando com conceitos como POO, Collections, tratamento de exceções, JDBC, Spring Boot, Spring MVC, Spring Security, JPA, DTOs, validações e desenvolvimento de APIs REST.',
-      descEn: 'My primary domain of study and specialization is the Java ecosystem, applying OOP, Collections, exception handling, JDBC, Spring Boot, Spring MVC, Spring Security, JPA, DTOs, validations, and REST API engineering.'
+      descEn: 'My primary area of study and specialization is the Java ecosystem: OOP, Collections, exception handling, JDBC, Spring Boot, Spring MVC, Spring Security, JPA, DTOs, validations, and REST API development.'
     },
     {
       icon: Database,
@@ -46,7 +46,7 @@ export default function About() {
           </div>
 
           <KineticText
-            text={lang === 'pt' ? 'Desenvolvedor Backend Java em Formação' : 'Java Backend Engineer in Training'}
+            text={lang === 'pt' ? 'Desenvolvedor Backend Java em Formação' : 'Java Backend Developer in Training'}
             as="h2"
             staggerDelayMs={18}
             className="text-2xl sm:text-4xl font-black text-white tracking-tight"
@@ -56,12 +56,12 @@ export default function About() {
             <p>
               {lang === 'pt'
                 ? 'Sou desenvolvedor Backend Java em formação, cursando Análise e Desenvolvimento de Sistemas, com foco no desenvolvimento de aplicações utilizando Java e Spring Boot.'
-                : 'I am a Java Backend Developer in training, pursuing a degree in Systems Analysis and Development, focused on engineering software applications using Java and Spring Boot.'}
+                : 'I am a Java Backend Developer in training, pursuing a degree in Systems Analysis and Development, focused on developing applications using Java and Spring Boot.'}
             </p>
             <p className="text-neutral-400 text-sm">
               {lang === 'pt'
                 ? 'Ao longo da graduação, construí uma base em programação orientada a objetos, desenvolvimento de APIs REST, persistência de dados, segurança, bancos de dados relacionais, versionamento e fundamentos de DevOps e Cloud.'
-                : 'Throughout my academic journey, I built a solid foundation in object-oriented programming, REST API engineering, data persistence, security, relational databases, version control, and DevOps / Cloud fundamentals.'}
+                : 'Throughout my academic journey, I built a foundation in object-oriented programming, REST API engineering, data persistence, security, relational databases, version control, and DevOps / Cloud fundamentals.'}
             </p>
           </div>
         </div>
@@ -102,7 +102,7 @@ export default function About() {
               <p className="text-xs sm:text-sm text-neutral-400 leading-relaxed">
                 {lang === 'pt'
                   ? 'Durante a graduação também tive contato com outras áreas e tecnologias, como C#/.NET, React, React Native, Python, Inteligência Artificial, Machine Learning e IoT. Esses conhecimentos fazem parte da minha formação acadêmica, mas atualmente meu desenvolvimento profissional está direcionado ao Backend com Java.'
-                  : 'During my studies, I also worked across various domains and technologies including C#/.NET, React, React Native, Python, Artificial Intelligence, Machine Learning, and IoT. While these constitute my academic background, my active professional development is firmly dedicated to Java Backend Engineering.'}
+                  : 'During my studies, I also explored other domains and technologies including C#/.NET, React, React Native, Python, Artificial Intelligence, Machine Learning, and IoT. While these constitute my academic background, my active professional development is firmly directed toward Java Backend.'}
               </p>
             </div>
           </div>
@@ -115,8 +115,8 @@ export default function About() {
               </span>
               <p className="text-xs sm:text-sm text-white font-medium leading-relaxed">
                 {lang === 'pt'
-                  ? 'Consolidar cada vez mais os fundamentos de desenvolvimento de software e adquirir autonomia para projetar, desenvolver, testar e entregar aplicações backend de forma consistente.'
-                  : 'Continuously consolidate software engineering fundamentals and gain autonomy to design, develop, test, and deliver resilient backend applications consistently.'}
+                  ? 'Busco minha primeira oportunidade como Desenvolvedor Backend Java, onde possa aplicar e aprofundar meus conhecimentos em Java, Spring Boot, APIs REST e bancos de dados, contribuindo com o desenvolvimento de software e evoluindo através da experiência prática em equipe.'
+                  : 'Seeking my first opportunity as a Java Backend Developer, to apply and deepen my knowledge in Java, Spring Boot, REST APIs, and databases, contributing to software development and evolving through practical team experience.'}
               </p>
             </div>
           </div>

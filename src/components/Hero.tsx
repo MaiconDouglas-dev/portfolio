@@ -29,8 +29,8 @@ export default function Hero() {
             {/* Minimal Status Dot */}
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/[0.08] bg-white/[0.03] backdrop-blur-md">
               <span className="w-2 h-2 rounded-full bg-appleGreen-500 animate-pulse" />
-              <span className="text-xs font-mono text-neutral-400">
-                {lang === 'pt' ? 'Cursando ADS • Backend Java' : 'Studying Systems Analysis • Java Backend'}
+              <span className="text-xs font-mono text-neutral-300">
+                {lang === 'pt' ? 'Aberto a oportunidades em Backend Java' : 'Open to Java Backend Opportunities'}
               </span>
             </div>
 
@@ -43,15 +43,15 @@ export default function Hero() {
                 className="text-4xl sm:text-6xl font-black tracking-tight text-white leading-[1.08]"
               />
               <p className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-appleRed-500 via-rose-500 via-appleViolet-500 to-appleBlue-500 bg-clip-text text-transparent">
-                {lang === 'pt' ? 'Desenvolvedor Backend Java' : 'Java Backend Developer'}
+                {lang === 'pt' ? 'Desenvolvedor Backend Java em Formação' : 'Java Backend Developer in Training'}
               </p>
             </div>
 
             {/* Concise Bio */}
             <p className="text-sm sm:text-base text-neutral-400 max-w-xl leading-relaxed">
               {lang === 'pt'
-                ? 'Desenvolvedor Backend Java em formação (Análise e Desenvolvimento de Sistemas). Foco na construção de aplicações e APIs REST com Java e Spring Boot, persistência em Oracle Database (SQL / PL-SQL) e deploy com Docker e Azure.'
-                : 'Java Backend Developer in training (Systems Analysis and Development degree). Focused on building robust REST APIs with Java and Spring Boot, Oracle Database persistence, Docker, and Microsoft Azure.'}
+                ? 'Desenvolvedor Backend Java em formação, cursando Análise e Desenvolvimento de Sistemas. Foco no desenvolvimento de aplicações e APIs REST com Java e Spring Boot, persistência em Oracle Database (SQL / PL/SQL), Git, Docker e Microsoft Azure.'
+                : 'Java Backend Developer in training, pursuing Systems Analysis and Development. Focused on building REST APIs with Java and Spring Boot, Oracle Database (SQL / PL/SQL), Git, Docker, and Microsoft Azure.'}
             </p>
 
             {/* Clear Magnetic CTAs */}

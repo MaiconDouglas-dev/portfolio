@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Terminal as TermIcon, Play, CheckCircle2, Cpu, Database, Shield } from 'lucide-react';
 
 export default function TerminalCard() {
   const [selectedCmd, setSelectedCmd] = useState<number>(0);
@@ -9,17 +8,17 @@ export default function TerminalCard() {
   const commands = [
     {
       label: 'GET /actuator/health',
-      request: 'curl -X GET https://api.clyvo.com.br/actuator/health',
+      request: 'curl -X GET http://localhost:8080/actuator/health',
       response: {
         status: 'UP',
-        runtime: 'Java 21 / 25 LTS',
-        database: 'Oracle 19c (Flyway Validated)',
-        security: 'Spring Security 6 (JWT RBAC)'
+        runtime: 'Java 21',
+        database: 'Oracle Database (Connected)',
+        security: 'Spring Security (JWT RBAC)'
       }
     },
     {
-      label: 'POST /auth/login',
-      request: 'curl -X POST /api/v1/auth/login -d "{\"email\":\"dr.vet@clyvo.com\"}"',
+      label: 'POST /api/v1/auth/login',
+      request: 'curl -X POST http://localhost:8080/api/v1/auth/login -d "{\"email\":\"dr.vet@clyvo.com\"}"',
       response: {
         status: 'AUTHENTICATED',
         role: 'ROLE_VETERINARIO',
@@ -42,7 +41,7 @@ export default function TerminalCard() {
           <span className="ml-2 text-[11px] font-mono text-neutral-400">ClyvoApiApplication.java</span>
         </div>
         <span className="text-[10px] font-mono text-appleGreen-500 bg-appleGreen-500/10 px-2 py-0.5 rounded-full border border-appleGreen-500/20">
-          SPRING BOOT 3 • LIVE
+          SPRING BOOT 3 • LOCAL DEV
         </span>
       </div>
 
@@ -66,7 +65,7 @@ export default function TerminalCard() {
       {/* Terminal Content */}
       <div className="p-3.5 font-mono text-[11px] leading-relaxed bg-black text-neutral-300">
         <div className="text-neutral-500 mb-2 truncate">
-          <span className="text-appleRed-500">clyvo-mvet:~$</span> {current.request}
+          <span className="text-appleRed-500">clyvo-api:~$</span> {current.request}
         </div>
         <pre className="text-appleGreen-400 p-2.5 rounded-lg bg-neutral-950/80 border border-neutral-900 overflow-x-auto">
           {JSON.stringify(current.response, null, 2)}

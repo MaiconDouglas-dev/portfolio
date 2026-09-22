@@ -64,15 +64,15 @@ export default function Contact() {
             {lang === 'pt' ? 'CONTATO' : 'CONTACT'}
           </span>
           <KineticText
-            text={lang === 'pt' ? 'Vamos conversar sobre o próximo projeto?' : "Let's build your next system together."}
+            text={lang === 'pt' ? 'Vamos conversar sobre novas oportunidades?' : "Let's connect for new opportunities."}
             as="h2"
             staggerDelayMs={18}
             className="text-3xl sm:text-4xl font-bold text-white tracking-tight"
           />
           <p className="text-sm text-neutral-400">
             {lang === 'pt'
-              ? 'Disponível para contratação, projetos corporativos e consultoria de backend.'
-              : 'Available for full-time opportunities, consulting, and backend architecture.'}
+              ? 'Aberto a oportunidades em Backend Java e novos desafios técnicos.'
+              : 'Open to Java Backend opportunities and new technical challenges.'}
           </p>
         </div>
 
