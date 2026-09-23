@@ -475,6 +475,184 @@ export default function LusionBackground() {
     const starPoints = new THREE.Points(starGeometry, starMaterial);
     scene.add(starPoints);
 
+    // ============================================================================
+    // 5.5 3D Cyber Tesseract & Hyperspace Warp Corridor (Lusion 30s-40s Experience)
+    // Deep perspective cyber tunnel with rotating 4D tesseracts & neon portal frames
+    // ============================================================================
+    const corridorGroup = new THREE.Group();
+    corridorGroup.visible = false;
+    scene.add(corridorGroup);
+
+    // 1. Cyber Portal Frames along Z axis
+    const portalCount = 16;
+    const portalSpacing = 160;
+    const portalStartZ = 100;
+    const portalWidth = isMobile ? 380 : 540;
+    const portalHeight = isMobile ? 260 : 360;
+
+    const portalFramePositions: number[] = [];
+    const portalRubyFramePositions: number[] = [];
+
+    for (let p = 0; p < portalCount; p++) {
+      const pz = portalStartZ - p * portalSpacing;
+      const hw = portalWidth * 0.5;
+      const hh = portalHeight * 0.5;
+      const py = 60;
+
+      const targetArr = p % 3 === 0 ? portalRubyFramePositions : portalFramePositions;
+      targetArr.push(
+        -hw, py - hh, pz,   hw, py - hh, pz,
+         hw, py - hh, pz,   hw, py + hh, pz,
+         hw, py + hh, pz,  -hw, py + hh, pz,
+        -hw, py + hh, pz,  -hw, py - hh, pz
+      );
+    }
+
+    const portalFrameGeo = new THREE.BufferGeometry();
+    portalFrameGeo.setAttribute('position', new THREE.Float32BufferAttribute(portalFramePositions, 3));
+    const portalMatCyan = new THREE.LineBasicMaterial({
+      color: 0x00f0ff,
+      transparent: true,
+      opacity: 0,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    });
+    const portalCyanMesh = new THREE.LineSegments(portalFrameGeo, portalMatCyan);
+    corridorGroup.add(portalCyanMesh);
+
+    const portalRubyGeo = new THREE.BufferGeometry();
+    portalRubyGeo.setAttribute('position', new THREE.Float32BufferAttribute(portalRubyFramePositions, 3));
+    const portalMatRuby = new THREE.LineBasicMaterial({
+      color: 0xff2d55,
+      transparent: true,
+      opacity: 0,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    });
+    const portalRubyMesh = new THREE.LineSegments(portalRubyGeo, portalMatRuby);
+    corridorGroup.add(portalRubyMesh);
+
+    // 2. Procedural 4D Tesseract (Hypercube) Geometry Builder
+    const buildTesseractGeo = (outerSize: number, innerSize: number) => {
+      const o = outerSize * 0.5;
+      const i = innerSize * 0.5;
+      const signs = [
+        [-1, -1, -1], [1, -1, -1], [1, 1, -1], [-1, 1, -1],
+        [-1, -1,  1], [1, -1,  1], [1, 1,  1], [-1, 1,  1],
+      ];
+      const cubeEdges = [
+        [0, 1], [1, 2], [2, 3], [3, 0],
+        [4, 5], [5, 6], [6, 7], [7, 4],
+        [0, 4], [1, 5], [2, 6], [3, 7],
+      ];
+      const posArr: number[] = [];
+      // Outer
+      for (const [v1, v2] of cubeEdges) {
+        posArr.push(signs[v1][0] * o, signs[v1][1] * o, signs[v1][2] * o);
+        posArr.push(signs[v2][0] * o, signs[v2][1] * o, signs[v2][2] * o);
+      }
+      // Inner
+      for (const [v1, v2] of cubeEdges) {
+        posArr.push(signs[v1][0] * i, signs[v1][1] * i, signs[v1][2] * i);
+        posArr.push(signs[v2][0] * i, signs[v2][1] * i, signs[v2][2] * i);
+      }
+      // 8 Interconnecting Hypercube diagonals
+      for (let k = 0; k < 8; k++) {
+        posArr.push(signs[k][0] * o, signs[k][1] * o, signs[k][2] * o);
+        posArr.push(signs[k][0] * i, signs[k][1] * i, signs[k][2] * i);
+      }
+      const geo = new THREE.BufferGeometry();
+      geo.setAttribute('position', new THREE.Float32BufferAttribute(posArr, 3));
+      return geo;
+    };
+
+    const tesseractMatCyan = new THREE.LineBasicMaterial({
+      color: 0x00f0ff,
+      transparent: true,
+      opacity: 0,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    });
+    const tesseractMatRuby = new THREE.LineBasicMaterial({
+      color: 0xff2d55,
+      transparent: true,
+      opacity: 0,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    });
+
+    const tesseractGeos: THREE.BufferGeometry[] = [];
+    const tesseracts: {
+      mesh: THREE.LineSegments;
+      rotSpeed: THREE.Vector3;
+      basePos: THREE.Vector3;
+    }[] = [];
+
+    const tesseractConfigs = [
+      { x: -280, y: 120, z: -350, size: 75, isRuby: false },
+      { x: 290, y: 140, z: -680, size: 85, isRuby: true },
+      { x: -310, y: 40, z: -1050, size: 70, isRuby: false },
+      { x: 300, y: 50, z: -1420, size: 80, isRuby: true },
+      { x: -270, y: 150, z: -1750, size: 75, isRuby: false },
+      { x: 280, y: 110, z: -2100, size: 90, isRuby: false },
+    ];
+
+    tesseractConfigs.forEach((cfg) => {
+      const geo = buildTesseractGeo(cfg.size, cfg.size * 0.52);
+      tesseractGeos.push(geo);
+      const mesh = new THREE.LineSegments(geo, cfg.isRuby ? tesseractMatRuby : tesseractMatCyan);
+      mesh.position.set(cfg.x, cfg.y, cfg.z);
+      corridorGroup.add(mesh);
+
+      tesseracts.push({
+        mesh,
+        rotSpeed: new THREE.Vector3(
+          0.4 + Math.random() * 0.6,
+          0.5 + Math.random() * 0.7,
+          0.3 + Math.random() * 0.5
+        ),
+        basePos: mesh.position.clone(),
+      });
+    });
+
+    // 3. Hyperspace Warp Speed Streamers
+    const streamerCount = isMobile ? 24 : 44;
+    const streamerLength = 220;
+    const streamerPositions = new Float32Array(streamerCount * 6);
+    const streamerSpeeds = new Float32Array(streamerCount);
+
+    for (let s = 0; s < streamerCount; s++) {
+      const rad = 140 + Math.random() * 320;
+      const ang = (s / streamerCount) * Math.PI * 2 + Math.random() * 0.2;
+      const sx = Math.cos(ang) * rad;
+      const sy = 60 + Math.sin(ang) * (rad * 0.65);
+      const sz = portalStartZ - Math.random() * 2400;
+
+      streamerPositions[s * 6] = sx;
+      streamerPositions[s * 6 + 1] = sy;
+      streamerPositions[s * 6 + 2] = sz;
+
+      streamerPositions[s * 6 + 3] = sx;
+      streamerPositions[s * 6 + 4] = sy;
+      streamerPositions[s * 6 + 5] = sz - streamerLength;
+
+      streamerSpeeds[s] = 480 + Math.random() * 420;
+    }
+
+    const streamerGeo = new THREE.BufferGeometry();
+    const streamerPosAttr = new THREE.BufferAttribute(streamerPositions, 3);
+    streamerGeo.setAttribute('position', streamerPosAttr);
+
+    const streamerMat = new THREE.LineBasicMaterial({
+      color: 0x00f0ff,
+      transparent: true,
+      opacity: 0,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    });
+    const streamerMesh = new THREE.LineSegments(streamerGeo, streamerMat);
+    corridorGroup.add(streamerMesh);
+
     // 6. Fluid Mouse & Touch Tracking & Kinetic Wake
     const mouse = {
       x: 0,
@@ -660,6 +838,44 @@ export default function LusionBackground() {
         pulseVectors[idx].x = p.progress;
       });
 
+      // ============================================================================
+      // 3D Cyber Tesseract & Hyperspace Warp Corridor Update (Lusion Transition)
+      // ============================================================================
+      const corridorAlpha = THREE.MathUtils.smoothstep(scrollFraction, 0.38, 0.72);
+      corridorGroup.visible = corridorAlpha > 0.01;
+
+      if (corridorGroup.visible) {
+        portalMatCyan.opacity = corridorAlpha * 0.45;
+        portalMatRuby.opacity = corridorAlpha * 0.38;
+        tesseractMatCyan.opacity = corridorAlpha * 0.70;
+        tesseractMatRuby.opacity = corridorAlpha * 0.65;
+        streamerMat.opacity = corridorAlpha * 0.65;
+
+        // Rotate Tesseracts along the corridor
+        tesseracts.forEach((t) => {
+          t.mesh.rotation.x += t.rotSpeed.x * delta;
+          t.mesh.rotation.y += t.rotSpeed.y * delta;
+          t.mesh.rotation.z += t.rotSpeed.z * delta;
+          t.mesh.position.y = t.basePos.y + Math.sin(time * 1.5 + t.basePos.x) * 12;
+        });
+
+        // Advance Warp Speed Streamers
+        const streamerSpeedBoost = 1 + scrollVelocity * 0.08;
+        const posArray = streamerPosAttr.array as Float32Array;
+        for (let s = 0; s < streamerCount; s++) {
+          const idx = s * 6;
+          const currentSpeed = streamerSpeeds[s] * streamerSpeedBoost * delta;
+          posArray[idx + 2] += currentSpeed;
+          posArray[idx + 5] = posArray[idx + 2] - (streamerLength + scrollVelocity * 2.2);
+
+          if (posArray[idx + 2] > 260) {
+            posArray[idx + 2] = portalStartZ - 2400;
+            posArray[idx + 5] = posArray[idx + 2] - streamerLength;
+          }
+        }
+        streamerPosAttr.needsUpdate = true;
+      }
+
       renderer.render(scene, camera);
     };
 
@@ -682,6 +898,15 @@ export default function LusionBackground() {
       meshMaterial.dispose();
       starGeometry.dispose();
       starMaterial.dispose();
+      portalFrameGeo.dispose();
+      portalRubyGeo.dispose();
+      portalMatCyan.dispose();
+      portalMatRuby.dispose();
+      tesseractMatCyan.dispose();
+      tesseractMatRuby.dispose();
+      tesseractGeos.forEach((g) => g.dispose());
+      streamerGeo.dispose();
+      streamerMat.dispose();
       renderer.dispose();
 
       if (container.contains(renderer.domElement)) {

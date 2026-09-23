@@ -6,6 +6,7 @@ export default function CustomCursor() {
   const [mounted, setMounted] = useState(false);
   const [isClicking, setIsClicking] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [cursorText, setCursorText] = useState<string | null>(null);
   const [isVisible, setIsVisible] = useState(false);
   const [ripples, setRipples] = useState<Array<{ id: number; x: number; y: number }>>([]);
 
@@ -38,6 +39,13 @@ export default function CustomCursor() {
           'a, button, input, select, [role="button"], .cursor-pointer, .interactive-hover'
         );
         setIsHovered(Boolean(interactiveEl));
+
+        const textEl = target.closest('[data-cursor-text]') as HTMLElement | null;
+        const text = textEl?.getAttribute('data-cursor-text') || null;
+        setCursorText(text);
+      } else {
+        setIsHovered(false);
+        setCursorText(null);
       }
     };
 
@@ -48,12 +56,16 @@ export default function CustomCursor() {
     };
 
     const onMouseUp = () => setIsClicking(false);
-    const onMouseLeave = () => setIsVisible(false);
+    const onMouseLeave = () => {
+      setIsVisible(false);
+      setIsHovered(false);
+      setCursorText(null);
+    };
 
-    // High-responsiveness trackpad tracking loop (0.65 interpolation factor gives instant, crisp tracking)
+    // High-responsiveness trackpad tracking loop (0.72 factor gives instant precision)
     const renderLoop = () => {
-      ringX += (mouseX - ringX) * 0.65;
-      ringY += (mouseY - ringY) * 0.65;
+      ringX += (mouseX - ringX) * 0.72;
+      ringY += (mouseY - ringY) * 0.72;
 
       if (ring) {
         ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0)`;
@@ -87,17 +99,25 @@ export default function CustomCursor() {
       }`}
       aria-hidden="true"
     >
-      {/* Precision Trackpad Aura Ring (native OS cursor remains 100% visible & sharp) */}
+      {/* Precision Trackpad Aura Ring / Text Pill (native OS cursor remains 100% visible & sharp) */}
       <div
         id="lusion-cursor-ring"
-        className={`fixed top-0 left-0 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none will-change-transform transition-[width,height,border-color,background-color] duration-150 ease-out ${
-          isClicking
-            ? 'w-4 h-4 border border-appleRed-500/80 bg-appleRed-500/20'
+        className={`fixed top-0 left-0 -translate-x-1/2 -translate-y-1/2 pointer-events-none will-change-transform flex items-center justify-center transition-[width,height,border-color,background-color,border-radius,padding] duration-150 ease-out ${
+          cursorText
+            ? 'h-6 px-3 rounded-full border border-white/60 bg-black/85 backdrop-blur-md shadow-[0_0_20px_rgba(255,255,255,0.2)]'
+            : isClicking
+            ? 'w-3 h-3 rounded-full border border-appleRed-500/80 bg-appleRed-500/30'
             : isHovered
-            ? 'w-9 h-9 border border-white/50 bg-white/[0.04] shadow-[0_0_16px_rgba(255,255,255,0.12)]'
-            : 'w-5 h-5 border border-white/30 bg-transparent'
+            ? 'w-7 h-7 rounded-full border border-white/50 bg-white/[0.04] shadow-[0_0_12px_rgba(255,255,255,0.12)]'
+            : 'w-3.5 h-3.5 rounded-full border border-white/30 bg-transparent'
         }`}
-      />
+      >
+        {cursorText && (
+          <span className="text-[9px] font-mono font-bold tracking-wider text-white uppercase whitespace-nowrap">
+            {cursorText}
+          </span>
+        )}
+      </div>
 
       {/* Subtle Click Pulse */}
       {ripples.map((r) => (

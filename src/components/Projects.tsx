@@ -146,7 +146,13 @@ export default function Projects() {
                     }`}
                   >
                     <span className="text-[10px] opacity-80 font-bold">{proj.number}</span>
-                    <span className="font-medium">{idx === 0 ? 'Clyvo (Vet)' : `Slot ${proj.number}`}</span>
+                    <span className="font-medium">
+                      {idx === 0
+                        ? 'Clyvo (Vet)'
+                        : idx === 1
+                        ? 'FoodFlow (Delivery)'
+                        : `Slot ${proj.number} (${lang === 'pt' ? 'Em Breve' : 'Upcoming'})`}
+                    </span>
                     {proj.isPlaceholder ? (
                       <span className="w-1.5 h-1.5 rounded-full bg-amber-400/90" />
                     ) : (
