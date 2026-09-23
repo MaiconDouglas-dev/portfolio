@@ -12,7 +12,7 @@ interface MagneticButtonProps {
 export default function MagneticButton({
   children,
   className = '',
-  strength = 0.28,
+  strength = 0.08, // Very subtle, elegant magnetic pull (never jumps or bugs)
   onClick,
 }: MagneticButtonProps) {
   const ref = useRef<HTMLDivElement>(null);
@@ -26,8 +26,11 @@ export default function MagneticButton({
     const centerX = left + width / 2;
     const centerY = top + height / 2;
 
-    const deltaX = (clientX - centerX) * strength;
-    const deltaY = (clientY - centerY) * strength;
+    // Clamp maximum translation to ±6px so buttons never aggressively shift over the cursor
+    const rawX = (clientX - centerX) * strength;
+    const rawY = (clientY - centerY) * strength;
+    const deltaX = Math.max(-6, Math.min(6, rawX));
+    const deltaY = Math.max(-5, Math.min(5, rawY));
 
     setPosition({ x: deltaX, y: deltaY });
   };
@@ -51,8 +54,8 @@ export default function MagneticButton({
       style={{
         transform: `translate3d(${position.x}px, ${position.y}px, 0)`,
         transition: isHovered
-          ? 'transform 0.12s ease-out'
-          : 'transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+          ? 'transform 0.15s ease-out'
+          : 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
       }}
       className={`inline-block will-change-transform cursor-pointer ${className}`}
     >

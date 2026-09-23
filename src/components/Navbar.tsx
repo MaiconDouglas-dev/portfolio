@@ -50,9 +50,10 @@ export default function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
         {/* Lusion-style Brand Monogram */}
-        <MagneticButton strength={0.2}>
+        <MagneticButton strength={0.1}>
           <a
             href="#"
+            data-cursor-text={lang === 'pt' ? 'INÍCIO' : 'TOP'}
             className="group flex items-center gap-3 select-none cursor-pointer"
           >
             <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-appleRed-600 via-appleViolet-600 to-appleBlue-500 flex items-center justify-center text-white font-mono font-black shadow-lg shadow-appleRed-500/25 group-hover:scale-105 transition-transform duration-300">
@@ -73,9 +74,10 @@ export default function Navbar() {
         {/* Floating Pill Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-1 bg-white/[0.04] p-1.5 rounded-full border border-white/[0.08] backdrop-blur-xl">
           {navLinks.map((link) => (
-            <MagneticButton key={link.href} strength={0.25}>
+            <MagneticButton key={link.href} strength={0.08}>
               <button
                 onClick={() => handleNavClick(link.href)}
+                data-cursor-text={link.label.toUpperCase()}
                 className="px-4 py-1.5 text-xs font-medium text-neutral-300 hover:text-white rounded-full hover:bg-white/[0.08] transition-all duration-200"
               >
                 {link.label}
@@ -87,14 +89,15 @@ export default function Navbar() {
         {/* Right Controls: Audio + Lang + Theme + Talk */}
         <div className="hidden sm:flex items-center gap-2.5">
           {/* Lusion Live Sound Visualizer */}
-          <MagneticButton strength={0.3}>
+          <MagneticButton strength={0.1}>
             <AudioEqualizer />
           </MagneticButton>
 
           {/* Language Switcher */}
-          <MagneticButton strength={0.25}>
+          <MagneticButton strength={0.08}>
             <button
               onClick={handleToggleLang}
+              data-cursor-text={lang === 'pt' ? 'ENGLISH' : 'PORTUGUÊS'}
               title={lang === 'pt' ? 'Switch to English' : 'Mudar para Português'}
               className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-mono font-semibold border border-white/[0.08] bg-white/[0.03] text-neutral-300 hover:border-appleRed-500/50 hover:text-appleRed-400 hover:bg-white/[0.06] transition-all duration-200"
             >
@@ -104,11 +107,12 @@ export default function Navbar() {
           </MagneticButton>
 
           {/* Magnetic Let's Talk CTA */}
-          <MagneticButton strength={0.35}>
+          <MagneticButton strength={0.1}>
             <a
               href="https://wa.me/5511937184412?text=Ol%C3%A1%20Maicon%2C%20vi%20seu%20portf%C3%B3lio%20e%20gostaria%20de%20conversar!"
               target="_blank"
               rel="noopener noreferrer"
+              data-cursor-text="WHATSAPP"
               className="group inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-appleRed-600 via-rose-600 to-appleViolet-600 hover:from-appleRed-500 hover:to-appleViolet-500 text-white font-medium text-xs tracking-wide shadow-lg shadow-appleRed-500/25 transition-all duration-300 select-none cursor-pointer"
             >
               <MessageSquare size={13} className="text-white group-hover:rotate-12 transition-transform" />

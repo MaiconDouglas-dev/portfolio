@@ -1,11 +1,18 @@
 'use client';
 
 // ============================================================================
-// Procedural Web Audio Engine: Sci-Fi SFX + Space Ambient Celestial Drone
+// Procedural Web Audio Engine: Ambient Space Music + Sci-Fi SFX
 // 100% Royalty-Free, Zero Network Latency, Pure Mathematical Web Audio Synthesis
-// Calibrated for clear audibility and maximum acoustic comfort on ALL devices
-// (MacBook / Dell laptops, iPhone, iPad, Android, headphones, desktop monitors)
+// Real musical progression (chords + gentle arpeggiated melodies + warm bass)
+// Calibrated for acoustic comfort and clear musicality on all speakers
 // ============================================================================
+
+interface MusicalChord {
+  name: string;
+  bass: number; // Hz
+  padNotes: number[]; // Hz
+  melodyPool: number[]; // Hz
+}
 
 class AudioManager {
   private ctx: AudioContext | null = null;
@@ -13,31 +20,62 @@ class AudioManager {
   private isPlayingAmbience: boolean = false;
   private listeners: Set<(enabled: boolean) => void> = new Set();
 
-  // Ambient Drone Audio Nodes
-  private masterGain: GainNode | null = null;
-  private droneOscillators: OscillatorNode[] = [];
-  private droneGains: GainNode[] = [];
-  private lfoOsc: OscillatorNode | null = null;
-  private lfoGain: GainNode | null = null;
-  private ambientFilter: BiquadFilterNode | null = null;
-  private noiseSource: AudioBufferSourceNode | null = null;
-  private noiseGain: GainNode | null = null;
+  // Master Audio Nodes
+  private masterMusicGain: GainNode | null = null;
+  private musicFilter: BiquadFilterNode | null = null;
+  private currentPadOscs: { osc: OscillatorNode; gain: GainNode }[] = [];
+  private currentBassOsc: { osc: OscillatorNode; gain: GainNode }[] = [];
+
+  // Musical Sequencer State
+  private sequencerTimer: ReturnType<typeof setInterval> | null = null;
+  private nextBeatTime: number = 0;
+  private currentBeat: number = 0;
+  private currentChordIdx: number = 0;
   private lastKineticTime: number = 0;
+
+  // 4-Chord Cinematic Space Progression (Dm9 -> Bbmaj7 -> Fmaj7 -> C/E)
+  // Peaceful, inspiring, chill space music in 64 BPM
+  private chords: MusicalChord[] = [
+    {
+      name: 'Dm9',
+      bass: 73.42, // D2
+      padNotes: [146.83, 174.61, 220.00, 261.63, 329.63], // D3, F3, A3, C4, E4
+      melodyPool: [220.00, 261.63, 293.66, 329.63, 440.00, 523.25], // A3, C4, D4, E4, A4, C5
+    },
+    {
+      name: 'Bbmaj7',
+      bass: 58.27, // Bb1
+      padNotes: [116.54, 174.61, 220.00, 293.66, 349.23], // Bb2, F3, A3, D4, F4
+      melodyPool: [220.00, 293.66, 349.23, 440.00, 523.25, 587.33], // A3, D4, F4, A4, C5, D5
+    },
+    {
+      name: 'Fmaj7',
+      bass: 87.31, // F2
+      padNotes: [130.81, 174.61, 220.00, 261.63, 329.63], // C3, F3, A3, C4, E4
+      melodyPool: [261.63, 329.63, 349.23, 392.00, 440.00, 523.25], // C4, E4, F4, G4, A4, C5
+    },
+    {
+      name: 'C/E',
+      bass: 65.41, // C2
+      padNotes: [130.81, 164.81, 196.00, 246.94, 293.66], // C3, E3, G3, B3, D4
+      melodyPool: [246.94, 293.66, 329.63, 392.00, 493.88, 523.25], // B3, D4, E4, G4, B4, C5
+    },
+  ];
 
   constructor() {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('md_portfolio_audio');
       this.isEnabled = saved === 'true';
 
-      // Global user gesture listener: unlock AudioContext seamlessly on first interaction
+      // Unlock AudioContext on first user interaction seamlessly
       const unlockAudio = () => {
         if (this.ctx && this.ctx.state === 'suspended') {
           this.ctx.resume();
         }
       };
-      window.addEventListener('click', unlockAudio, { passive: true, once: false });
-      window.addEventListener('keydown', unlockAudio, { passive: true, once: false });
-      window.addEventListener('touchstart', unlockAudio, { passive: true, once: false });
+      window.addEventListener('click', unlockAudio, { passive: true });
+      window.addEventListener('keydown', unlockAudio, { passive: true });
+      window.addEventListener('touchstart', unlockAudio, { passive: true });
     }
   }
 
@@ -101,13 +139,9 @@ class AudioManager {
   }
 
   // ============================================================================
-  // UI Sound Effects (Tactile, High-Tech, Comfortable Sci-Fi Synthesis)
-  // Designed to be clearly audible yet never harsh or fatiguing
+  // UI Sound Effects (Tactile, High-Tech, Pleasant Sci-Fi Synthesis)
   // ============================================================================
 
-  /**
-   * Tactile hover tick: soft futuristic frequency shimmer (45ms).
-   */
   public playHover() {
     if (!this.isEnabled) return;
     try {
@@ -119,7 +153,6 @@ class AudioManager {
       const gain = ctx.createGain();
       const filter = ctx.createBiquadFilter();
 
-      // Bandpass filter centered at 950Hz creates a velvety tactile feel
       filter.type = 'bandpass';
       filter.frequency.setValueAtTime(950, now);
       filter.Q.setValueAtTime(1.8, now);
@@ -140,9 +173,6 @@ class AudioManager {
     } catch {}
   }
 
-  /**
-   * Resonant magnetic click: dual-pulse tactile impulse.
-   */
   public playClick() {
     if (!this.isEnabled) return;
     try {
@@ -150,7 +180,6 @@ class AudioManager {
       if (!ctx) return;
       const now = ctx.currentTime;
 
-      // Primary tone
       const osc1 = ctx.createOscillator();
       const gain1 = ctx.createGain();
       osc1.type = 'sine';
@@ -163,7 +192,6 @@ class AudioManager {
       osc1.connect(gain1);
       gain1.connect(ctx.destination);
 
-      // Warm sub-click thud
       const osc2 = ctx.createOscillator();
       const gain2 = ctx.createGain();
       osc2.type = 'triangle';
@@ -183,9 +211,6 @@ class AudioManager {
     } catch {}
   }
 
-  /**
-   * Tab switch / category filter: smooth sci-fi interface transition.
-   */
   public playTab() {
     if (!this.isEnabled) return;
     try {
@@ -216,9 +241,6 @@ class AudioManager {
     } catch {}
   }
 
-  /**
-   * Modal Open: dimensional whoosh with ascending filter sweep.
-   */
   public playModalOpen() {
     if (!this.isEnabled) return;
     try {
@@ -250,9 +272,6 @@ class AudioManager {
     } catch {}
   }
 
-  /**
-   * Modal Close: descending smooth whoosh.
-   */
   public playModalClose() {
     if (!this.isEnabled) return;
     try {
@@ -278,9 +297,6 @@ class AudioManager {
     } catch {}
   }
 
-  /**
-   * Copy to clipboard / confirmation success: celestial ascending major triad (A4 - C#5 - E5).
-   */
   public playSuccess() {
     if (!this.isEnabled) return;
     try {
@@ -288,9 +304,7 @@ class AudioManager {
       if (!ctx) return;
       const now = ctx.currentTime;
 
-      // A major chord triad: 440Hz, 554.37Hz, 659.25Hz
       const notes = [440, 554.37, 659.25];
-
       notes.forEach((freq, idx) => {
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
@@ -311,16 +325,12 @@ class AudioManager {
     } catch {}
   }
 
-  /**
-   * Sound activation boot chime (unmistakable confirmation that sound is ON).
-   */
   private playActivateChime() {
     try {
       const ctx = this.getContext();
       if (!ctx) return;
       const now = ctx.currentTime;
 
-      // Ascending futuristic chime: E4 (329.6), A4 (440), C#5 (554.4)
       const pitches = [329.63, 440.0, 554.37];
       pitches.forEach((freq, i) => {
         const osc = ctx.createOscillator();
@@ -340,9 +350,6 @@ class AudioManager {
     } catch {}
   }
 
-  /**
-   * Sound deactivation power-down tone.
-   */
   private playDeactivateChime() {
     try {
       const ctx = this.getContext();
@@ -369,18 +376,11 @@ class AudioManager {
   }
 
   // ============================================================================
-  // Celestial Space Ambient Drone (Warm, Immersive, Comfortable & Audibile)
-  // Inspired by Interstellar / Brian Eno / Blade Runner 2049
-  //
-  // Chord Architecture: Ethereal A minor / Space Pad
-  // - A2 (110.00 Hz): warm foundation, audible on all laptop speakers
-  // - E3 (164.81 Hz): perfect fifth body, rich grounding
-  // - A3 (220.00 Hz): pure center harmonic presence
-  // - C4 (261.63 Hz): soft minor third mystery
-  // - E4 (329.63 Hz): high shimmer warmth
-  //
-  // Master Filter: Gentle 650Hz lowpass modulated by ultra-slow 22s breathing LFO
-  // Master Volume: 0.32 (solid, clear, luxurious, completely fatigue-free)
+  // Procedural Space Ambient Music Engine (Real Musical Composition)
+  // Generates genuine musical movement:
+  // - Atmospheric pad chords that change every 4 measures
+  // - Warm round bass notes supporting the harmony
+  // - Relaxing, celestial Rhodes/synth-bell melodic arpeggios
   // ============================================================================
 
   public startAmbience() {
@@ -391,172 +391,243 @@ class AudioManager {
 
       const now = ctx.currentTime;
 
-      // 1. Master Ambient Gain with smooth 1.8s fade-in
+      // 1. Master Music Bus Gain (smooth 1.5s fade-in to comfortable ~26% volume)
       const masterGain = ctx.createGain();
       masterGain.gain.setValueAtTime(0.0001, now);
-      masterGain.gain.linearRampToValueAtTime(0.32, now + 1.8);
+      masterGain.gain.linearRampToValueAtTime(0.26, now + 1.5);
       masterGain.connect(ctx.destination);
-      this.masterGain = masterGain;
+      this.masterMusicGain = masterGain;
 
-      // 2. Warm Lowpass Resonant Filter (central cutoff 680Hz)
-      // Allows warm chord harmonics through while cutting harsh frequencies
+      // 2. Warm Musical Filter (1100Hz cutoff allows melodic bells through softly)
       const filter = ctx.createBiquadFilter();
       filter.type = 'lowpass';
-      filter.frequency.setValueAtTime(680, now);
-      filter.Q.setValueAtTime(1.4, now);
+      filter.frequency.setValueAtTime(1100, now);
+      filter.Q.setValueAtTime(1.0, now);
       filter.connect(masterGain);
-      this.ambientFilter = filter;
-
-      // 3. Cosmic Breathing LFO (~22 second slow orbital cycle)
-      const lfo = ctx.createOscillator();
-      const lfoGain = ctx.createGain();
-      lfo.type = 'sine';
-      lfo.frequency.setValueAtTime(0.045, now); // ~22s period
-      lfoGain.gain.setValueAtTime(110, now);    // Modulates cutoff ±110Hz (570Hz to 790Hz)
-      lfo.connect(lfoGain);
-      lfoGain.connect(filter.frequency);
-      lfo.start(now);
-      this.lfoOsc = lfo;
-      this.lfoGain = lfoGain;
-
-      // 4. Harmonic Space Pad Voices:
-      // Multi-layer warm chord with micro-detuning for lush stereo expansion
-      const voices = [
-        { freq: 110.00, vol: 0.38, type: 'sine' as OscillatorType, detune: -1.2 },    // A2 (Foundation)
-        { freq: 110.00, vol: 0.28, type: 'triangle' as OscillatorType, detune: 1.8 }, // A2 (Warmth)
-        { freq: 164.81, vol: 0.32, type: 'sine' as OscillatorType, detune: 2.1 },    // E3 (Fifth)
-        { freq: 220.00, vol: 0.28, type: 'sine' as OscillatorType, detune: -1.8 },   // A3 (Octave)
-        { freq: 261.63, vol: 0.20, type: 'triangle' as OscillatorType, detune: 1.0 }, // C4 (Minor Third)
-        { freq: 329.63, vol: 0.16, type: 'sine' as OscillatorType, detune: 2.4 },    // E4 (Shimmer)
-      ];
-
-      this.droneOscillators = [];
-      this.droneGains = [];
-
-      voices.forEach((v) => {
-        const osc = ctx.createOscillator();
-        const oscGain = ctx.createGain();
-
-        osc.type = v.type;
-        osc.frequency.setValueAtTime(v.freq, now);
-        osc.detune.setValueAtTime(v.detune, now);
-
-        // Individual voice gain
-        oscGain.gain.setValueAtTime(v.vol, now);
-
-        osc.connect(oscGain);
-        oscGain.connect(filter);
-        osc.start(now);
-
-        this.droneOscillators.push(osc);
-        this.droneGains.push(oscGain);
-      });
-
-      // 5. Stardust Cosmic Noise Floor (gentle bandpass filtered texture)
-      try {
-        const sampleRate = ctx.sampleRate;
-        const bufferSize = sampleRate * 3;
-        const noiseBuffer = ctx.createBuffer(1, bufferSize, sampleRate);
-        const data = noiseBuffer.getChannelData(0);
-        let b0 = 0, b1 = 0, b2 = 0;
-
-        // Pink noise filtering
-        for (let i = 0; i < bufferSize; i++) {
-          const white = Math.random() * 2 - 1;
-          b0 = 0.99886 * b0 + white * 0.0555179;
-          b1 = 0.99332 * b1 + white * 0.0750759;
-          b2 = 0.96900 * b2 + white * 0.1538520;
-          data[i] = (b0 + b1 + b2 + white * 0.5362) * 0.11;
-        }
-
-        const noise = ctx.createBufferSource();
-        noise.buffer = noiseBuffer;
-        noise.loop = true;
-        this.noiseSource = noise;
-
-        const noiseFilter = ctx.createBiquadFilter();
-        noiseFilter.type = 'bandpass';
-        noiseFilter.frequency.setValueAtTime(450, now);
-        noiseFilter.Q.setValueAtTime(1.0, now);
-
-        const noiseGain = ctx.createGain();
-        noiseGain.gain.setValueAtTime(0.04, now);
-        this.noiseGain = noiseGain;
-
-        noise.connect(noiseFilter);
-        noiseFilter.connect(noiseGain);
-        noiseGain.connect(masterGain);
-        noise.start(now);
-      } catch {}
+      this.musicFilter = filter;
 
       this.isPlayingAmbience = true;
+      this.currentBeat = 0;
+      this.currentChordIdx = 0;
+
+      // Tempo: 64 BPM -> 1 beat = 0.9375 seconds
+      const secondsPerBeat = 60 / 64;
+      this.nextBeatTime = now + 0.1;
+
+      // Start by playing the first chord immediately
+      this.triggerChord(now, this.chords[0]);
+
+      // Sequencer lookahead loop (checks every 50ms, schedules ahead by 200ms)
+      this.sequencerTimer = setInterval(() => {
+        if (!this.isPlayingAmbience || !this.ctx) return;
+        const currentCtxTime = this.ctx.currentTime;
+
+        while (this.nextBeatTime < currentCtxTime + 0.2) {
+          this.scheduleBeat(this.nextBeatTime, this.currentBeat);
+          this.nextBeatTime += secondsPerBeat;
+          this.currentBeat = (this.currentBeat + 1) % 16; // 4 measures of 4 beats
+        }
+      }, 50);
+
     } catch {
       this.isPlayingAmbience = false;
     }
   }
 
-  // ============================================================================
-  // Kinetic Audio-Visual Modulation
-  // Fast mouse movement or scrolling smoothly opens the filter
-  // ============================================================================
+  /**
+   * Schedules rhythmic musical events on each beat.
+   */
+  private scheduleBeat(time: number, beat: number) {
+    if (!this.ctx || !this.musicFilter) return;
 
+    // A measure has 4 beats. Chord changes every 4 beats (1 measure per chord)
+    const chordIndex = Math.floor(beat / 4);
+    const isNewChord = beat % 4 === 0;
+    const chord = this.chords[chordIndex % this.chords.length];
+
+    // If starting a new measure, transition to the new chord pad & bass
+    if (isNewChord) {
+      this.triggerChord(time, chord);
+    }
+
+    // Play gentle melodic bell notes on beats 0, 1.5, 2, 3 (rhythmic musical pattern)
+    // Beat 0: root melodic note
+    // Beat 1: passing note
+    // Beat 2: accent note
+    // Beat 3: resolution note
+    const melodyIndex = (beat * 2 + Math.floor(beat / 3)) % chord.melodyPool.length;
+    const freq = chord.melodyPool[melodyIndex];
+
+    // Only play on selected rhythmic accents to feel like a real relaxing melody, not busy noise
+    if (beat % 2 === 0 || beat === 3) {
+      this.triggerMelodyNote(time, freq);
+    }
+
+    // Occasional gentle eighth-note syncopation on beat 1.5
+    if (beat === 1) {
+      const syncoTime = time + (60 / 64) * 0.5;
+      const syncoFreq = chord.melodyPool[(melodyIndex + 2) % chord.melodyPool.length];
+      this.triggerMelodyNote(syncoTime, syncoFreq, 0.05);
+    }
+  }
+
+  /**
+   * Triggers a warm sustained pad chord and supporting bass.
+   */
+  private triggerChord(time: number, chord: MusicalChord) {
+    if (!this.ctx || !this.musicFilter) return;
+
+    // Fade out previous pad voices gently over 1.2s
+    const oldPads = [...this.currentPadOscs];
+    const oldBass = [...this.currentBassOsc];
+    this.currentPadOscs = [];
+    this.currentBassOsc = [];
+
+    oldPads.forEach(({ osc, gain }) => {
+      try {
+        gain.gain.linearRampToValueAtTime(0.0001, time + 1.2);
+        osc.stop(time + 1.25);
+        setTimeout(() => osc.disconnect(), 1300);
+      } catch {}
+    });
+
+    oldBass.forEach(({ osc, gain }) => {
+      try {
+        gain.gain.linearRampToValueAtTime(0.0001, time + 0.8);
+        osc.stop(time + 0.85);
+        setTimeout(() => osc.disconnect(), 900);
+      } catch {}
+    });
+
+    // 1. Warm Bass Note (Sine + subtle triangle)
+    try {
+      const bassOsc = this.ctx.createOscillator();
+      const bassGain = this.ctx.createGain();
+
+      bassOsc.type = 'sine';
+      bassOsc.frequency.setValueAtTime(chord.bass, time);
+
+      bassGain.gain.setValueAtTime(0.0001, time);
+      bassGain.gain.linearRampToValueAtTime(0.24, time + 0.35);
+      bassGain.gain.linearRampToValueAtTime(0.12, time + 2.5);
+      bassGain.gain.linearRampToValueAtTime(0.0001, time + 3.8);
+
+      bassOsc.connect(bassGain);
+      bassGain.connect(this.musicFilter);
+      bassOsc.start(time);
+      bassOsc.stop(time + 3.8);
+
+      this.currentBassOsc.push({ osc: bassOsc, gain: bassGain });
+    } catch {}
+
+    // 2. Swelling Pad Chord (Soft Sine Voices with micro-detune)
+    chord.padNotes.forEach((noteFreq, idx) => {
+      if (!this.ctx || !this.musicFilter) return;
+      try {
+        const padOsc = this.ctx.createOscillator();
+        const padGain = this.ctx.createGain();
+
+        padOsc.type = idx % 2 === 0 ? 'sine' : 'triangle';
+        padOsc.frequency.setValueAtTime(noteFreq, time);
+        padOsc.detune.setValueAtTime(idx === 0 ? 0 : (idx % 2 === 0 ? 1.8 : -1.8), time);
+
+        const targetVol = idx === 0 ? 0.16 : 0.11;
+        padGain.gain.setValueAtTime(0.0001, time);
+        padGain.gain.linearRampToValueAtTime(targetVol, time + 1.0);
+        padGain.gain.linearRampToValueAtTime(targetVol * 0.8, time + 3.0);
+        padGain.gain.linearRampToValueAtTime(0.0001, time + 3.9);
+
+        padOsc.connect(padGain);
+        padGain.connect(this.musicFilter);
+        padOsc.start(time);
+        padOsc.stop(time + 3.9);
+
+        this.currentPadOscs.push({ osc: padOsc, gain: padGain });
+      } catch {}
+    });
+  }
+
+  /**
+   * Triggers a sweet, warm synth bell / Rhodes melodic note.
+   */
+  private triggerMelodyNote(time: number, freq: number, volume: number = 0.08) {
+    if (!this.ctx || !this.musicFilter) return;
+    try {
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, time);
+
+      // Sweet percussive bell envelope: quick 10ms attack, gentle 700ms decay
+      gain.gain.setValueAtTime(0.0001, time);
+      gain.gain.linearRampToValueAtTime(volume, time + 0.015);
+      gain.gain.exponentialRampToValueAtTime(0.0001, time + 0.75);
+
+      osc.connect(gain);
+      gain.connect(this.musicFilter);
+
+      osc.start(time);
+      osc.stop(time + 0.75);
+    } catch {}
+  }
+
+  /**
+   * Kinetic interaction: moving the mouse or scrolling smoothly opens the music filter.
+   */
   public onKineticDisturbance(speed: number) {
-    if (!this.isEnabled || !this.isPlayingAmbience || !this.ctx || !this.ambientFilter) return;
+    if (!this.isEnabled || !this.isPlayingAmbience || !this.ctx || !this.musicFilter) return;
 
     const now = this.ctx.currentTime;
     const clampedSpeed = Math.min(Math.max(speed, 0), 2.5);
-    if (clampedSpeed < 0.06) return;
+    if (clampedSpeed < 0.08) return;
 
-    if (now - this.lastKineticTime < 0.07) return;
+    if (now - this.lastKineticTime < 0.08) return;
     this.lastKineticTime = now;
 
     try {
-      const targetFreq = 680 + clampedSpeed * 120;
-      this.ambientFilter.frequency.cancelScheduledValues(now);
-      this.ambientFilter.frequency.setValueAtTime(this.ambientFilter.frequency.value, now);
-      this.ambientFilter.frequency.linearRampToValueAtTime(targetFreq, now + 0.09);
-      this.ambientFilter.frequency.linearRampToValueAtTime(680, now + 0.85);
+      const targetFreq = 1100 + clampedSpeed * 150;
+      this.musicFilter.frequency.cancelScheduledValues(now);
+      this.musicFilter.frequency.setValueAtTime(this.musicFilter.frequency.value, now);
+      this.musicFilter.frequency.linearRampToValueAtTime(targetFreq, now + 0.1);
+      this.musicFilter.frequency.linearRampToValueAtTime(1100, now + 0.9);
     } catch {}
   }
 
   public stopAmbience() {
     if (!this.isPlayingAmbience) return;
     try {
-      if (this.masterGain && this.ctx) {
+      if (this.sequencerTimer) {
+        clearInterval(this.sequencerTimer);
+        this.sequencerTimer = null;
+      }
+
+      if (this.masterMusicGain && this.ctx) {
         const now = this.ctx.currentTime;
-        this.masterGain.gain.cancelScheduledValues(now);
-        this.masterGain.gain.setValueAtTime(this.masterGain.gain.value, now);
-        this.masterGain.gain.linearRampToValueAtTime(0.0001, now + 0.5);
+        this.masterMusicGain.gain.cancelScheduledValues(now);
+        this.masterMusicGain.gain.setValueAtTime(this.masterMusicGain.gain.value, now);
+        this.masterMusicGain.gain.linearRampToValueAtTime(0.0001, now + 0.5);
 
         setTimeout(() => {
-          this.droneOscillators.forEach((osc) => {
+          this.currentPadOscs.forEach(({ osc }) => {
             try {
               osc.stop();
               osc.disconnect();
             } catch {}
           });
-          this.droneOscillators = [];
-          this.droneGains = [];
+          this.currentPadOscs = [];
 
-          if (this.noiseSource) {
+          this.currentBassOsc.forEach(({ osc }) => {
             try {
-              this.noiseSource.stop();
-              this.noiseSource.disconnect();
+              osc.stop();
+              osc.disconnect();
             } catch {}
-            this.noiseSource = null;
-          }
+          });
+          this.currentBassOsc = [];
 
-          if (this.lfoOsc) {
-            try {
-              this.lfoOsc.stop();
-              this.lfoOsc.disconnect();
-            } catch {}
-            this.lfoOsc = null;
-          }
-
-          if (this.masterGain) {
-            this.masterGain.disconnect();
-            this.masterGain = null;
+          if (this.masterMusicGain) {
+            this.masterMusicGain.disconnect();
+            this.masterMusicGain = null;
           }
           this.isPlayingAmbience = false;
         }, 550);

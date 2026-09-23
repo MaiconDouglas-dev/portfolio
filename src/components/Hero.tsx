@@ -73,11 +73,12 @@ export default function Hero() {
                 </button>
               </MagneticButton>
 
-              <MagneticButton strength={0.25}>
+              <MagneticButton strength={0.08}>
                 <a
                   href="https://wa.me/5511937184412?text=Ol%C3%A1%20Maicon%2C%20vi%20seu%20portf%C3%B3lio%20e%20gostaria%20de%20conversar!"
                   target="_blank"
                   rel="noopener noreferrer"
+                  data-cursor-text="WHATSAPP"
                   className="inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-white/[0.1] bg-black/80 text-neutral-200 font-semibold text-xs hover:border-appleRed-500/40 hover:text-white transition-all cursor-pointer backdrop-blur-md"
                 >
                   <MessageSquare size={14} className="text-appleRed-500" />
@@ -87,31 +88,34 @@ export default function Hero() {
 
               {/* Social Icons Inline with Magnetic Physics */}
               <div className="flex items-center gap-1.5 pl-2">
-                <MagneticButton strength={0.35}>
+                <MagneticButton strength={0.12}>
                   <a
                     href="https://github.com/MaiconDouglas-dev"
                     target="_blank"
                     rel="noopener noreferrer"
+                    data-cursor-text="GITHUB"
                     className="p-2.5 rounded-lg border border-white/[0.08] text-neutral-400 hover:text-white hover:border-white/20 transition-all block"
                   >
                     <Github size={16} />
                   </a>
                 </MagneticButton>
 
-                <MagneticButton strength={0.35}>
+                <MagneticButton strength={0.12}>
                   <a
                     href="https://www.linkedin.com/in/maicon-douglas-b244571b5/"
                     target="_blank"
                     rel="noopener noreferrer"
+                    data-cursor-text="LINKEDIN"
                     className="p-2.5 rounded-lg border border-white/[0.08] text-neutral-400 hover:text-appleBlue-400 hover:border-appleBlue-500/30 transition-all block"
                   >
                     <Linkedin size={16} />
                   </a>
                 </MagneticButton>
 
-                <MagneticButton strength={0.35}>
+                <MagneticButton strength={0.12}>
                   <a
                     href="mailto:maicondouglasdev1@gmail.com"
+                    data-cursor-text="E-MAIL"
                     className="p-2.5 rounded-lg border border-white/[0.08] text-neutral-400 hover:text-appleRed-400 hover:border-appleRed-500/30 transition-all block"
                   >
                     <Mail size={16} />
