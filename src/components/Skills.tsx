@@ -143,7 +143,7 @@ export default function Skills() {
                           {lang === 'pt' ? 'Tecnologias & Tópicos:' : 'Technologies & Topics:'}
                         </span>
                         <div className="flex flex-wrap gap-1.5">
-                          {group.items.map((item, idx) => (
+                          {(lang === 'pt' ? (group.itemsPt || group.items || []) : (group.itemsEn || group.items || [])).map((item, idx) => (
                             <span
                               key={idx}
                               className="px-2.5 py-1 rounded-lg text-xs font-medium bg-white/[0.05] text-neutral-200 border border-white/[0.08] hover:border-appleRed-500/40 hover:text-white transition-all cursor-default"
@@ -200,7 +200,7 @@ export default function Skills() {
                     </div>
 
                     <div className="flex flex-wrap gap-1.5 pt-2 border-t border-white/[0.04]">
-                      {group.items.map((item, idx) => (
+                      {(lang === 'pt' ? (group.itemsPt || group.items || []) : (group.itemsEn || group.items || [])).map((item, idx) => (
                         <span
                           key={idx}
                           className="px-2.5 py-1 rounded-md text-xs font-mono bg-white/[0.03] text-neutral-400 border border-white/[0.05] hover:text-neutral-200"
@@ -239,7 +239,7 @@ export default function Skills() {
                     </div>
 
                     <div className="flex flex-wrap gap-1.5 pt-2 border-t border-white/[0.04]">
-                      {group.items.map((item, idx) => (
+                      {(lang === 'pt' ? (group.itemsPt || group.items || []) : (group.itemsEn || group.items || [])).map((item, idx) => (
                         <span
                           key={idx}
                           className="px-2.5 py-1 rounded-md text-xs font-mono bg-white/[0.03] text-neutral-400 border border-white/[0.05] hover:text-neutral-200"

@@ -23,15 +23,35 @@ export const projects: Project[] = [
       'Docker',
       'Swagger / OpenAPI'
     ],
+    tagsPt: [
+      'Java 21',
+      'Spring Boot 3',
+      'APIs REST',
+      'Spring Security',
+      'Oracle Database',
+      'PL/SQL',
+      'Docker',
+      'Swagger / OpenAPI'
+    ],
+    tagsEn: [
+      'Java 21',
+      'Spring Boot 3',
+      'REST APIs',
+      'Spring Security',
+      'Oracle Database',
+      'PL/SQL',
+      'Docker',
+      'Swagger / OpenAPI'
+    ],
     githubUrl: 'https://github.com/MaiconDouglas-dev',
     hasSwaggerModal: true,
     hasArchitectureModal: true,
     isPlaceholder: false,
     metrics: [
-      { labelPt: 'Controle de Acesso', labelEn: 'Access Control', value: 'RBAC (Roles)' },
-      { labelPt: 'Banco de Dados', labelEn: 'Database', value: 'Oracle Database' },
-      { labelPt: 'Rotinas & Dados', labelEn: 'Data Logic', value: 'PL/SQL' },
-      { labelPt: 'Documentação', labelEn: 'Documentation', value: 'Swagger / OpenAPI' },
+      { labelPt: 'Controle de Acesso', labelEn: 'Access Control', valuePt: 'RBAC (Roles)', valueEn: 'RBAC (Roles)', value: 'RBAC (Roles)' },
+      { labelPt: 'Banco de Dados', labelEn: 'Database', valuePt: 'Oracle Database', valueEn: 'Oracle Database', value: 'Oracle Database' },
+      { labelPt: 'Rotinas & Dados', labelEn: 'Data Logic', valuePt: 'PL/SQL', valueEn: 'PL/SQL', value: 'PL/SQL' },
+      { labelPt: 'Documentação', labelEn: 'Documentation', valuePt: 'Swagger / OpenAPI', valueEn: 'Swagger / OpenAPI', value: 'Swagger / OpenAPI' },
     ],
     architectureHighlightsPt: [
       'Autenticação com Spring Security e controle de acesso por perfil (ROLE_TUTOR, ROLE_VETERINARIO, ROLE_CLINICA).',
@@ -67,15 +87,33 @@ export const projects: Project[] = [
       'Docker',
       'Swagger / OpenAPI'
     ],
+    tagsPt: [
+      'Java 21',
+      'Spring Boot 3',
+      'APIs REST',
+      'Spring Data JPA',
+      'Banco Relacional',
+      'Docker',
+      'Swagger / OpenAPI'
+    ],
+    tagsEn: [
+      'Java 21',
+      'Spring Boot 3',
+      'REST APIs',
+      'Spring Data JPA',
+      'Relational Database',
+      'Docker',
+      'Swagger / OpenAPI'
+    ],
     githubUrl: 'https://github.com/MaiconDouglas-dev',
     hasSwaggerModal: false,
     hasArchitectureModal: false,
     isPlaceholder: true,
     metrics: [
-      { labelPt: 'Status', labelEn: 'Status', value: 'Slot Disponível' },
-      { labelPt: 'Arquitetura', labelEn: 'Architecture', value: 'RESTful API' },
-      { labelPt: 'Persistência', labelEn: 'Persistence', value: 'JPA / Hibernate' },
-      { labelPt: 'Deploy', labelEn: 'Deployment', value: 'Docker' }
+      { labelPt: 'Status', labelEn: 'Status', valuePt: 'Slot Disponível', valueEn: 'Available Slot', value: 'Slot Disponível' },
+      { labelPt: 'Arquitetura', labelEn: 'Architecture', valuePt: 'RESTful API', valueEn: 'RESTful API', value: 'RESTful API' },
+      { labelPt: 'Persistência', labelEn: 'Persistence', valuePt: 'JPA / Hibernate', valueEn: 'JPA / Hibernate', value: 'JPA / Hibernate' },
+      { labelPt: 'Deploy', labelEn: 'Deployment', valuePt: 'Docker', valueEn: 'Docker', value: 'Docker' }
     ]
   },
   {
@@ -98,15 +136,31 @@ export const projects: Project[] = [
       'JUnit 5',
       'Docker Compose'
     ],
+    tagsPt: [
+      'Java',
+      'Spring Boot',
+      'Redis / Cache',
+      'RabbitMQ / Kafka',
+      'JUnit 5',
+      'Docker Compose'
+    ],
+    tagsEn: [
+      'Java',
+      'Spring Boot',
+      'Redis / Cache',
+      'RabbitMQ / Kafka',
+      'JUnit 5',
+      'Docker Compose'
+    ],
     githubUrl: 'https://github.com/MaiconDouglas-dev',
     hasSwaggerModal: false,
     hasArchitectureModal: false,
     isPlaceholder: true,
     metrics: [
-      { labelPt: 'Status', labelEn: 'Status', value: 'Slot Disponível' },
-      { labelPt: 'Processamento', labelEn: 'Processing', value: 'Assíncrono' },
-      { labelPt: 'Testes', labelEn: 'Testing', value: 'JUnit 5' },
-      { labelPt: 'Ambiente', labelEn: 'Environment', value: 'Containerizado' }
+      { labelPt: 'Status', labelEn: 'Status', valuePt: 'Slot Disponível', valueEn: 'Available Slot', value: 'Slot Disponível' },
+      { labelPt: 'Processamento', labelEn: 'Processing', valuePt: 'Assíncrono', valueEn: 'Asynchronous', value: 'Assíncrono' },
+      { labelPt: 'Testes', labelEn: 'Testing', valuePt: 'JUnit 5', valueEn: 'JUnit 5', value: 'JUnit 5' },
+      { labelPt: 'Ambiente', labelEn: 'Environment', valuePt: 'Containerizado', valueEn: 'Containerized', value: 'Containerizado' }
     ]
   },
   {
@@ -129,15 +183,31 @@ export const projects: Project[] = [
       'CI/CD Pipelines',
       'Linux'
     ],
+    tagsPt: [
+      'Java 21',
+      'Spring Boot 3',
+      'Microsoft Azure',
+      'Docker',
+      'Pipelines CI/CD',
+      'Linux'
+    ],
+    tagsEn: [
+      'Java 21',
+      'Spring Boot 3',
+      'Microsoft Azure',
+      'Docker',
+      'CI/CD Pipelines',
+      'Linux'
+    ],
     githubUrl: 'https://github.com/MaiconDouglas-dev',
     hasSwaggerModal: false,
     hasArchitectureModal: false,
     isPlaceholder: true,
     metrics: [
-      { labelPt: 'Status', labelEn: 'Status', value: 'Slot Disponível' },
-      { labelPt: 'Nuvem', labelEn: 'Cloud Provider', value: 'Microsoft Azure' },
-      { labelPt: 'CI/CD', labelEn: 'CI/CD', value: 'GitHub Actions' },
-      { labelPt: 'Monitoramento', labelEn: 'Monitoring', value: 'Spring Actuator' }
+      { labelPt: 'Status', labelEn: 'Status', valuePt: 'Slot Disponível', valueEn: 'Available Slot', value: 'Slot Disponível' },
+      { labelPt: 'Nuvem', labelEn: 'Cloud Provider', valuePt: 'Microsoft Azure', valueEn: 'Microsoft Azure', value: 'Microsoft Azure' },
+      { labelPt: 'CI/CD', labelEn: 'CI/CD', valuePt: 'GitHub Actions', valueEn: 'GitHub Actions', value: 'GitHub Actions' },
+      { labelPt: 'Monitoramento', labelEn: 'Monitoring', valuePt: 'Spring Actuator', valueEn: 'Spring Actuator', value: 'Spring Actuator' }
     ]
   }
 ];

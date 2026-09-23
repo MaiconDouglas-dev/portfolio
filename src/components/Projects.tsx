@@ -9,6 +9,7 @@ import ApiSwaggerModal from './ApiSwaggerModal';
 import KineticText from './KineticText';
 import MagneticButton from './MagneticButton';
 import FuturisticCard from './FuturisticCard';
+import { soundManager } from '@/utils/audio';
 
 export default function Projects() {
   const { lang } = useApp();
@@ -37,9 +38,16 @@ export default function Projects() {
   }, []);
 
   const scrollToProject = (id: string) => {
+    soundManager.playTab();
     const el = document.getElementById(`project-card-${id}`);
     if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const navAndStepperOffset = 152;
+      const elementPosition = el.getBoundingClientRect().top + window.scrollY;
+      const offsetPosition = elementPosition - navAndStepperOffset;
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth',
+      });
     }
   };
 
@@ -89,34 +97,40 @@ export default function Projects() {
 
   return (
     <section id="projects" className="py-24 sm:py-32 border-t border-white/[0.06] relative">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10 sm:space-y-14">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10 sm:space-y-12">
         
-        {/* Section Header & Lusion-inspired Project Stepper */}
-        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
-          <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-appleRed-500/20 bg-appleRed-500/10">
-              <span className="w-1.5 h-1.5 rounded-full bg-appleRed-500 animate-pulse" />
-              <span className="text-xs font-mono font-bold text-appleRed-400 uppercase tracking-widest">
-                {lang === 'pt' ? 'PROJETOS & DESENVOLVIMENTO // 04 RELEASES' : 'PROJECTS & RELEASES // 04 SLOTS'}
-              </span>
-            </div>
+        {/* Section Header */}
+        <div className="space-y-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-appleRed-500/20 bg-appleRed-500/10">
+            <span className="w-1.5 h-1.5 rounded-full bg-appleRed-500 animate-pulse" />
+            <span className="text-xs font-mono font-bold text-appleRed-400 uppercase tracking-widest">
+              {lang === 'pt' ? 'PROJETOS & DESENVOLVIMENTO // 04 RELEASES' : 'PROJECTS & RELEASES // 04 SLOTS'}
+            </span>
+          </div>
 
-            <KineticText
-              text={lang === 'pt' ? 'Projetos & Desenvolvimento' : 'Projects & Development'}
-              as="h2"
-              staggerDelayMs={18}
-              className="text-2xl sm:text-4xl font-black text-white tracking-tight"
-            />
+          <KineticText
+            text={lang === 'pt' ? 'Projetos & Desenvolvimento' : 'Projects & Development'}
+            as="h2"
+            staggerDelayMs={18}
+            className="text-2xl sm:text-4xl font-black text-white tracking-tight"
+          />
 
-            <p className="text-xs sm:text-sm text-neutral-400 max-w-xl leading-relaxed">
-              {lang === 'pt'
-                ? 'Arquitetura backend em Java, APIs REST, modelagem relacional no Oracle, microsserviços e integração contínua.'
-                : 'Backend architecture in Java, REST APIs, Oracle relational data modeling, microservices, and continuous delivery.'}
-            </p>
+          <p className="text-xs sm:text-sm text-neutral-400 max-w-2xl leading-relaxed">
+            {lang === 'pt'
+              ? 'Arquitetura backend em Java, APIs REST, modelagem relacional no Oracle, microsserviços e integração contínua.'
+              : 'Backend architecture in Java, REST APIs, Oracle relational data modeling, microservices, and continuous delivery.'}
+          </p>
+        </div>
+
+        {/* Sticky Project Stepper Navigation Bar (Always Visible During Stacking) */}
+        <div className="sticky top-20 z-30 py-2.5 px-3 sm:px-4 rounded-2xl bg-[#0a0a0f]/90 backdrop-blur-xl border border-white/[0.1] shadow-[0_12px_36px_rgba(0,0,0,0.8)] flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2 text-xs font-mono text-neutral-400 shrink-0 hidden sm:flex">
+            <Layers size={14} className="text-appleRed-500" />
+            <span className="font-semibold text-neutral-300">{lang === 'pt' ? 'RELEASES' : 'RELEASES'}:</span>
           </div>
 
           {/* Quick-Jump Stepper Pills (Touch Friendly & Horizontally Scrollable on Mobile) */}
-          <div className="flex items-center gap-1.5 p-1.5 rounded-2xl bg-white/[0.03] border border-white/[0.08] backdrop-blur-xl overflow-x-auto max-w-full no-scrollbar">
+          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar max-w-full w-full sm:w-auto">
             {projects.map((proj, idx) => {
               const isActive = activeProjectIdx === idx;
               const activeStyle = getActivePillStyle(idx);
@@ -125,21 +139,29 @@ export default function Projects() {
                 <MagneticButton key={proj.id} strength={0.2}>
                   <button
                     onClick={() => scrollToProject(proj.id)}
-                    className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-mono border transition-all duration-300 cursor-pointer whitespace-nowrap shrink-0 ${
+                    className={`inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-xs font-mono border transition-all duration-300 cursor-pointer whitespace-nowrap shrink-0 ${
                       isActive
                         ? activeStyle
-                        : 'border-transparent text-neutral-400 hover:text-white hover:bg-white/[0.06]'
+                        : 'border-white/[0.06] bg-white/[0.03] text-neutral-400 hover:text-white hover:bg-white/[0.08] hover:border-white/20'
                     }`}
                   >
-                    <span className="text-[10px] opacity-75 font-bold">{proj.number}</span>
-                    <span>{idx === 0 ? 'Clyvo (Vet)' : `Slot ${proj.number}`}</span>
-                    {proj.isPlaceholder && (
+                    <span className="text-[10px] opacity-80 font-bold">{proj.number}</span>
+                    <span className="font-medium">{idx === 0 ? 'Clyvo (Vet)' : `Slot ${proj.number}`}</span>
+                    {proj.isPlaceholder ? (
                       <span className="w-1.5 h-1.5 rounded-full bg-amber-400/90" />
+                    ) : (
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                     )}
                   </button>
                 </MagneticButton>
               );
             })}
+          </div>
+
+          <div className="hidden lg:flex items-center gap-2 text-[11px] font-mono text-neutral-400 shrink-0">
+            <span className="text-white font-bold">0{activeProjectIdx + 1}</span>
+            <span>/</span>
+            <span>04</span>
           </div>
         </div>
 
@@ -149,13 +171,15 @@ export default function Projects() {
             const isFirst = idx === 0;
             const glow = getGlowColor(idx);
             const badgeStyle = getBadgeStyle(idx);
-            const stackingTopOffset = `calc(4.75rem + ${idx * 14}px)`;
+            const stackingTopOffset = `calc(9.25rem + ${idx * 14}px)`;
+
+            const currentTags = lang === 'pt' ? (proj.tagsPt || proj.tags) : (proj.tagsEn || proj.tags);
 
             return (
               <div
                 key={proj.id}
                 id={`project-card-${proj.id}`}
-                className="sticky transition-all duration-300 will-change-transform"
+                className="sticky scroll-mt-40 transition-all duration-300 will-change-transform"
                 style={{ top: stackingTopOffset }}
               >
                 <FuturisticCard
@@ -218,7 +242,7 @@ export default function Projects() {
                             {lang === 'pt' ? m.labelPt : m.labelEn}
                           </span>
                           <span className="text-xs font-bold text-neutral-200 block truncate mt-0.5">
-                            {m.value}
+                            {lang === 'pt' ? (m.valuePt || m.value) : (m.valueEn || m.value)}
                           </span>
                         </div>
                       ))}
@@ -245,7 +269,7 @@ export default function Projects() {
 
                   {/* Tags */}
                   <div className="flex flex-wrap gap-1.5 sm:gap-2 relative z-10">
-                    {proj.tags.map((t) => (
+                    {currentTags.map((t) => (
                       <span
                         key={t}
                         className="px-2.5 py-1 text-xs font-mono rounded-lg bg-white/[0.04] text-neutral-300 border border-white/[0.06] hover:border-white/20 transition-colors"
@@ -261,7 +285,10 @@ export default function Projects() {
                       <>
                         <MagneticButton strength={0.25} className="w-full sm:w-auto">
                           <button
-                            onClick={() => setSwaggerModalOpen(true)}
+                            onClick={() => {
+                              soundManager.playModalOpen();
+                              setSwaggerModalOpen(true);
+                            }}
                             className="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-2.5 rounded-xl bg-gradient-to-r from-appleRed-600 to-rose-600 hover:from-appleRed-500 hover:to-rose-500 text-white font-semibold text-xs shadow-lg shadow-appleRed-500/20 hover:scale-[1.02] cursor-pointer transition-all"
                           >
                             <Terminal size={14} />
@@ -271,7 +298,10 @@ export default function Projects() {
 
                         <MagneticButton strength={0.25} className="w-full sm:w-auto">
                           <button
-                            onClick={() => setArchModalOpen(true)}
+                            onClick={() => {
+                              soundManager.playModalOpen();
+                              setArchModalOpen(true);
+                            }}
                             className="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-2.5 rounded-xl border border-white/[0.12] bg-white/[0.04] text-neutral-200 font-semibold text-xs hover:border-appleViolet-500/40 hover:text-white transition-all cursor-pointer backdrop-blur-md"
                           >
                             <Layers size={14} className="text-appleViolet-400" />

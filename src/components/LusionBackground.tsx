@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
+import { soundManager } from '@/utils/audio';
 
 export default function LusionBackground() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -574,6 +575,11 @@ export default function LusionBackground() {
       const scrollInertiaBoost = Math.min(scrollVelocity * 0.008, 0.8);
       const kineticBoost = THREE.MathUtils.clamp(mouse.speed * 8 + scrollInertiaBoost, 0, 1.8);
       const influenceRadius = 340 + kineticBoost * 90;
+
+      // Subtle interactive kinetic audio modulation
+      if (kineticBoost > 0.08) {
+        soundManager.onKineticDisturbance(kineticBoost);
+      }
 
       // 3D Camera Flight Path
       const baseCamY = 270 - Math.sin(scrollFraction * Math.PI) * 110 - scrollFraction * 60;

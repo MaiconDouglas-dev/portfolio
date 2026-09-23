@@ -1,6 +1,14 @@
 export type Language = 'pt' | 'en';
 export type Theme = 'dark' | 'light';
 
+export interface ProjectMetric {
+  labelPt: string;
+  labelEn: string;
+  valuePt?: string;
+  valueEn?: string;
+  value?: string;
+}
+
 export interface Project {
   id: string;
   featured: boolean;
@@ -14,15 +22,13 @@ export interface Project {
   descPt: string;
   descEn: string;
   tags: string[];
+  tagsPt?: string[];
+  tagsEn?: string[];
   githubUrl?: string;
   hasSwaggerModal?: boolean;
   hasArchitectureModal?: boolean;
   isPlaceholder?: boolean;
-  metrics?: {
-    labelPt: string;
-    labelEn: string;
-    value: string;
-  }[];
+  metrics?: ProjectMetric[];
   architectureHighlightsPt?: string[];
   architectureHighlightsEn?: string[];
 }
@@ -35,7 +41,7 @@ export interface SkillCategory {
   descriptionEn: string;
   items: {
     name: string;
-    level: string; // e.g., 'Avançado', 'Prático', 'Em Produção'
+    level: string;
     iconName: string;
     descriptionPt: string;
     descriptionEn: string;
