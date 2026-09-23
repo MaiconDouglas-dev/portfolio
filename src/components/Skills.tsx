@@ -5,6 +5,7 @@ import { useApp } from '@/context/AppContext';
 import { skillsInventory, SkillGroup } from '@/data/skills';
 import KineticText from './KineticText';
 import MagneticButton from './MagneticButton';
+import FuturisticCard from './FuturisticCard';
 import { Server, Database, Cloud, Code2, GraduationCap, Sparkles, CheckCircle2 } from 'lucide-react';
 
 export default function Skills() {
@@ -106,9 +107,13 @@ export default function Skills() {
                 .map((group) => {
                   const Icon = tabIcons[group.id] || Server;
                   return (
-                    <div
+                    <FuturisticCard
                       key={group.id}
-                      className="p-6 rounded-3xl border border-white/[0.1] bg-black/70 backdrop-blur-2xl space-y-5 hover:border-appleRed-500/30 transition-all duration-300 shadow-[0_4px_24px_rgba(0,0,0,0.6)] flex flex-col justify-between"
+                      glowColor="rgba(255, 45, 85, 0.2)"
+                      withTilt={true}
+                      withCorners={true}
+                      className="h-full border-white/[0.1] hover:border-appleRed-500/40 shadow-[0_4px_24px_rgba(0,0,0,0.6)]"
+                      contentClassName="p-6 flex flex-col justify-between h-full space-y-5"
                     >
                       <div className="space-y-3">
                         <div className="flex items-center justify-between gap-2">
@@ -142,7 +147,7 @@ export default function Skills() {
                           ))}
                         </div>
                       </div>
-                    </div>
+                    </FuturisticCard>
                   );
                 })}
             </div>
@@ -165,9 +170,13 @@ export default function Skills() {
               {/* Conhecimentos Complementares */}
               {(activeTab === 'all' || activeTab === 'complementary') &&
                 secondarySkills.map((group) => (
-                  <div
+                  <FuturisticCard
                     key={group.id}
-                    className="p-6 rounded-3xl border border-white/[0.06] bg-black/40 backdrop-blur-xl space-y-4 hover:border-white/[0.14] transition-all duration-300"
+                    glowColor="rgba(139, 92, 246, 0.15)"
+                    withTilt={true}
+                    withCorners={false}
+                    className="bg-black/40 border-white/[0.06] hover:border-white/[0.16]"
+                    contentClassName="p-6 space-y-4"
                   >
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
@@ -194,15 +203,19 @@ export default function Skills() {
                         </span>
                       ))}
                     </div>
-                  </div>
+                  </FuturisticCard>
                 ))}
 
               {/* Contato Acadêmico */}
               {(activeTab === 'all' || activeTab === 'academic-contact') &&
                 academicSkills.map((group) => (
-                  <div
+                  <FuturisticCard
                     key={group.id}
-                    className="p-6 rounded-3xl border border-white/[0.06] bg-black/40 backdrop-blur-xl space-y-4 hover:border-white/[0.14] transition-all duration-300"
+                    glowColor="rgba(59, 130, 246, 0.15)"
+                    withTilt={true}
+                    withCorners={false}
+                    className="bg-black/40 border-white/[0.06] hover:border-white/[0.16]"
+                    contentClassName="p-6 space-y-4"
                   >
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
@@ -229,7 +242,7 @@ export default function Skills() {
                         </span>
                       ))}
                     </div>
-                  </div>
+                  </FuturisticCard>
                 ))}
             </div>
           </div>

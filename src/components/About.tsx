@@ -4,6 +4,7 @@ import React from 'react';
 import { useApp } from '@/context/AppContext';
 import { GraduationCap, Server, Database, Cloud, Compass, Target } from 'lucide-react';
 import KineticText from './KineticText';
+import FuturisticCard from './FuturisticCard';
 
 export default function About() {
   const { lang } = useApp();
@@ -70,10 +71,20 @@ export default function About() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {pillars.map((item, idx) => {
             const Icon = item.icon;
+            const glow =
+              idx === 0
+                ? 'rgba(255, 45, 85, 0.2)'
+                : idx === 1
+                ? 'rgba(59, 130, 246, 0.18)'
+                : 'rgba(16, 185, 129, 0.18)';
             return (
-              <div
+              <FuturisticCard
                 key={idx}
-                className="p-6 sm:p-7 rounded-3xl border border-white/[0.08] bg-black/60 backdrop-blur-2xl hover:border-white/20 transition-all duration-300 space-y-4 group shadow-[0_4px_24px_rgba(0,0,0,0.6)] flex flex-col justify-between"
+                glowColor={glow}
+                withTilt={true}
+                withCorners={true}
+                className="h-full border-white/[0.08] hover:border-white/25 shadow-[0_4px_24px_rgba(0,0,0,0.6)]"
+                contentClassName="p-6 sm:p-7 flex flex-col justify-between h-full space-y-4 group"
               >
                 <div className="space-y-3">
                   <div className="w-10 h-10 rounded-2xl bg-white/[0.05] border border-white/[0.08] flex items-center justify-center text-appleRed-400 group-hover:scale-110 transition-transform">
@@ -86,13 +97,19 @@ export default function About() {
                     {lang === 'pt' ? item.descPt : item.descEn}
                   </p>
                 </div>
-              </div>
+              </FuturisticCard>
             );
           })}
         </div>
 
         {/* Multidisciplinary Foundation & Objective Banner */}
-        <div className="p-6 sm:p-8 rounded-3xl border border-white/[0.08] bg-black/60 backdrop-blur-2xl space-y-4 shadow-[0_4px_24px_rgba(0,0,0,0.6)]">
+        <FuturisticCard
+          glowColor="rgba(168, 85, 247, 0.18)"
+          withTilt={false}
+          withCorners={true}
+          className="border-white/[0.08] shadow-[0_4px_24px_rgba(0,0,0,0.6)]"
+          contentClassName="p-6 sm:p-8 space-y-4"
+        >
           <div className="flex items-start gap-3">
             <Compass size={20} className="text-appleViolet-400 shrink-0 mt-0.5" />
             <div className="space-y-2">
@@ -120,7 +137,7 @@ export default function About() {
               </p>
             </div>
           </div>
-        </div>
+        </FuturisticCard>
 
       </div>
     </section>

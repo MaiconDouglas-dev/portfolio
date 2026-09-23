@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import FuturisticCard from './FuturisticCard';
 
 export default function TerminalCard() {
   const [selectedCmd, setSelectedCmd] = useState<number>(0);
@@ -31,7 +32,12 @@ export default function TerminalCard() {
   const current = commands[selectedCmd];
 
   return (
-    <div className="rounded-2xl overflow-hidden border border-white/[0.08] bg-[#0c0c11] shadow-xl">
+    <FuturisticCard
+      withTilt={true}
+      withCorners={true}
+      glowColor="rgba(255, 45, 85, 0.22)"
+      className="!rounded-2xl border-white/[0.1] bg-[#0c0c11] shadow-2xl"
+    >
       {/* Top Bar */}
       <div className="flex items-center justify-between px-3.5 py-2.5 bg-black border-b border-white/[0.06]">
         <div className="flex items-center gap-1.5">
@@ -71,6 +77,6 @@ export default function TerminalCard() {
           {JSON.stringify(current.response, null, 2)}
         </pre>
       </div>
-    </div>
+    </FuturisticCard>
   );
 }

@@ -5,6 +5,7 @@ import { useApp } from '@/context/AppContext';
 import { Mail, Phone, Linkedin, Github, Copy, Check, ArrowUpRight } from 'lucide-react';
 import KineticText from './KineticText';
 import MagneticButton from './MagneticButton';
+import FuturisticCard from './FuturisticCard';
 
 export default function Contact() {
   const { lang } = useApp();
@@ -81,10 +82,22 @@ export default function Contact() {
           {channels.map((c) => {
             const Icon = c.icon;
             const isCopied = copiedKey === c.key;
+            const glow =
+              c.key === 'phone'
+                ? 'rgba(16, 185, 129, 0.2)'
+                : c.key === 'email'
+                ? 'rgba(255, 45, 85, 0.2)'
+                : c.key === 'linkedin'
+                ? 'rgba(59, 130, 246, 0.2)'
+                : 'rgba(168, 85, 247, 0.2)';
             return (
-              <div
+              <FuturisticCard
                 key={c.key}
-                className="p-5 rounded-2xl border border-white/[0.08] bg-black/50 backdrop-blur-2xl text-left space-y-3 flex flex-col justify-between hover:border-white/20 transition-all duration-300 shadow-[0_4px_20px_rgba(0,0,0,0.5)] group"
+                glowColor={glow}
+                withTilt={true}
+                withCorners={true}
+                className="!rounded-2xl border-white/[0.08] hover:border-white/20 shadow-[0_4px_20px_rgba(0,0,0,0.5)] group h-full"
+                contentClassName="p-5 text-left flex flex-col justify-between h-full space-y-3"
               >
                 <div>
                   <div className="flex items-center justify-between">
@@ -112,7 +125,7 @@ export default function Contact() {
                     <ArrowUpRight size={13} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                   </a>
                 </MagneticButton>
-              </div>
+              </FuturisticCard>
             );
           })}
         </div>

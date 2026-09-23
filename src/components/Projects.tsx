@@ -7,6 +7,7 @@ import ArchitectureModal from './ArchitectureModal';
 import ApiSwaggerModal from './ApiSwaggerModal';
 import KineticText from './KineticText';
 import MagneticButton from './MagneticButton';
+import FuturisticCard from './FuturisticCard';
 
 export default function Projects() {
   const { lang } = useApp();
@@ -31,7 +32,14 @@ export default function Projects() {
         </div>
 
         {/* Featured Card: Clyvo — Sistema de Gestão Veterinária */}
-        <div className="rounded-3xl border border-appleRed-500/30 bg-black/60 backdrop-blur-2xl p-6 sm:p-8 space-y-6 shadow-[0_10px_40px_rgba(255,45,85,0.08)] hover:border-appleRed-500/50 transition-all duration-300">
+        <FuturisticCard
+          withBorderBeam={true}
+          withTilt={true}
+          withCorners={true}
+          glowColor="rgba(255, 45, 85, 0.25)"
+          className="border-appleRed-500/30 shadow-[0_10px_40px_rgba(255,45,85,0.12)] hover:border-appleRed-500/60"
+          contentClassName="p-6 sm:p-8 space-y-6"
+        >
           <div className="flex flex-wrap items-center justify-between gap-2">
             <span className="px-3 py-1 rounded-full text-xs font-mono font-bold bg-appleRed-500/10 text-appleRed-400 border border-appleRed-500/20">
               {lang === 'pt' ? 'PROJETO PRINCIPAL' : 'FEATURED PROJECT'}
@@ -93,7 +101,7 @@ export default function Projects() {
               </a>
             </MagneticButton>
           </div>
-        </div>
+        </FuturisticCard>
 
       </div>
 
