@@ -326,8 +326,8 @@ export default function LusionBackground() {
     scene.add(terrainMesh);
 
     // ============================================================================
-    // 5. Authentic Twinkling Starfield & Galaxy River (Custom Star Shader)
-    // Ethereal celestial glow, stellar scintillation, and astronomical diffraction flares
+    // 5. Authentic Realistic White Starfield (Astronomical Diamond-White Stars)
+    // Pure white spectrum with natural twinkling, uniform elegant sizing
     // ============================================================================
     const starCount = isMobile ? 480 : 850;
     const starPositions = new Float32Array(starCount * 3);
@@ -336,14 +336,14 @@ export default function LusionBackground() {
     const starTwinkleSpeeds = new Float32Array(starCount);
     const starTwinklePhases = new Float32Array(starCount);
 
-    // Star color temperatures (Sirius blue-white, Apple ruby red dwarf, gold sun, white-hot, violet pulsar)
+    // Realistic astronomical white star temperatures (pure diamond white & subtle silver white)
     const starPalette = [
-      new THREE.Color(0xffffff), // Pure brilliant white
-      new THREE.Color(0xb5dcff), // Deep cyan-blue (Class O/B)
-      new THREE.Color(0xffe082), // Golden Amber (Class G/K)
-      new THREE.Color(0xff4d6d), // Apple Ruby (Red Supergiant)
-      new THREE.Color(0xd8b4fe), // Violet pulsar
-      new THREE.Color(0xffffff), // More white stars for balance
+      new THREE.Color(0xffffff), // Pure white
+      new THREE.Color(0xffffff), // Pure white
+      new THREE.Color(0xf6f9ff), // Diamond icy white (Sirius / Vega)
+      new THREE.Color(0xffffff), // Pure white
+      new THREE.Color(0xfffdfc), // Natural starlight white
+      new THREE.Color(0xffffff), // Pure white
     ];
 
     for (let s = 0; s < starCount; s++) {
@@ -351,7 +351,7 @@ export default function LusionBackground() {
       let sy: number;
       let sz: number;
 
-      // 60% of stars concentrated along an inclined galactic river band across the sky
+      // 60% of stars along the upper celestial galaxy band
       if (s < starCount * 0.6) {
         const t = (Math.random() - 0.5) * 4600;
         const angle = -0.28;
@@ -361,9 +361,9 @@ export default function LusionBackground() {
         sy = baseY + 260 + t * Math.sin(angle) * 0.14 + spreadY;
         sz = t * Math.cos(angle) * 0.26 + spreadZ - 250;
       } else {
-        // 40% scattered across the upper celestial background
+        // 40% scattered across the upper celestial sky
         sx = (Math.random() - 0.5) * 4600;
-        sy = baseY + 120 + Math.random() * 750;
+        sy = baseY + 140 + Math.random() * 750;
         sz = (Math.random() - 0.5) * 3600 - 200;
       }
 
@@ -371,23 +371,23 @@ export default function LusionBackground() {
       starPositions[s * 3 + 1] = sy;
       starPositions[s * 3 + 2] = sz;
 
-      // Temperature color
+      // White starlight
       const col = starPalette[Math.floor(Math.random() * starPalette.length)];
       starColors[s * 3] = col.r;
       starColors[s * 3 + 1] = col.g;
       starColors[s * 3 + 2] = col.b;
 
-      // Star size distribution: 12% prominent glittering stars, 35% medium stars, 53% crisp stardust
+      // Natural, balanced size distribution: none grow overly large
       const randType = Math.random();
       if (randType > 0.88) {
-        starSizes[s] = 16.0 + Math.random() * 8.0; // Major prominent stars with cross flare
-      } else if (randType > 0.52) {
-        starSizes[s] = 9.0 + Math.random() * 5.0; // Medium luminous stars
+        starSizes[s] = 5.2 + Math.random() * 2.2; // Brighter anchor stars (max ~7.4)
+      } else if (randType > 0.50) {
+        starSizes[s] = 3.6 + Math.random() * 1.4; // Medium stars
       } else {
-        starSizes[s] = 5.0 + Math.random() * 3.0; // Crisp micro stardust
+        starSizes[s] = 2.4 + Math.random() * 1.0; // Fine stardust
       }
 
-      starTwinkleSpeeds[s] = 0.9 + Math.random() * 2.0;
+      starTwinkleSpeeds[s] = 0.8 + Math.random() * 1.6;
       starTwinklePhases[s] = Math.random() * Math.PI * 2;
     }
 
@@ -413,19 +413,20 @@ export default function LusionBackground() {
       void main() {
         vec3 pos = position;
 
-        // Subtle cosmic drift on GPU
-        pos.y += sin(uTime * 0.6 * aTwinkleSpeed + aTwinklePhase) * 12.0;
-        pos.x += cos(uTime * 0.3 * aTwinkleSpeed + aTwinklePhase) * 10.0;
+        // Subtle cosmic drift
+        pos.y += sin(uTime * 0.5 * aTwinkleSpeed + aTwinklePhase) * 10.0;
+        pos.x += cos(uTime * 0.25 * aTwinkleSpeed + aTwinklePhase) * 8.0;
 
-        // Stellar scintillation / twinkling
+        // Smooth natural twinkling without harsh spikes
         float t = uTime * aTwinkleSpeed + aTwinklePhase;
-        float twinkle = 0.60 + 0.30 * sin(t) + 0.25 * pow(max(0.0, sin(t * 1.8)), 4.0);
+        float twinkle = 0.72 + 0.28 * sin(t);
 
         vStarColor = aColor;
         vTwinkle = twinkle;
 
         vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
-        gl_PointSize = clamp((aSize * twinkle * (650.0 / max(250.0, -mvPosition.z))) * uPixelRatio, 2.5, 56.0);
+        // Strictly clamped point size between 2.0px and 16.0px so none grow too large
+        gl_PointSize = clamp((aSize * twinkle * (460.0 / max(280.0, -mvPosition.z))) * uPixelRatio, 2.0, 16.0);
         gl_Position = projectionMatrix * mvPosition;
       }
     `;
@@ -441,23 +442,21 @@ export default function LusionBackground() {
         if (dist > 0.5) discard;
 
         // 1. Hot brilliant star core
-        float core = exp(-dist * 8.5);
+        float core = exp(-dist * 10.0);
 
-        // 2. Soft astronomical celestial halo
-        float halo = exp(-dist * 3.0) * 0.75;
+        // 2. Soft natural celestial halo
+        float halo = exp(-dist * 3.8) * 0.55;
 
-        // 3. Subtle 4-point diffraction cross (astronomy lens diffraction spike)
-        float crossX = max(0.0, 1.0 - abs(coord.x) * 10.0) * max(0.0, 1.0 - abs(coord.y) * 2.2);
-        float crossY = max(0.0, 1.0 - abs(coord.y) * 10.0) * max(0.0, 1.0 - abs(coord.x) * 2.2);
-        float flare = (crossX + crossY) * 0.45;
+        // 3. Subtle delicate diffraction spike
+        float crossX = max(0.0, 1.0 - abs(coord.x) * 12.0) * max(0.0, 1.0 - abs(coord.y) * 2.5);
+        float crossY = max(0.0, 1.0 - abs(coord.y) * 12.0) * max(0.0, 1.0 - abs(coord.x) * 2.5);
+        float flare = (crossX + crossY) * 0.25;
 
         float brightness = core * 1.5 + halo + flare;
-        float alpha = clamp(brightness * vTwinkle * 1.3, 0.0, 1.0);
+        float alpha = clamp(brightness * vTwinkle * 1.1, 0.0, 1.0);
 
-        // Center blushes to pure white, outer halo preserves star temperature tint
-        vec3 finalColor = mix(vStarColor, vec3(1.0), core * 0.85);
-
-        gl_FragColor = vec4(finalColor, alpha);
+        // All stars render pure crisp white
+        gl_FragColor = vec4(vec3(1.0), alpha);
       }
     `;
 

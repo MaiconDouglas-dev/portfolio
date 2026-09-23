@@ -1,17 +1,22 @@
 'use client';
 
 // ============================================================================
-// Procedural Web Audio Engine: Ambient Space Music + Sci-Fi SFX
+// Procedural Web Audio Engine: Ambient Space Piano & Cinematic Neo-Classical
 // 100% Royalty-Free, Zero Network Latency, Pure Mathematical Web Audio Synthesis
-// Real musical progression (chords + gentle arpeggiated melodies + warm bass)
-// Calibrated for acoustic comfort and clear musicality on all speakers
+// Composed 4-measure lyrical theme (Fmaj7 -> Am7 -> Cmaj7 -> Em7) in 58 BPM
+// Warm felt-piano timbre with soft acoustic delay tails, zero ear fatigue
 // ============================================================================
 
 interface MusicalChord {
   name: string;
   bass: number; // Hz
   padNotes: number[]; // Hz
-  melodyPool: number[]; // Hz
+}
+
+interface MelodicNote {
+  beat: number; // 0 to 15.75
+  freq: number; // Hz
+  vol: number;
 }
 
 class AudioManager {
@@ -29,37 +34,58 @@ class AudioManager {
   // Musical Sequencer State
   private sequencerTimer: ReturnType<typeof setInterval> | null = null;
   private nextBeatTime: number = 0;
-  private currentBeat: number = 0;
-  private currentChordIdx: number = 0;
+  private currentStep: number = 0; // 16 beats loop
   private lastKineticTime: number = 0;
 
-  // 4-Chord Cinematic Space Progression (Dm9 -> Bbmaj7 -> Fmaj7 -> C/E)
-  // Peaceful, inspiring, chill space music in 64 BPM
+  // Lyrical 4-Chord Progression (Fmaj7 -> Am7 -> Cmaj7 -> Em7)
   private chords: MusicalChord[] = [
-    {
-      name: 'Dm9',
-      bass: 73.42, // D2
-      padNotes: [146.83, 174.61, 220.00, 261.63, 329.63], // D3, F3, A3, C4, E4
-      melodyPool: [220.00, 261.63, 293.66, 329.63, 440.00, 523.25], // A3, C4, D4, E4, A4, C5
-    },
-    {
-      name: 'Bbmaj7',
-      bass: 58.27, // Bb1
-      padNotes: [116.54, 174.61, 220.00, 293.66, 349.23], // Bb2, F3, A3, D4, F4
-      melodyPool: [220.00, 293.66, 349.23, 440.00, 523.25, 587.33], // A3, D4, F4, A4, C5, D5
-    },
     {
       name: 'Fmaj7',
       bass: 87.31, // F2
-      padNotes: [130.81, 174.61, 220.00, 261.63, 329.63], // C3, F3, A3, C4, E4
-      melodyPool: [261.63, 329.63, 349.23, 392.00, 440.00, 523.25], // C4, E4, F4, G4, A4, C5
+      padNotes: [174.61, 220.00, 261.63, 329.63], // F3, A3, C4, E4
     },
     {
-      name: 'C/E',
-      bass: 65.41, // C2
-      padNotes: [130.81, 164.81, 196.00, 246.94, 293.66], // C3, E3, G3, B3, D4
-      melodyPool: [246.94, 293.66, 329.63, 392.00, 493.88, 523.25], // B3, D4, E4, G4, B4, C5
+      name: 'Am7',
+      bass: 55.00, // A1
+      padNotes: [164.81, 220.00, 261.63, 329.63], // E3, A3, C4, E4
     },
+    {
+      name: 'Cmaj7',
+      bass: 65.41, // C2
+      padNotes: [196.00, 246.94, 261.63, 329.63], // G3, B3, C4, E4
+    },
+    {
+      name: 'Em7',
+      bass: 82.41, // E2
+      padNotes: [164.81, 196.00, 246.94, 293.66], // E3, G3, B3, D4
+    },
+  ];
+
+  // Composed 16-beat Piano Melody Theme (emotional, cinematic, relaxing)
+  private melodyTheme: MelodicNote[] = [
+    // Measure 1: Fmaj7 — soulful opening
+    { beat: 0.0, freq: 440.00, vol: 0.08 }, // A4
+    { beat: 1.5, freq: 523.25, vol: 0.06 }, // C5
+    { beat: 2.0, freq: 392.00, vol: 0.07 }, // G4
+    { beat: 3.0, freq: 329.63, vol: 0.06 }, // E4
+
+    // Measure 2: Am7 — introspective peak
+    { beat: 4.0, freq: 659.25, vol: 0.08 }, // E5
+    { beat: 5.5, freq: 587.33, vol: 0.06 }, // D5
+    { beat: 6.0, freq: 523.25, vol: 0.07 }, // C5
+    { beat: 7.0, freq: 440.00, vol: 0.06 }, // A4
+
+    // Measure 3: Cmaj7 — uplifting soaring hope
+    { beat: 8.0, freq: 392.00, vol: 0.08 }, // G4
+    { beat: 9.5, freq: 493.88, vol: 0.06 }, // B4
+    { beat: 10.0, freq: 587.33, vol: 0.07 }, // D5
+    { beat: 11.0, freq: 659.25, vol: 0.07 }, // E5
+
+    // Measure 4: Em7 — cascading resolution
+    { beat: 12.0, freq: 493.88, vol: 0.08 }, // B4
+    { beat: 13.0, freq: 392.00, vol: 0.07 }, // G4
+    { beat: 14.0, freq: 329.63, vol: 0.06 }, // E4
+    { beat: 15.0, freq: 293.66, vol: 0.05 }, // D4
   ];
 
   constructor() {
@@ -67,7 +93,6 @@ class AudioManager {
       const saved = localStorage.getItem('md_portfolio_audio');
       this.isEnabled = saved === 'true';
 
-      // Unlock AudioContext on first user interaction seamlessly
       const unlockAudio = () => {
         if (this.ctx && this.ctx.state === 'suspended') {
           this.ctx.resume();
@@ -376,11 +401,8 @@ class AudioManager {
   }
 
   // ============================================================================
-  // Procedural Space Ambient Music Engine (Real Musical Composition)
-  // Generates genuine musical movement:
-  // - Atmospheric pad chords that change every 4 measures
-  // - Warm round bass notes supporting the harmony
-  // - Relaxing, celestial Rhodes/synth-bell melodic arpeggios
+  // Procedural Cinematic Space Piano Engine (58 BPM Relaxing Track)
+  // Composed theme with soft felt piano notes, space echo tails, and warm pads
   // ============================================================================
 
   public startAmbience() {
@@ -391,43 +413,42 @@ class AudioManager {
 
       const now = ctx.currentTime;
 
-      // 1. Master Music Bus Gain (smooth 1.5s fade-in to comfortable ~26% volume)
+      // 1. Master Music Bus (smooth 1.6s fade-in)
       const masterGain = ctx.createGain();
       masterGain.gain.setValueAtTime(0.0001, now);
-      masterGain.gain.linearRampToValueAtTime(0.26, now + 1.5);
+      masterGain.gain.linearRampToValueAtTime(0.28, now + 1.6);
       masterGain.connect(ctx.destination);
       this.masterMusicGain = masterGain;
 
-      // 2. Warm Musical Filter (1100Hz cutoff allows melodic bells through softly)
+      // 2. Warm Piano / Felt Filter (1350Hz cutoff)
       const filter = ctx.createBiquadFilter();
       filter.type = 'lowpass';
-      filter.frequency.setValueAtTime(1100, now);
-      filter.Q.setValueAtTime(1.0, now);
+      filter.frequency.setValueAtTime(1350, now);
+      filter.Q.setValueAtTime(0.85, now);
       filter.connect(masterGain);
       this.musicFilter = filter;
 
       this.isPlayingAmbience = true;
-      this.currentBeat = 0;
-      this.currentChordIdx = 0;
+      this.currentStep = 0;
 
-      // Tempo: 64 BPM -> 1 beat = 0.9375 seconds
-      const secondsPerBeat = 60 / 64;
+      // Tempo: 58 BPM -> 1 beat = 1.0345 seconds
+      const secondsPerBeat = 60 / 58;
       this.nextBeatTime = now + 0.1;
 
-      // Start by playing the first chord immediately
+      // Start measure 0 immediately
       this.triggerChord(now, this.chords[0]);
 
-      // Sequencer lookahead loop (checks every 50ms, schedules ahead by 200ms)
+      // Sequencer lookahead loop
       this.sequencerTimer = setInterval(() => {
         if (!this.isPlayingAmbience || !this.ctx) return;
         const currentCtxTime = this.ctx.currentTime;
 
-        while (this.nextBeatTime < currentCtxTime + 0.2) {
-          this.scheduleBeat(this.nextBeatTime, this.currentBeat);
+        while (this.nextBeatTime < currentCtxTime + 0.25) {
+          this.scheduleMeasureEvents(this.nextBeatTime, this.currentStep);
           this.nextBeatTime += secondsPerBeat;
-          this.currentBeat = (this.currentBeat + 1) % 16; // 4 measures of 4 beats
+          this.currentStep = (this.currentStep + 1) % 16;
         }
-      }, 50);
+      }, 45);
 
     } catch {
       this.isPlayingAmbience = false;
@@ -435,49 +456,32 @@ class AudioManager {
   }
 
   /**
-   * Schedules rhythmic musical events on each beat.
+   * Schedules events for each beat of the 16-beat cycle.
    */
-  private scheduleBeat(time: number, beat: number) {
+  private scheduleMeasureEvents(time: number, step: number) {
     if (!this.ctx || !this.musicFilter) return;
 
-    // A measure has 4 beats. Chord changes every 4 beats (1 measure per chord)
-    const chordIndex = Math.floor(beat / 4);
-    const isNewChord = beat % 4 === 0;
-    const chord = this.chords[chordIndex % this.chords.length];
-
-    // If starting a new measure, transition to the new chord pad & bass
-    if (isNewChord) {
-      this.triggerChord(time, chord);
+    // Chord changes every 4 beats
+    if (step % 4 === 0) {
+      const chordIndex = Math.floor(step / 4) % this.chords.length;
+      this.triggerChord(time, this.chords[chordIndex]);
     }
 
-    // Play gentle melodic bell notes on beats 0, 1.5, 2, 3 (rhythmic musical pattern)
-    // Beat 0: root melodic note
-    // Beat 1: passing note
-    // Beat 2: accent note
-    // Beat 3: resolution note
-    const melodyIndex = (beat * 2 + Math.floor(beat / 3)) % chord.melodyPool.length;
-    const freq = chord.melodyPool[melodyIndex];
-
-    // Only play on selected rhythmic accents to feel like a real relaxing melody, not busy noise
-    if (beat % 2 === 0 || beat === 3) {
-      this.triggerMelodyNote(time, freq);
-    }
-
-    // Occasional gentle eighth-note syncopation on beat 1.5
-    if (beat === 1) {
-      const syncoTime = time + (60 / 64) * 0.5;
-      const syncoFreq = chord.melodyPool[(melodyIndex + 2) % chord.melodyPool.length];
-      this.triggerMelodyNote(syncoTime, syncoFreq, 0.05);
-    }
+    // Check for melodic notes in the theme at this step
+    this.melodyTheme.forEach((note) => {
+      if (Math.abs(note.beat - step) < 0.25) {
+        this.triggerPianoNote(time, note.freq, note.vol);
+      }
+    });
   }
 
   /**
-   * Triggers a warm sustained pad chord and supporting bass.
+   * Triggers a warm sustained pad chord and supporting acoustic bass.
    */
   private triggerChord(time: number, chord: MusicalChord) {
     if (!this.ctx || !this.musicFilter) return;
 
-    // Fade out previous pad voices gently over 1.2s
+    // Fade out previous pad voices gently over 1.4s
     const oldPads = [...this.currentPadOscs];
     const oldBass = [...this.currentBassOsc];
     this.currentPadOscs = [];
@@ -485,21 +489,21 @@ class AudioManager {
 
     oldPads.forEach(({ osc, gain }) => {
       try {
-        gain.gain.linearRampToValueAtTime(0.0001, time + 1.2);
-        osc.stop(time + 1.25);
-        setTimeout(() => osc.disconnect(), 1300);
+        gain.gain.linearRampToValueAtTime(0.0001, time + 1.4);
+        osc.stop(time + 1.45);
+        setTimeout(() => osc.disconnect(), 1500);
       } catch {}
     });
 
     oldBass.forEach(({ osc, gain }) => {
       try {
-        gain.gain.linearRampToValueAtTime(0.0001, time + 0.8);
-        osc.stop(time + 0.85);
-        setTimeout(() => osc.disconnect(), 900);
+        gain.gain.linearRampToValueAtTime(0.0001, time + 1.0);
+        osc.stop(time + 1.05);
+        setTimeout(() => osc.disconnect(), 1100);
       } catch {}
     });
 
-    // 1. Warm Bass Note (Sine + subtle triangle)
+    // 1. Deep Round Acoustic Bass
     try {
       const bassOsc = this.ctx.createOscillator();
       const bassGain = this.ctx.createGain();
@@ -509,38 +513,38 @@ class AudioManager {
 
       bassGain.gain.setValueAtTime(0.0001, time);
       bassGain.gain.linearRampToValueAtTime(0.24, time + 0.35);
-      bassGain.gain.linearRampToValueAtTime(0.12, time + 2.5);
-      bassGain.gain.linearRampToValueAtTime(0.0001, time + 3.8);
+      bassGain.gain.linearRampToValueAtTime(0.12, time + 2.8);
+      bassGain.gain.linearRampToValueAtTime(0.0001, time + 4.1);
 
       bassOsc.connect(bassGain);
       bassGain.connect(this.musicFilter);
       bassOsc.start(time);
-      bassOsc.stop(time + 3.8);
+      bassOsc.stop(time + 4.1);
 
       this.currentBassOsc.push({ osc: bassOsc, gain: bassGain });
     } catch {}
 
-    // 2. Swelling Pad Chord (Soft Sine Voices with micro-detune)
-    chord.padNotes.forEach((noteFreq, idx) => {
+    // 2. Ethereal Pad Chord
+    chord.padNotes.forEach((freq, idx) => {
       if (!this.ctx || !this.musicFilter) return;
       try {
         const padOsc = this.ctx.createOscillator();
         const padGain = this.ctx.createGain();
 
         padOsc.type = idx % 2 === 0 ? 'sine' : 'triangle';
-        padOsc.frequency.setValueAtTime(noteFreq, time);
-        padOsc.detune.setValueAtTime(idx === 0 ? 0 : (idx % 2 === 0 ? 1.8 : -1.8), time);
+        padOsc.frequency.setValueAtTime(freq, time);
+        padOsc.detune.setValueAtTime(idx === 0 ? 0 : (idx % 2 === 0 ? 1.5 : -1.5), time);
 
-        const targetVol = idx === 0 ? 0.16 : 0.11;
+        const targetVol = idx === 0 ? 0.14 : 0.09;
         padGain.gain.setValueAtTime(0.0001, time);
-        padGain.gain.linearRampToValueAtTime(targetVol, time + 1.0);
-        padGain.gain.linearRampToValueAtTime(targetVol * 0.8, time + 3.0);
-        padGain.gain.linearRampToValueAtTime(0.0001, time + 3.9);
+        padGain.gain.linearRampToValueAtTime(targetVol, time + 1.2);
+        padGain.gain.linearRampToValueAtTime(targetVol * 0.75, time + 3.2);
+        padGain.gain.linearRampToValueAtTime(0.0001, time + 4.1);
 
         padOsc.connect(padGain);
         padGain.connect(this.musicFilter);
         padOsc.start(time);
-        padOsc.stop(time + 3.9);
+        padOsc.stop(time + 4.1);
 
         this.currentPadOscs.push({ osc: padOsc, gain: padGain });
       } catch {}
@@ -548,27 +552,60 @@ class AudioManager {
   }
 
   /**
-   * Triggers a sweet, warm synth bell / Rhodes melodic note.
+   * Triggers a warm felt-piano note with acoustic hammer overtone and dreamy space echo.
    */
-  private triggerMelodyNote(time: number, freq: number, volume: number = 0.08) {
+  private triggerPianoNote(time: number, freq: number, volume: number = 0.08) {
     if (!this.ctx || !this.musicFilter) return;
     try {
+      // Primary felt-piano tone (Sine fundamental)
       const osc = this.ctx.createOscillator();
       const gain = this.ctx.createGain();
 
       osc.type = 'sine';
       osc.frequency.setValueAtTime(freq, time);
 
-      // Sweet percussive bell envelope: quick 10ms attack, gentle 700ms decay
+      // Acoustic piano felt envelope: 25ms soft hammer attack, smooth 1.8s decay
       gain.gain.setValueAtTime(0.0001, time);
-      gain.gain.linearRampToValueAtTime(volume, time + 0.015);
-      gain.gain.exponentialRampToValueAtTime(0.0001, time + 0.75);
+      gain.gain.linearRampToValueAtTime(volume, time + 0.025);
+      gain.gain.exponentialRampToValueAtTime(0.0001, time + 1.8);
 
       osc.connect(gain);
       gain.connect(this.musicFilter);
-
       osc.start(time);
-      osc.stop(time + 0.75);
+      osc.stop(time + 1.8);
+
+      // Subtle hammer overtone (triangle 1 octave up, quick 180ms decay)
+      const overtoneOsc = this.ctx.createOscillator();
+      const overtoneGain = this.ctx.createGain();
+
+      overtoneOsc.type = 'triangle';
+      overtoneOsc.frequency.setValueAtTime(freq * 2, time);
+
+      overtoneGain.gain.setValueAtTime(0.0001, time);
+      overtoneGain.gain.linearRampToValueAtTime(volume * 0.18, time + 0.015);
+      overtoneGain.gain.exponentialRampToValueAtTime(0.0001, time + 0.22);
+
+      overtoneOsc.connect(overtoneGain);
+      overtoneGain.connect(this.musicFilter);
+      overtoneOsc.start(time);
+      overtoneOsc.stop(time + 0.22);
+
+      // Dreamy space echo repeat (+380ms delay at 30% volume)
+      const echoOsc = this.ctx.createOscillator();
+      const echoGain = this.ctx.createGain();
+
+      echoOsc.type = 'sine';
+      echoOsc.frequency.setValueAtTime(freq, time + 0.38);
+
+      echoGain.gain.setValueAtTime(0.0001, time + 0.38);
+      echoGain.gain.linearRampToValueAtTime(volume * 0.28, time + 0.40);
+      echoGain.gain.exponentialRampToValueAtTime(0.0001, time + 1.6);
+
+      echoOsc.connect(echoGain);
+      echoGain.connect(this.musicFilter);
+      echoOsc.start(time + 0.38);
+      echoOsc.stop(time + 1.6);
+
     } catch {}
   }
 
@@ -586,11 +623,11 @@ class AudioManager {
     this.lastKineticTime = now;
 
     try {
-      const targetFreq = 1100 + clampedSpeed * 150;
+      const targetFreq = 1350 + clampedSpeed * 180;
       this.musicFilter.frequency.cancelScheduledValues(now);
       this.musicFilter.frequency.setValueAtTime(this.musicFilter.frequency.value, now);
       this.musicFilter.frequency.linearRampToValueAtTime(targetFreq, now + 0.1);
-      this.musicFilter.frequency.linearRampToValueAtTime(1100, now + 0.9);
+      this.musicFilter.frequency.linearRampToValueAtTime(1350, now + 0.9);
     } catch {}
   }
 
