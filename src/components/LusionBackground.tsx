@@ -150,6 +150,8 @@ export default function LusionBackground() {
       uniform float uDepth;
       uniform vec4 uPulses[7];
       uniform vec3 uPulseColors[7];
+      uniform vec2 uShockwaveCenter;
+      uniform float uShockwaveTime;
 
       attribute float aNormX;
       attribute float aLineIdx;
@@ -209,6 +211,23 @@ export default function LusionBackground() {
           float smooth2 = w2 * w2 * w2 * (w2 * (w2 * 6.0 - 15.0) + 10.0);
           y += smooth2 * (26.0 + uKineticBoost * 10.0);
           totalInfluence += smooth2 * 0.45;
+        }
+
+        // 3.5 Dynamic Click Shockwave Ripple
+        if (uShockwaveTime >= 0.0 && uShockwaveTime < 2.4) {
+          vec2 diffSW = vec2(x - uShockwaveCenter.x, z - uShockwaveCenter.y);
+          float distSW = length(diffSW);
+          float swSpeed = 750.0;
+          float currentRadius = uShockwaveTime * swSpeed;
+          float ringDist = abs(distSW - currentRadius);
+          float ringWidth = 110.0;
+          if (ringDist < ringWidth) {
+            float fadeTime = 1.0 - uShockwaveTime / 2.4;
+            float swFactor = (1.0 - ringDist / ringWidth) * fadeTime;
+            float swWave = sin(ringDist * 0.09) * swFactor * 48.0;
+            y += swWave;
+            totalInfluence += swFactor * 0.75;
+          }
         }
 
         pos.y = y;
@@ -295,6 +314,8 @@ export default function LusionBackground() {
         uDepth: { value: depth },
         uPulses: { value: pulseVectors },
         uPulseColors: { value: pulseColorVectors },
+        uShockwaveCenter: { value: new THREE.Vector2(0, 0) },
+        uShockwaveTime: { value: -100.0 },
       },
       transparent: true,
       blending: THREE.AdditiveBlending,
@@ -530,11 +551,20 @@ export default function LusionBackground() {
       starMaterial.uniforms.uPixelRatio.value = dpr;
     };
 
-    updateViewportConfig();
+    let shockwaveStartTime = -100.0;
 
+    const onPointerDown = (event: MouseEvent | TouchEvent) => {
+      const clientX = 'clientX' in event ? event.clientX : event.touches[0].clientX;
+      const clientY = 'clientY' in event ? event.clientY : event.touches[0].clientY;
+      projectPointerTo3D(clientX, clientY);
+      meshMaterial.uniforms.uShockwaveCenter.value.set(mouseWorldTarget.x, mouseWorldTarget.z);
+      shockwaveStartTime = clock.getElapsedTime();
+    };
+
+    window.addEventListener('mousedown', onPointerDown, { passive: true });
+    window.addEventListener('touchstart', onPointerDown, { passive: true });
     window.addEventListener('mousemove', onMouseMove, { passive: true });
     window.addEventListener('touchmove', onTouchMove, { passive: true });
-    window.addEventListener('touchstart', onTouchStart, { passive: true });
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', updateViewportConfig);
     if (typeof window !== 'undefined' && 'DeviceOrientationEvent' in window) {
@@ -544,8 +574,24 @@ export default function LusionBackground() {
     // 7. Ultra-Lightweight GPU-Driven Animation Loop
     let animationFrameId: number;
     const clock = new THREE.Clock();
+    let isRunning = true;
+
+    const onVisibilityChange = () => {
+      if (document.hidden) {
+        isRunning = false;
+        cancelAnimationFrame(animationFrameId);
+      } else {
+        if (!isRunning) {
+          isRunning = true;
+          clock.start();
+          animationFrameId = requestAnimationFrame(animate);
+        }
+      }
+    };
+    document.addEventListener('visibilitychange', onVisibilityChange);
 
     const animate = () => {
+      if (!isRunning) return;
       animationFrameId = requestAnimationFrame(animate);
 
       const delta = Math.min(clock.getDelta(), 0.1);
@@ -580,6 +626,10 @@ export default function LusionBackground() {
       if (kineticBoost > 0.08) {
         soundManager.onKineticDisturbance(kineticBoost);
       }
+
+      // Update Shockwave Time
+      const swElapsed = shockwaveStartTime > 0 ? (time - shockwaveStartTime) : -100.0;
+      meshMaterial.uniforms.uShockwaveTime.value = swElapsed;
 
       // 3D Camera Flight Path
       const baseCamY = 270 - Math.sin(scrollFraction * Math.PI) * 110 - scrollFraction * 60;
@@ -618,9 +668,11 @@ export default function LusionBackground() {
 
     return () => {
       cancelAnimationFrame(animationFrameId);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+      window.removeEventListener('mousedown', onPointerDown);
+      window.removeEventListener('touchstart', onPointerDown);
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('touchmove', onTouchMove);
-      window.removeEventListener('touchstart', onTouchStart);
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('resize', updateViewportConfig);
       if (typeof window !== 'undefined' && 'DeviceOrientationEvent' in window) {

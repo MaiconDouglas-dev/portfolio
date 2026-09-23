@@ -6,15 +6,22 @@ import { Mail, Phone, Linkedin, Github, Copy, Check, ArrowUpRight } from 'lucide
 import KineticText from './KineticText';
 import MagneticButton from './MagneticButton';
 import FuturisticCard from './FuturisticCard';
+import { soundManager } from '@/utils/audio';
 
 export default function Contact() {
   const { lang } = useApp();
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
 
   const handleCopy = (text: string, key: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedKey(key);
-    setTimeout(() => setCopiedKey(null), 2000);
+    try {
+      navigator.clipboard.writeText(text);
+      soundManager.playSuccess();
+      setCopiedKey(key);
+      setTimeout(() => setCopiedKey(null), 2000);
+    } catch {
+      setCopiedKey(key);
+      setTimeout(() => setCopiedKey(null), 2000);
+    }
   };
 
   const channels = [
@@ -100,15 +107,24 @@ export default function Contact() {
                 contentClassName="p-5 text-left flex flex-col justify-between h-full space-y-3"
               >
                 <div>
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between relative">
                     <Icon size={18} className={c.color} />
-                    <button
-                      onClick={() => handleCopy(c.copy, c.key)}
-                      title="Copiar"
-                      className="text-neutral-400 hover:text-white cursor-pointer p-1 transition-colors"
-                    >
-                      {isCopied ? <Check size={14} className="text-appleGreen-500" /> : <Copy size={14} />}
-                    </button>
+                    <div className="relative">
+                      <button
+                        onClick={() => handleCopy(c.copy, c.key)}
+                        title={lang === 'pt' ? 'Copiar para a área de transferência' : 'Copy to clipboard'}
+                        data-cursor-text={isCopied ? (lang === 'pt' ? 'COPIADO' : 'COPIED') : (lang === 'pt' ? 'COPIAR' : 'COPY')}
+                        className="text-neutral-400 hover:text-white cursor-pointer p-1.5 rounded-lg hover:bg-white/[0.08] transition-colors"
+                      >
+                        {isCopied ? <Check size={14} className="text-appleGreen-500 animate-scale" /> : <Copy size={14} />}
+                      </button>
+
+                      {isCopied && (
+                        <span className="absolute -top-7 right-0 px-2 py-0.5 rounded-md bg-appleGreen-500/20 border border-appleGreen-500/40 text-[10px] font-mono font-bold text-appleGreen-400 whitespace-nowrap animate-fadeIn">
+                          {lang === 'pt' ? 'Copiado!' : 'Copied!'}
+                        </span>
+                      )}
+                    </div>
                   </div>
                   <p className="text-[11px] font-mono text-neutral-400 mt-2">{c.label}</p>
                   <p className="text-xs font-semibold text-white truncate">{c.val}</p>

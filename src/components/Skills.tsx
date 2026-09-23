@@ -7,10 +7,16 @@ import KineticText from './KineticText';
 import MagneticButton from './MagneticButton';
 import FuturisticCard from './FuturisticCard';
 import { Server, Database, Cloud, Code2, GraduationCap, Sparkles, CheckCircle2 } from 'lucide-react';
+import { soundManager } from '@/utils/audio';
 
 export default function Skills() {
   const { lang } = useApp();
   const [activeTab, setActiveTab] = useState<string>('all');
+
+  const handleTabChange = (tabId: string) => {
+    soundManager.playTab();
+    setActiveTab(tabId);
+  };
 
   const tabIcons: Record<string, React.ElementType> = {
     'all': Sparkles,
@@ -56,7 +62,8 @@ export default function Skills() {
         <div className="flex items-center gap-2 pt-2 overflow-x-auto no-scrollbar max-w-full pb-1 sm:flex-wrap">
           <MagneticButton strength={0.2}>
             <button
-              onClick={() => setActiveTab('all')}
+              onClick={() => handleTabChange('all')}
+              data-cursor-text={lang === 'pt' ? 'FILTRO' : 'FILTER'}
               className={`px-4 py-2 rounded-full text-xs font-mono font-semibold transition-all duration-200 cursor-pointer whitespace-nowrap shrink-0 ${
                 activeTab === 'all'
                   ? 'bg-appleRed-600 text-white shadow-md shadow-appleRed-500/25 border border-appleRed-500/40'
@@ -74,7 +81,8 @@ export default function Skills() {
             return (
               <MagneticButton key={group.id} strength={0.2}>
                 <button
-                  onClick={() => setActiveTab(group.id)}
+                  onClick={() => handleTabChange(group.id)}
+                  data-cursor-text={lang === 'pt' ? 'FILTRO' : 'FILTER'}
                   className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-mono font-medium transition-all duration-200 cursor-pointer whitespace-nowrap shrink-0 ${
                     isSelected
                       ? 'bg-appleRed-600 text-white shadow-md shadow-appleRed-500/25 border border-appleRed-500/40'

@@ -187,7 +187,7 @@ export default function Projects() {
                   withTilt={true}
                   withCorners={true}
                   glowColor={glow}
-                  data-cursor-text={isFirst ? (lang === 'pt' ? 'EXPLORAR' : 'EXPLORE') : (lang === 'pt' ? `SLOT 0${idx + 1}` : `SLOT 0${idx + 1}`)}
+                  data-cursor-text={isFirst ? (lang === 'pt' ? 'CLYVO' : 'CLYVO') : proj.id === 'foodflow' ? 'FOODFLOW' : (lang === 'pt' ? `SLOT 0${idx + 1}` : `SLOT 0${idx + 1}`)}
                   className={`border border-white/[0.12] bg-[#0c0c12]/95 backdrop-blur-2xl shadow-[0_24px_60px_rgba(0,0,0,0.85)] hover:border-white/30 transition-all duration-300 ${
                     isFirst ? 'border-appleRed-500/40 shadow-[0_24px_70px_rgba(255,45,85,0.12)]' : ''
                   }`}
@@ -325,19 +325,21 @@ export default function Projects() {
                       <>
                         <MagneticButton strength={0.25} className="w-full sm:w-auto">
                           <a
-                            href="https://github.com/MaiconDouglas-dev"
+                            href={proj.githubUrl || 'https://github.com/MaiconDouglas-dev'}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-2.5 rounded-xl bg-white/[0.08] hover:bg-white/[0.14] text-white font-semibold text-xs border border-white/[0.12] hover:scale-[1.02] cursor-pointer transition-all"
                           >
                             <Github size={14} />
-                            <span>{lang === 'pt' ? 'Repositório no GitHub' : 'GitHub Repository'}</span>
+                            <span>{proj.id === 'foodflow' ? (lang === 'pt' ? 'Ver Código no GitHub' : 'View Code on GitHub') : (lang === 'pt' ? 'Repositório no GitHub' : 'GitHub Repository')}</span>
                             <ArrowUpRight size={13} className="text-neutral-400" />
                           </a>
                         </MagneticButton>
 
                         <span className="text-xs font-mono text-neutral-400 italic">
-                          {lang === 'pt' ? '• Pronto para receber novos dados' : '• Ready to receive new project data'}
+                          {proj.id === 'foodflow'
+                            ? (lang === 'pt' ? '• Protótipo Full Stack em andamento' : '• Full Stack prototype in progress')
+                            : (lang === 'pt' ? '• Pronto para receber novos dados' : '• Ready to receive new project data')}
                         </span>
                       </>
                     )}
@@ -351,8 +353,20 @@ export default function Projects() {
       </div>
 
       {/* Interactive Architecture & Swagger Modals for Clyvo */}
-      <ArchitectureModal isOpen={archModalOpen} onClose={() => setArchModalOpen(false)} />
-      <ApiSwaggerModal isOpen={swaggerModalOpen} onClose={() => setSwaggerModalOpen(false)} />
+      <ArchitectureModal
+        isOpen={archModalOpen}
+        onClose={() => {
+          soundManager.playModalClose();
+          setArchModalOpen(false);
+        }}
+      />
+      <ApiSwaggerModal
+        isOpen={swaggerModalOpen}
+        onClose={() => {
+          soundManager.playModalClose();
+          setSwaggerModalOpen(false);
+        }}
+      />
     </section>
   );
 }

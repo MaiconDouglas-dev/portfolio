@@ -86,15 +86,19 @@ export default function About() {
                 : 'text-emerald-400 group-hover:text-emerald-400';
 
             return (
-              <FuturisticCard
+              <div
                 key={idx}
-                glowColor={glow}
-                withTilt={true}
-                withCorners={true}
-                className="h-full border-white/[0.08] hover:border-white/25 shadow-[0_4px_24px_rgba(0,0,0,0.6)]"
-                contentClassName="p-5 sm:p-7 flex flex-col justify-between h-full space-y-4 group"
+                data-cursor-text={lang === 'pt' ? 'PILAR' : 'PILLAR'}
+                className="interactive-hover h-full"
               >
-                <div className="space-y-3">
+                <FuturisticCard
+                  glowColor={glow}
+                  withTilt={true}
+                  withCorners={true}
+                  className="h-full border-white/[0.08] hover:border-white/25 shadow-[0_4px_24px_rgba(0,0,0,0.6)] cursor-pointer"
+                  contentClassName="p-5 sm:p-7 flex flex-col justify-between h-full space-y-4 group"
+                >
+                  <div className="space-y-3">
                   <div className={`w-10 h-10 rounded-2xl bg-white/[0.05] border border-white/[0.08] flex items-center justify-center ${accentColor} group-hover:scale-110 transition-transform`}>
                     <Icon size={18} />
                   </div>
@@ -106,8 +110,9 @@ export default function About() {
                   </p>
                 </div>
               </FuturisticCard>
-            );
-          })}
+            </div>
+          );
+        })}
         </div>
 
         {/* Multidisciplinary Foundation & Objective Banner */}

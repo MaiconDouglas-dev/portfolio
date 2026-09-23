@@ -2,12 +2,17 @@
 
 import React, { useState } from 'react';
 import FuturisticCard from './FuturisticCard';
+import { soundManager } from '@/utils/audio';
+import { Copy, Check } from 'lucide-react';
 
 export default function TerminalCard() {
   const [selectedCmd, setSelectedCmd] = useState<number>(0);
+  const [copied, setCopied] = useState<boolean>(false);
 
   const commands = [
     {
+      app: 'ClyvoApiApplication.java',
+      badge: 'SPRING BOOT 3 • ORACLE',
       label: 'GET /actuator/health',
       request: 'curl -X GET http://localhost:8080/actuator/health',
       response: {
@@ -18,6 +23,8 @@ export default function TerminalCard() {
       }
     },
     {
+      app: 'ClyvoAuthService.java',
+      badge: 'JWT AUTH • RBAC',
       label: 'POST /api/v1/auth/login',
       request: 'curl -X POST http://localhost:8080/api/v1/auth/login -d "{\"email\":\"dr.vet@clyvo.com\"}"',
       response: {
@@ -26,17 +33,42 @@ export default function TerminalCard() {
         crmv: '18492-SP',
         token: 'Bearer eyJhbGciOiJIUzI1Ni...'
       }
+    },
+    {
+      app: 'FoodFlowOrderService.java',
+      badge: 'FOODFLOW • DOCKER + PG',
+      label: 'POST /api/v1/orders',
+      request: 'curl -X POST http://localhost:8081/api/v1/orders -d "{\"customer\":\"Maicon\",\"items\":2}"',
+      response: {
+        orderId: 'ff-9482b',
+        status: 'CREATED',
+        domainAggregate: 'Order',
+        database: 'PostgreSQL 16 (Flyway V2)',
+        testcontainers: 'PASS (100% isolated)'
+      }
     }
   ];
 
   const current = commands[selectedCmd];
+
+  const handleSelect = (idx: number) => {
+    soundManager.playTab();
+    setSelectedCmd(idx);
+  };
+
+  const handleCopyRequest = () => {
+    navigator.clipboard.writeText(current.request);
+    soundManager.playSuccess();
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
     <FuturisticCard
       withTilt={true}
       withCorners={true}
       glowColor="rgba(255, 45, 85, 0.22)"
-      className="!rounded-2xl border-white/[0.1] bg-[#0c0c11] shadow-2xl"
+      className="!rounded-2xl border-white/[0.1] bg-[#0c0c11] shadow-2xl overflow-hidden"
     >
       {/* Top Bar */}
       <div className="flex items-center justify-between px-3.5 py-2.5 bg-black border-b border-white/[0.06]">
@@ -44,23 +76,24 @@ export default function TerminalCard() {
           <div className="w-2.5 h-2.5 rounded-full bg-appleRed-500/80" />
           <div className="w-2.5 h-2.5 rounded-full bg-amber-400/80" />
           <div className="w-2.5 h-2.5 rounded-full bg-appleGreen-500/80" />
-          <span className="ml-2 text-[11px] font-mono text-neutral-400">ClyvoApiApplication.java</span>
+          <span className="ml-2 text-[11px] font-mono text-neutral-400">{current.app}</span>
         </div>
         <span className="text-[10px] font-mono text-appleGreen-500 bg-appleGreen-500/10 px-2 py-0.5 rounded-full border border-appleGreen-500/20">
-          SPRING BOOT 3 • LOCAL DEV
+          {current.badge}
         </span>
       </div>
 
       {/* Commands Tabs */}
-      <div className="flex gap-1 p-2 bg-black/50 border-b border-white/[0.04]">
+      <div className="flex gap-1 p-2 bg-black/60 border-b border-white/[0.04] overflow-x-auto no-scrollbar">
         {commands.map((cmd, idx) => (
           <button
             key={idx}
-            onClick={() => setSelectedCmd(idx)}
-            className={`px-2.5 py-1 text-[11px] font-mono rounded-md transition-all cursor-pointer ${
+            onClick={() => handleSelect(idx)}
+            data-cursor-text="CURL"
+            className={`px-2.5 py-1 text-[11px] font-mono rounded-md transition-all cursor-pointer whitespace-nowrap ${
               selectedCmd === idx
-                ? 'bg-appleRed-600 text-white font-semibold'
-                : 'text-neutral-400 hover:text-white'
+                ? 'bg-appleRed-600 text-white font-semibold shadow-sm'
+                : 'text-neutral-400 hover:text-white hover:bg-white/[0.04]'
             }`}
           >
             {cmd.label}
@@ -70,8 +103,17 @@ export default function TerminalCard() {
 
       {/* Terminal Content */}
       <div className="p-3.5 font-mono text-[11px] leading-relaxed bg-black text-neutral-300">
-        <div className="text-neutral-500 mb-2 truncate">
-          <span className="text-appleRed-500">clyvo-api:~$</span> {current.request}
+        <div className="flex items-center justify-between text-neutral-500 mb-2 gap-2">
+          <div className="truncate">
+            <span className="text-appleRed-500 font-bold">bash$</span> {current.request}
+          </div>
+          <button
+            onClick={handleCopyRequest}
+            title="Copiar comando cURL"
+            className="text-neutral-500 hover:text-white shrink-0 p-1 rounded hover:bg-white/[0.08] transition-colors"
+          >
+            {copied ? <Check size={12} className="text-appleGreen-500" /> : <Copy size={12} />}
+          </button>
         </div>
         <pre className="text-appleGreen-400 p-2.5 rounded-lg bg-neutral-950/80 border border-neutral-900 overflow-x-auto">
           {JSON.stringify(current.response, null, 2)}

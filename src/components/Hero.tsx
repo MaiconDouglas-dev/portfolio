@@ -6,13 +6,18 @@ import TerminalCard from './TerminalCard';
 import KineticText from './KineticText';
 import MagneticButton from './MagneticButton';
 import { ArrowDown, MessageSquare, Github, Linkedin, Mail } from 'lucide-react';
+import { soundManager } from '@/utils/audio';
 
 export default function Hero() {
   const { lang } = useApp();
 
   const handleScrollToProjects = () => {
+    soundManager.playTab();
     const el = document.getElementById('projects');
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
+    if (el) {
+      const top = el.getBoundingClientRect().top + window.scrollY - 80;
+      window.scrollTo({ top, behavior: 'smooth' });
+    }
   };
 
   return (
@@ -60,6 +65,7 @@ export default function Hero() {
                 <button
                   type="button"
                   onClick={handleScrollToProjects}
+                  data-cursor-text={lang === 'pt' ? 'PROJETOS' : 'PROJECTS'}
                   className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-appleRed-600 to-rose-600 hover:from-appleRed-500 hover:to-rose-500 text-white font-semibold text-xs shadow-lg shadow-appleRed-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer"
                 >
                   <span>{lang === 'pt' ? 'Ver Projetos' : 'View Projects'}</span>
