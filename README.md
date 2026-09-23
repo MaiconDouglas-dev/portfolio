@@ -51,10 +51,10 @@ O portfólio foi desenhado com ergonomia visual e contraste refinado:
 
 Inspirado nas técnicas de **Creative Development** do estúdio **[Lusion.co](https://lusion.co/)**, o portfólio integra soluções visuais e físicas avançadas:
 
-1. **Universo 3D WebGL / Three.js (`LusionBackground`)**:
-   - Canvas tridimensional full-viewport simulando uma malha com nós de backend e pacotes luminosos trafegando em circuitos.
-   - **Perturbação Fluida do Mouse**: O cursor interage com o campo de partículas com amortecimento exponencial (`lerp`).
-   - **Câmera 3D Guiada por Scroll**: Movimento suave de profundidade ao longo da navegação.
+1. **Malha Topográfica Cybernética 3D WebGL (`LusionBackground`)**:
+   - Canvas tridimensional full-viewport com uma malha fluida de curvas de dados e linhas de contorno ondulantes inspiradas em topografia digital.
+   - **Onda Gravitacional Interativa do Mouse**: O cursor projeta um raio 3D no plano que cria ondulações fluidas elásticas na malha e acende pulsos luminosos de alta velocidade em vermelho carmesim, azul elétrico e violeta.
+   - **Câmera 3D Guiada por Scroll**: Inclinação de horizonte e perspectiva de profundidade que respondem dinamicamente à navegação.
 
 2. **Tipografia Cinética Mascarada (`KineticText`)**:
    - Títulos divididos em caracteres individuais com máscaras de corte (`overflow: hidden`) e animação com curvas cubic-bezier elásticas.
