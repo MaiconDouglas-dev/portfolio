@@ -21,7 +21,7 @@ interface MelodicNote {
 
 class AudioManager {
   private ctx: AudioContext | null = null;
-  private isEnabled: boolean = false;
+  private isEnabled: boolean = true;
   private isPlayingAmbience: boolean = false;
   private listeners: Set<(enabled: boolean) => void> = new Set();
 
@@ -91,16 +91,38 @@ class AudioManager {
   constructor() {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('md_portfolio_audio');
-      this.isEnabled = saved === 'true';
+      // Audio is ENABLED by default unless the user explicitly muted it previously
+      this.isEnabled = saved !== 'false';
 
       const unlockAudio = () => {
-        if (this.ctx && this.ctx.state === 'suspended') {
-          this.ctx.resume();
+        if (!this.isEnabled) return;
+        const ctx = this.getContext();
+        if (ctx) {
+          if (ctx.state === 'suspended') {
+            ctx.resume().then(() => {
+              if (this.isEnabled && !this.isPlayingAmbience) {
+                this.startAmbience();
+              }
+            }).catch(() => {});
+          } else if (!this.isPlayingAmbience) {
+            this.startAmbience();
+          }
         }
       };
+
+      // Attempt immediate unlock in case browser policy allows autoplay
+      try {
+        if (this.isEnabled) {
+          unlockAudio();
+        }
+      } catch {}
+
+      // Attach user gesture listeners to unlock and start playback seamlessly
       window.addEventListener('click', unlockAudio, { passive: true });
       window.addEventListener('keydown', unlockAudio, { passive: true });
       window.addEventListener('touchstart', unlockAudio, { passive: true });
+      window.addEventListener('scroll', unlockAudio, { passive: true });
+      window.addEventListener('pointerdown', unlockAudio, { passive: true });
     }
   }
 
