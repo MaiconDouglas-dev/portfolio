@@ -7,12 +7,16 @@ import Contact from '@/components/Contact';
 import Footer from '@/components/Footer';
 import LusionBackground from '@/components/LusionBackground';
 import ScrollProgressHUD from '@/components/ScrollProgressHUD';
+import SoundFXListener from '@/components/SoundFXListener';
 
 export default function HomePage() {
   return (
     <main className="relative min-h-screen flex flex-col bg-black text-[#f5f5f7] overflow-x-clip selection:bg-appleRed-600 selection:text-white">
       {/* 3D WebGL Universe Background (Three.js with fluid mouse disturbance & depth camera) */}
       <LusionBackground />
+
+      {/* Global Interactive Sound Effects Manager */}
+      <SoundFXListener />
 
       {/* Lusion-style Vertical Scroll Progress HUD */}
       <ScrollProgressHUD />

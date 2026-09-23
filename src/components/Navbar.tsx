@@ -5,11 +5,17 @@ import { useApp } from '@/context/AppContext';
 import { Languages, Menu, X, ArrowUpRight, Github, Linkedin, MessageSquare } from 'lucide-react';
 import AudioEqualizer from './AudioEqualizer';
 import MagneticButton from './MagneticButton';
+import { soundManager } from '@/utils/audio';
 
 export default function Navbar() {
   const { lang, toggleLang, t } = useApp();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const handleToggleLang = () => {
+    soundManager.playTab();
+    toggleLang();
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -88,7 +94,7 @@ export default function Navbar() {
           {/* Language Switcher */}
           <MagneticButton strength={0.25}>
             <button
-              onClick={toggleLang}
+              onClick={handleToggleLang}
               title={lang === 'pt' ? 'Switch to English' : 'Mudar para Português'}
               className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-mono font-semibold border border-white/[0.08] bg-white/[0.03] text-neutral-300 hover:border-appleRed-500/50 hover:text-appleRed-400 hover:bg-white/[0.06] transition-all duration-200"
             >
@@ -116,7 +122,7 @@ export default function Navbar() {
         <div className="flex sm:hidden items-center gap-2">
           <AudioEqualizer />
           <button
-            onClick={toggleLang}
+            onClick={handleToggleLang}
             className="px-2.5 py-1.5 rounded-lg text-xs font-mono font-bold border border-white/[0.08] bg-white/[0.04] text-neutral-200"
           >
             {lang.toUpperCase()}

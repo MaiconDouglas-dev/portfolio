@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Play, Code2, Send, Database, ShieldCheck, CheckCircle2 } from 'lucide-react';
 import { clyvoMockEndpoints } from '@/data/projects';
 import { useApp } from '@/context/AppContext';
+import { soundManager } from '@/utils/audio';
 
 interface Props {
   isOpen: boolean;
@@ -16,6 +17,17 @@ export default function ApiSwaggerModal({ isOpen, onClose }: Props) {
   const [hasExecuted, setHasExecuted] = useState(false);
   const [isExecuting, setIsExecuting] = useState(false);
 
+  useEffect(() => {
+    if (isOpen) {
+      soundManager.playModalOpen();
+    }
+  }, [isOpen]);
+
+  const handleClose = () => {
+    soundManager.playModalClose();
+    onClose();
+  };
+
   if (!isOpen) return null;
 
   const current = clyvoMockEndpoints[selectedIdx];
@@ -26,6 +38,7 @@ export default function ApiSwaggerModal({ isOpen, onClose }: Props) {
     setTimeout(() => {
       setIsExecuting(false);
       setHasExecuted(true);
+      soundManager.playSuccess();
     }, 280);
   };
 
@@ -45,7 +58,10 @@ export default function ApiSwaggerModal({ isOpen, onClose }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-md animate-fadeIn">
+    <div
+      onClick={handleClose}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-md animate-fadeIn"
+    >
       <div
         className="relative w-full max-w-5xl max-h-[90vh] overflow-y-auto custom-scrollbar bg-[#0c0c11] border border-white/[0.12] rounded-3xl shadow-2xl p-6 sm:p-8"
         onClick={(e) => e.stopPropagation()}
@@ -62,7 +78,7 @@ export default function ApiSwaggerModal({ isOpen, onClose }: Props) {
             </p>
           </div>
           <button
-            onClick={onClose}
+            onClick={handleClose}
             className="p-2 rounded-xl border border-white/[0.08] hover:bg-neutral-800 text-neutral-400 hover:text-white transition-colors cursor-pointer"
           >
             <X size={18} />
@@ -81,6 +97,7 @@ export default function ApiSwaggerModal({ isOpen, onClose }: Props) {
               <button
                 key={idx}
                 onClick={() => {
+                  soundManager.playTab();
                   setSelectedIdx(idx);
                   setHasExecuted(false);
                 }}

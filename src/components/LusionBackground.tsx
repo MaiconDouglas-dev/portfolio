@@ -137,8 +137,7 @@ export default function LusionBackground() {
     const pulseVectors = pulses.map((p) => new THREE.Vector4(p.progress, p.length, p.lineIdx, 1.0));
     const pulseColorVectors = pulses.map((p) => p.color);
 
-    // 4. Hardware-Accelerated Vertex & Fragment Shaders
-    // Seamless infinite edge falloff + planetary horizon curvature
+    // 4. Hardware-Accelerated Vertex & Fragment Shaders for the 3D Terrain
     const vertexShader = `
       uniform float uTime;
       uniform vec3 uMouse;
@@ -304,56 +303,156 @@ export default function LusionBackground() {
     const terrainMesh = new THREE.LineSegments(meshGeometry, meshMaterial);
     scene.add(terrainMesh);
 
-    // 5. Floating Cyber Stardust (Expanded Ambient Depth across 4200x3200)
-    const sparkCount = isMobile ? 90 : 160;
-    const sparkGeometry = new THREE.BufferGeometry();
-    const sparkPositions = new Float32Array(sparkCount * 3);
-    const sparkColors = new Float32Array(sparkCount * 3);
-    const sparkOriginals: { x: number; y: number; z: number; speed: number; phase: number }[] = [];
+    // ============================================================================
+    // 5. Authentic Twinkling Starfield & Galaxy River (Custom Star Shader)
+    // Ethereal celestial glow, stellar scintillation, and astronomical diffraction flares
+    // ============================================================================
+    const starCount = isMobile ? 240 : 460;
+    const starPositions = new Float32Array(starCount * 3);
+    const starColors = new Float32Array(starCount * 3);
+    const starSizes = new Float32Array(starCount);
+    const starTwinkleSpeeds = new Float32Array(starCount);
+    const starTwinklePhases = new Float32Array(starCount);
 
-    const sparkPalette = [
-      new THREE.Color(0xff2d55),
-      new THREE.Color(0x0a84ff),
-      new THREE.Color(0x8b5cf6),
-      new THREE.Color(0xffffff),
+    // Star color temperatures (Sirius blue-white, Apple ruby red dwarf, gold sun, white-hot, violet pulsar)
+    const starPalette = [
+      new THREE.Color(0xffffff), // Pure white
+      new THREE.Color(0xa8d5ff), // Deep cyan-blue (Class O/B)
+      new THREE.Color(0xffd166), // Golden Amber (Class G/K)
+      new THREE.Color(0xff3b5c), // Apple Ruby (Red Supergiant)
+      new THREE.Color(0xc084fc), // Violet pulsar
+      new THREE.Color(0xffffff), // More white stars for balance
     ];
 
-    for (let s = 0; s < sparkCount; s++) {
-      const sx = (Math.random() - 0.5) * 4200;
-      const sy = baseY + Math.random() * 340;
-      const sz = (Math.random() - 0.5) * 3000 - 100;
+    for (let s = 0; s < starCount; s++) {
+      let sx: number;
+      let sy: number;
+      let sz: number;
 
-      sparkPositions[s * 3] = sx;
-      sparkPositions[s * 3 + 1] = sy;
-      sparkPositions[s * 3 + 2] = sz;
+      // 65% of stars concentrated along an inclined galactic river / spiral arm band
+      if (s < starCount * 0.65) {
+        const t = (Math.random() - 0.5) * 4400;
+        const angle = -0.32;
+        const spreadY = (Math.random() - 0.5) * (Math.random() * 420);
+        const spreadZ = (Math.random() - 0.5) * 450;
+        sx = t;
+        sy = baseY + 180 + t * Math.sin(angle) * 0.12 + spreadY;
+        sz = t * Math.cos(angle) * 0.28 + spreadZ - 200;
+      } else {
+        // 35% scattered across the celestial background
+        sx = (Math.random() - 0.5) * 4400;
+        sy = baseY + 40 + Math.random() * 480;
+        sz = (Math.random() - 0.5) * 3200 - 150;
+      }
 
-      const col = sparkPalette[Math.floor(Math.random() * sparkPalette.length)];
-      sparkColors[s * 3] = col.r;
-      sparkColors[s * 3 + 1] = col.g;
-      sparkColors[s * 3 + 2] = col.b;
+      starPositions[s * 3] = sx;
+      starPositions[s * 3 + 1] = sy;
+      starPositions[s * 3 + 2] = sz;
 
-      sparkOriginals.push({
-        x: sx,
-        y: sy,
-        z: sz,
-        speed: 0.2 + Math.random() * 0.6,
-        phase: Math.random() * Math.PI * 2,
-      });
+      // Temperature color
+      const col = starPalette[Math.floor(Math.random() * starPalette.length)];
+      starColors[s * 3] = col.r;
+      starColors[s * 3 + 1] = col.g;
+      starColors[s * 3 + 2] = col.b;
+
+      // Star size distribution: 75% micro-stars, 20% medium stars, 5% brilliant anchor stars
+      const randType = Math.random();
+      if (randType > 0.95) {
+        starSizes[s] = 8.5 + Math.random() * 4.0; // Major prominent stars with cross flare
+      } else if (randType > 0.75) {
+        starSizes[s] = 5.0 + Math.random() * 2.5; // Medium luminous stars
+      } else {
+        starSizes[s] = 2.4 + Math.random() * 1.8; // Faint micro stardust
+      }
+
+      starTwinkleSpeeds[s] = 0.8 + Math.random() * 2.2;
+      starTwinklePhases[s] = Math.random() * Math.PI * 2;
     }
 
-    sparkGeometry.setAttribute('position', new THREE.BufferAttribute(sparkPositions, 3));
-    sparkGeometry.setAttribute('color', new THREE.BufferAttribute(sparkColors, 3));
+    const starGeometry = new THREE.BufferGeometry();
+    starGeometry.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
+    starGeometry.setAttribute('aColor', new THREE.BufferAttribute(starColors, 3));
+    starGeometry.setAttribute('aSize', new THREE.BufferAttribute(starSizes, 1));
+    starGeometry.setAttribute('aTwinkleSpeed', new THREE.BufferAttribute(starTwinkleSpeeds, 1));
+    starGeometry.setAttribute('aTwinklePhase', new THREE.BufferAttribute(starTwinklePhases, 1));
 
-    const sparkMaterial = new THREE.PointsMaterial({
-      size: 3.2,
-      vertexColors: true,
+    const starVertexShader = `
+      uniform float uTime;
+      uniform float uPixelRatio;
+
+      attribute float aSize;
+      attribute float aTwinkleSpeed;
+      attribute float aTwinklePhase;
+      attribute vec3 aColor;
+
+      varying vec3 vStarColor;
+      varying float vTwinkle;
+
+      void main() {
+        vec3 pos = position;
+
+        // Subtle cosmic drift on GPU
+        pos.y += sin(uTime * 0.7 * aTwinkleSpeed + aTwinklePhase) * 10.0;
+        pos.x += cos(uTime * 0.3 * aTwinkleSpeed + aTwinklePhase) * 8.0;
+
+        // Stellar scintillation / twinkling
+        float t = uTime * aTwinkleSpeed + aTwinklePhase;
+        float twinkle = 0.55 + 0.35 * sin(t) + 0.20 * pow(max(0.0, sin(t * 1.8)), 6.0);
+
+        vStarColor = aColor;
+        vTwinkle = twinkle;
+
+        vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
+        gl_PointSize = clamp((aSize * twinkle * (300.0 / -mvPosition.z)) * uPixelRatio, 1.0, 38.0);
+        gl_Position = projectionMatrix * mvPosition;
+      }
+    `;
+
+    const starFragmentShader = `
+      varying vec3 vStarColor;
+      varying float vTwinkle;
+
+      void main() {
+        vec2 coord = gl_PointCoord - vec2(0.5);
+        float dist = length(coord);
+
+        if (dist > 0.5) discard;
+
+        // 1. Hot brilliant star core
+        float core = exp(-dist * 12.0);
+
+        // 2. Soft astronomical celestial halo
+        float halo = exp(-dist * 4.0) * 0.45;
+
+        // 3. Subtle 4-point diffraction cross (astronomy lens diffraction spike)
+        float crossX = max(0.0, 1.0 - abs(coord.x) * 14.0) * max(0.0, 1.0 - abs(coord.y) * 2.5);
+        float crossY = max(0.0, 1.0 - abs(coord.y) * 14.0) * max(0.0, 1.0 - abs(coord.x) * 2.5);
+        float flare = (crossX + crossY) * 0.28;
+
+        float brightness = core + halo + flare;
+        float alpha = clamp(brightness * vTwinkle * 0.85, 0.0, 1.0);
+
+        // Center blushes to pure white, outer halo preserves star temperature tint
+        vec3 finalColor = mix(vStarColor, vec3(1.0), core * 0.65);
+
+        gl_FragColor = vec4(finalColor, alpha);
+      }
+    `;
+
+    const starMaterial = new THREE.ShaderMaterial({
+      vertexShader: starVertexShader,
+      fragmentShader: starFragmentShader,
+      uniforms: {
+        uTime: { value: 0 },
+        uPixelRatio: { value: Math.min(window.devicePixelRatio, isMobile ? 1.25 : 1.5) },
+      },
       transparent: true,
-      opacity: 0.75,
       blending: THREE.AdditiveBlending,
+      depthWrite: false,
     });
 
-    const sparkPoints = new THREE.Points(sparkGeometry, sparkMaterial);
-    scene.add(sparkPoints);
+    const starPoints = new THREE.Points(starGeometry, starMaterial);
+    scene.add(starPoints);
 
     // 6. Fluid Mouse & Touch Tracking & Kinetic Wake
     const mouse = {
@@ -425,7 +524,9 @@ export default function LusionBackground() {
       camera.updateProjectionMatrix();
 
       renderer.setSize(w, h);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, mobile ? 1.25 : 1.5));
+      const dpr = Math.min(window.devicePixelRatio, mobile ? 1.25 : 1.5);
+      renderer.setPixelRatio(dpr);
+      starMaterial.uniforms.uPixelRatio.value = dpr;
     };
 
     updateViewportConfig();
@@ -486,12 +587,15 @@ export default function LusionBackground() {
       camera.rotation.x = -0.34 + mouse.y * 0.035 - (scrollFraction * 0.08);
       camera.lookAt(mouse.x * 20, targetLookY, -180);
 
-      // Update Shader Uniforms (GPU execution only)
+      // Update Terrain Shader Uniforms (GPU execution only)
       meshMaterial.uniforms.uTime.value = time;
       meshMaterial.uniforms.uMouse.value.copy(mouseWorld);
       meshMaterial.uniforms.uTrail.value.copy(trailWorld);
       meshMaterial.uniforms.uKineticBoost.value = kineticBoost;
       meshMaterial.uniforms.uInfluenceRadius.value = influenceRadius;
+
+      // Update Twinkling Stars Shader Uniform
+      starMaterial.uniforms.uTime.value = time;
 
       // Update pulses
       const pulseSpeedMultiplier = 1 + Math.min(scrollVelocity * 0.015, 2.0);
@@ -500,17 +604,6 @@ export default function LusionBackground() {
         if (p.progress > 1.25) p.progress = -0.25;
         pulseVectors[idx].x = p.progress;
       });
-
-      // Update cyber stardust drift
-      const sparkPosAttr = sparkGeometry.attributes.position;
-      for (let s = 0; s < sparkCount; s++) {
-        const orig = sparkOriginals[s];
-        const sY = orig.y + Math.sin(time * orig.speed + orig.phase) * 16;
-        const sX = orig.x + Math.cos(time * 0.35 * orig.speed + orig.phase) * 10;
-        sparkPositions[s * 3] = sX;
-        sparkPositions[s * 3 + 1] = sY;
-      }
-      sparkPosAttr.needsUpdate = true;
 
       renderer.render(scene, camera);
     };
@@ -530,8 +623,8 @@ export default function LusionBackground() {
 
       meshGeometry.dispose();
       meshMaterial.dispose();
-      sparkGeometry.dispose();
-      sparkMaterial.dispose();
+      starGeometry.dispose();
+      starMaterial.dispose();
       renderer.dispose();
 
       if (container.contains(renderer.domElement)) {

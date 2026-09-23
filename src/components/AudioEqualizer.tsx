@@ -1,53 +1,22 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
+import { soundManager } from '@/utils/audio';
 
 export default function AudioEqualizer() {
   const [isPlaying, setIsPlaying] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const audioCtxRef = useRef<AudioContext | null>(null);
 
-  // Play subtle high-tech acoustic blip
-  const playInteractionSound = (freq = 440, duration = 0.08) => {
-    try {
-      if (!audioCtxRef.current) {
-        const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-        audioCtxRef.current = new AudioCtx();
-      }
-
-      const ctx = audioCtxRef.current;
-      if (ctx.state === 'suspended') {
-        ctx.resume();
-      }
-
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(freq, ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(freq * 1.5, ctx.currentTime + duration);
-
-      gain.gain.setValueAtTime(0.04, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration);
-
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-
-      osc.start();
-      osc.stop(ctx.currentTime + duration);
-    } catch {
-      // Audio context might be restricted before first gesture
-    }
-  };
+  useEffect(() => {
+    // Subscribe to global audio manager state
+    const unsubscribe = soundManager.subscribe((enabled) => {
+      setIsPlaying(enabled);
+    });
+    return unsubscribe;
+  }, []);
 
   const toggleSound = () => {
-    const nextState = !isPlaying;
-    setIsPlaying(nextState);
-    if (nextState) {
-      playInteractionSound(520, 0.12);
-    } else {
-      playInteractionSound(280, 0.09);
-    }
+    soundManager.toggle();
   };
 
   // Canvas visualizer loop
@@ -74,10 +43,10 @@ export default function AudioEqualizer() {
       for (let i = 0; i < barCount; i++) {
         let height = 4;
         if (isPlaying) {
-          // Dynamic harmonic motion
-          const wave1 = Math.sin(time * 1.5 + i * 1.2);
-          const wave2 = Math.cos(time * 2.2 + i * 0.8);
-          height = 4 + Math.abs(wave1 * 0.6 + wave2 * 0.4) * 14;
+          // Dynamic harmonic motion responsive to cosmic drone
+          const wave1 = Math.sin(time * 1.6 + i * 1.3);
+          const wave2 = Math.cos(time * 2.3 + i * 0.9);
+          height = 5 + Math.abs(wave1 * 0.65 + wave2 * 0.35) * 14;
         } else {
           // Subtle idle pulse
           height = 3.5 + Math.sin(time + i * 0.8) * 1.5;
@@ -86,13 +55,12 @@ export default function AudioEqualizer() {
         const x = startX + i * (barWidth + gap);
         const y = (canvas.height - height) / 2;
 
-        // Gradient bar color matching Apple Crimson -> Violet
         const grad = ctx.createLinearGradient(0, y, 0, y + height);
         if (isPlaying) {
           grad.addColorStop(0, '#ff2d55');
           grad.addColorStop(1, '#0a84ff');
         } else {
-          grad.addColorStop(0, 'rgba(255, 255, 255, 0.4)');
+          grad.addColorStop(0, 'rgba(255, 255, 255, 0.45)');
           grad.addColorStop(1, 'rgba(255, 255, 255, 0.2)');
         }
 
@@ -114,11 +82,11 @@ export default function AudioEqualizer() {
     <button
       type="button"
       onClick={toggleSound}
-      title={isPlaying ? 'Silenciar áudio ambiental' : 'Ativar áudio sintetizado'}
-      aria-label="Controle de áudio"
+      title={isPlaying ? 'Silenciar áudio e música espacial' : 'Ativar música espacial e efeitos sonoros'}
+      aria-label={isPlaying ? 'Silenciar áudio' : 'Ativar áudio'}
       className={`group relative flex items-center justify-center w-10 h-10 rounded-full border transition-all duration-300 cursor-pointer ${
         isPlaying
-          ? 'border-appleRed-500/50 bg-appleRed-500/10 shadow-[0_0_15px_rgba(255,45,85,0.25)]'
+          ? 'border-appleRed-500/60 bg-appleRed-500/15 shadow-[0_0_18px_rgba(255,45,85,0.35)] ring-1 ring-appleRed-500/30'
           : 'border-white/[0.08] bg-white/[0.03] hover:border-white/20'
       }`}
     >

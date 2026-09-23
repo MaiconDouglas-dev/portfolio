@@ -1,8 +1,9 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { X, Layers, ShieldCheck, Database, Server, Smartphone, CheckCircle2, Lock } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
+import { soundManager } from '@/utils/audio';
 
 interface Props {
   isOpen: boolean;
@@ -12,10 +13,24 @@ interface Props {
 export default function ArchitectureModal({ isOpen, onClose }: Props) {
   const { lang, t } = useApp();
 
+  useEffect(() => {
+    if (isOpen) {
+      soundManager.playModalOpen();
+    }
+  }, [isOpen]);
+
+  const handleClose = () => {
+    soundManager.playModalClose();
+    onClose();
+  };
+
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-md animate-fadeIn">
+    <div
+      onClick={handleClose}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-md animate-fadeIn"
+    >
       <div
         className="relative w-full max-w-5xl max-h-[90vh] overflow-y-auto custom-scrollbar bg-[#0c0c11] border border-white/[0.12] rounded-3xl shadow-2xl p-6 sm:p-8"
         onClick={(e) => e.stopPropagation()}
@@ -32,7 +47,7 @@ export default function ArchitectureModal({ isOpen, onClose }: Props) {
             </p>
           </div>
           <button
-            onClick={onClose}
+            onClick={handleClose}
             className="p-2 rounded-xl border border-white/[0.08] hover:bg-neutral-800 text-neutral-400 hover:text-white transition-colors cursor-pointer"
           >
             <X size={18} />
