@@ -50,9 +50,10 @@ export default function LusionBackground() {
     violetLight.position.set(0, 220, -320);
     scene.add(violetLight);
 
-    // 4. Cybernetic Topographic Mesh / Flow Fabric
-    const lineCount = 50; // Horizontal contour curves
-    const pointsPerLine = 88; // Points resolution for silky smooth curves
+    // 4. Cybernetic Topographic Mesh / Flow Fabric (High Subdivision Resolution)
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+    const lineCount = isMobile ? 50 : 64; // High-density horizontal contour curves
+    const pointsPerLine = isMobile ? 200 : 300; // Ultra-fine sampling ("cuts") for silky continuous curves
     const width = 1800;
     const depth = 1600;
     const baseY = -115;
@@ -114,9 +115,9 @@ export default function LusionBackground() {
       });
     }
 
-    // 5. Longitudinal Perspective Ribs (Transversal Lattice)
-    const ribCount = 20;
-    const ribPoints = 50;
+    // 5. Longitudinal Perspective Ribs (High-Density Transversal Cuts)
+    const ribCount = isMobile ? 20 : 28;
+    const ribPoints = isMobile ? 140 : 220; // Silky vertical curve cuts
     const ribLines: { geometry: THREE.BufferGeometry; positions: Float32Array; colors: Float32Array; ribIndex: number; baseX: number }[] = [];
 
     const ribMaterial = new THREE.LineBasicMaterial({
@@ -321,46 +322,55 @@ export default function LusionBackground() {
       time: number,
       kineticBoost: number
     ): { y: number; mouseInfluence: number } => {
-      // Layered mathematical ocean frequencies
-      const wave1 = Math.sin(x * 0.0032 + time * 1.25) * 34;
-      const wave2 = Math.cos(z * 0.0042 + time * 0.95) * 30;
-      const wave3 = Math.sin((x * 0.0022 + z * 0.0032) + time * 1.5) * 20;
-      const ripple = Math.cos((x - z) * 0.0035 - time * 0.8) * 14;
+      // 1. Organic, broad ocean harmonics (gentle wavelengths to avoid sharp slopes)
+      const wave1 = Math.sin(x * 0.0024 + time * 0.95) * 30;
+      const wave2 = Math.cos(z * 0.0032 + time * 0.75) * 26;
+      const wave3 = Math.sin(x * 0.0016 + z * 0.0026 + time * 1.15) * 18;
+      const ripple = Math.cos((x * 0.0022 - z * 0.0022) - time * 0.65) * 12;
 
       let y = baseY + wave1 + wave2 + wave3 + ripple;
 
-      // Primary cursor ripple
+      // 2. Primary cursor fluid deformation
       const dx1 = x - mouseWorld.x;
       const dz1 = z - mouseWorld.z;
       const distSq1 = dx1 * dx1 + dz1 * dz1;
-      const influenceRadius = 280 + kineticBoost * 80;
+      const influenceRadius = 320 + kineticBoost * 90;
       const radiusSq1 = influenceRadius * influenceRadius;
 
       let totalInfluence = 0;
 
       if (distSq1 < radiusSq1) {
-        const factor1 = 1 - distSq1 / radiusSq1;
-        const smooth1 = factor1 * factor1 * (3 - 2 * factor1);
+        const ratio1 = distSq1 / radiusSq1;
+        const w1 = 1 - ratio1;
+        // Quintic Perlin smootherstep: 6w^5 - 15w^4 + 10w^3 (guarantees zero 1st & 2nd derivatives at borders)
+        const smooth1 = w1 * w1 * w1 * (w1 * (w1 * 6 - 15) + 10);
+
+        // Core damping: eliminates central cone/crease ("quebra de linha") by making the ripple fade smoothly at center
+        const coreDamp = distSq1 / (distSq1 + 1200);
         const dist1 = Math.sqrt(distSq1);
-        // Concentric outward wave dispersion
-        const ripple1 = Math.sin(dist1 * 0.055 - time * 7.5) * (18 + kineticBoost * 12);
-        const swell1 = smooth1 * (60 + kineticBoost * 25) + ripple1 * smooth1;
+
+        // Silky, broad liquid harmonic ripple (0.026 spatial frequency gives wide, undulating water waves)
+        const ripple1 = Math.cos(dist1 * 0.026 - time * 4.4) * coreDamp * (16 + kineticBoost * 12);
+        const dome1 = smooth1 * (68 + kineticBoost * 28);
+        const swell1 = dome1 + ripple1 * smooth1;
+
         y += swell1;
         totalInfluence += smooth1;
       }
 
-      // Secondary trailing wake (creates a liquid trailing tail behind cursor motion)
+      // 3. Secondary trailing liquid wake (leaves a smooth trailing wave behind cursor motion)
       const dx2 = x - trailWorld.x;
       const dz2 = z - trailWorld.z;
       const distSq2 = dx2 * dx2 + dz2 * dz2;
-      const radiusSq2 = 220 * 220;
+      const radiusSq2 = 240 * 240;
 
       if (distSq2 < radiusSq2) {
-        const factor2 = 1 - distSq2 / radiusSq2;
-        const smooth2 = factor2 * factor2 * (3 - 2 * factor2);
-        const trailingSwell = smooth2 * 25;
+        const ratio2 = distSq2 / radiusSq2;
+        const w2 = 1 - ratio2;
+        const smooth2 = w2 * w2 * w2 * (w2 * (w2 * 6 - 15) + 10);
+        const trailingSwell = smooth2 * (24 + kineticBoost * 10);
         y += trailingSwell;
-        totalInfluence += smooth2 * 0.5;
+        totalInfluence += smooth2 * 0.45;
       }
 
       return { y, mouseInfluence: THREE.MathUtils.clamp(totalInfluence, 0, 1) };
@@ -381,13 +391,13 @@ export default function LusionBackground() {
       const mouseDeltaY = mouse.targetY - mouse.y;
       mouse.speed = Math.sqrt(mouseDeltaX * mouseDeltaX + mouseDeltaY * mouseDeltaY);
 
-      mouse.x += mouseDeltaX * 0.08;
-      mouse.y += mouseDeltaY * 0.08;
+      mouse.x += mouseDeltaX * 0.075;
+      mouse.y += mouseDeltaY * 0.075;
 
-      // Primary world target interpolation
-      mouseWorld.lerp(mouseWorldTarget, 0.11);
-      // Trailing wake point lags behind for liquid sensation
-      trailWorld.lerp(mouseWorld, 0.045);
+      // Primary world target interpolation with fluid viscosity
+      mouseWorld.lerp(mouseWorldTarget, 0.09);
+      // Trailing wake point lags behind for luxurious liquid sensation
+      trailWorld.lerp(mouseWorld, 0.038);
 
       const scrollDelta = scrollTargetY - scrollY;
       const scrollVelocity = Math.abs(scrollDelta);
