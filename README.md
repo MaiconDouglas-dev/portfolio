@@ -123,7 +123,7 @@ maicon-portfolio/
 │   │   ├── KineticText.tsx       # Tipografia cinética com máscara
 │   │   ├── AudioEqualizer.tsx    # Mini equalizador em canvas 2D
 │   │   ├── SmoothScroll.tsx      # Provedor Lenis para momentum scrolling
-│   │   ├── Navbar.tsx            # Header com áudio, idioma, tema e navegação
+│   │   ├── Navbar.tsx            # Header com áudio, idioma e navegação
 │   │   ├── Hero.tsx              # Hero com títulos cinéticos e TerminalCard
 │   │   ├── TerminalCard.tsx      # Terminal interativo com simulação de endpoints
 │   │   ├── About.tsx             # Trajetória, formação e pilares
@@ -134,7 +134,7 @@ maicon-portfolio/
 │   │   ├── Contact.tsx           # Canais diretos de contato
 │   │   └── Footer.tsx            # Rodapé minimalista
 │   ├── context/
-│   │   └── AppContext.tsx        # Gerenciamento de tema (Dark/Light) e i18n
+│   │   └── AppContext.tsx        # Gerenciamento de idioma (i18n) e estado global
 │   ├── data/
 │   │   ├── projects.ts           # Metadados de projetos e mocks de API
 │   │   ├── skills.ts             # Estrutura categorizada de competências

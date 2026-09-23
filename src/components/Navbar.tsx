@@ -2,12 +2,12 @@
 
 import React, { useState, useEffect } from 'react';
 import { useApp } from '@/context/AppContext';
-import { Sun, Moon, Languages, Menu, X, ArrowUpRight, Github, Linkedin, MessageSquare } from 'lucide-react';
+import { Languages, Menu, X, ArrowUpRight, Github, Linkedin, MessageSquare } from 'lucide-react';
 import AudioEqualizer from './AudioEqualizer';
 import MagneticButton from './MagneticButton';
 
 export default function Navbar() {
-  const { theme, toggleTheme, lang, toggleLang, t } = useApp();
+  const { lang, toggleLang, t } = useApp();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -97,21 +97,6 @@ export default function Navbar() {
             </button>
           </MagneticButton>
 
-          {/* Theme Switcher */}
-          <MagneticButton strength={0.25}>
-            <button
-              onClick={toggleTheme}
-              title={theme === 'dark' ? 'Ativar modo claro' : 'Ativar modo escuro'}
-              className="p-2.5 rounded-xl border border-white/[0.08] bg-white/[0.03] text-neutral-300 hover:border-appleRed-500/50 hover:text-appleRed-400 hover:bg-white/[0.06] transition-all duration-200"
-            >
-              {theme === 'dark' ? (
-                <Sun size={16} className="text-amber-400" />
-              ) : (
-                <Moon size={16} className="text-appleViolet-400" />
-              )}
-            </button>
-          </MagneticButton>
-
           {/* Magnetic Let's Talk CTA */}
           <MagneticButton strength={0.35}>
             <a
@@ -135,12 +120,6 @@ export default function Navbar() {
             className="px-2.5 py-1.5 rounded-lg text-xs font-mono font-bold border border-white/[0.08] bg-white/[0.04] text-neutral-200"
           >
             {lang.toUpperCase()}
-          </button>
-          <button
-            onClick={toggleTheme}
-            className="p-2 rounded-lg border border-white/[0.08] bg-white/[0.04] text-neutral-200"
-          >
-            {theme === 'dark' ? <Sun size={16} className="text-amber-400" /> : <Moon size={16} className="text-appleViolet-400" />}
           </button>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}

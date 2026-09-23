@@ -31,9 +31,9 @@ export default function TerminalCard() {
   const current = commands[selectedCmd];
 
   return (
-    <div className="rounded-2xl overflow-hidden border border-neutral-200 dark:border-white/[0.08] bg-white dark:bg-[#0c0c11] shadow-xl">
+    <div className="rounded-2xl overflow-hidden border border-white/[0.08] bg-[#0c0c11] shadow-xl">
       {/* Top Bar */}
-      <div className="flex items-center justify-between px-3.5 py-2.5 bg-neutral-100 dark:bg-black border-b border-neutral-200 dark:border-white/[0.06]">
+      <div className="flex items-center justify-between px-3.5 py-2.5 bg-black border-b border-white/[0.06]">
         <div className="flex items-center gap-1.5">
           <div className="w-2.5 h-2.5 rounded-full bg-appleRed-500/80" />
           <div className="w-2.5 h-2.5 rounded-full bg-amber-400/80" />
@@ -46,7 +46,7 @@ export default function TerminalCard() {
       </div>
 
       {/* Commands Tabs */}
-      <div className="flex gap-1 p-2 bg-neutral-50 dark:bg-black/50 border-b border-neutral-200 dark:border-white/[0.04]">
+      <div className="flex gap-1 p-2 bg-black/50 border-b border-white/[0.04]">
         {commands.map((cmd, idx) => (
           <button
             key={idx}

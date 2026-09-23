@@ -16,26 +16,19 @@ interface AppContextType {
 const AppContext = createContext<AppContextType | null>(null);
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>('dark');
   const [lang, setLang] = useState<Language>('pt');
   const [mounted, setMounted] = useState(false);
+  const theme: Theme = 'dark';
 
   useEffect(() => {
-    // Check saved preferences
-    const savedTheme = localStorage.getItem('md_portfolio_theme') as Theme | null;
-    const savedLang = localStorage.getItem('md_portfolio_lang') as Language | null;
+    // Clear any legacy theme preference to ensure pure Dark OLED experience
+    localStorage.removeItem('md_portfolio_theme');
 
-    if (savedTheme && (savedTheme === 'dark' || savedTheme === 'light')) {
-      setTheme(savedTheme);
-    } else {
-      // Default to dark mode for developer vibe
-      setTheme('dark');
-    }
+    const savedLang = localStorage.getItem('md_portfolio_lang') as Language | null;
 
     if (savedLang && (savedLang === 'pt' || savedLang === 'en')) {
       setLang(savedLang);
     } else {
-      // Detect browser language
       const browserLang = navigator.language.toLowerCase();
       if (browserLang.startsWith('en')) {
         setLang('en');
@@ -44,17 +37,14 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       }
     }
 
+    // Enforce dark mode on root
+    const root = document.documentElement;
+    root.classList.remove('light');
+    root.classList.add('dark');
+    root.style.colorScheme = 'dark';
+
     setMounted(true);
   }, []);
-
-  useEffect(() => {
-    if (!mounted) return;
-    const root = document.documentElement;
-    root.classList.remove('dark', 'light');
-    root.classList.add(theme);
-    root.style.colorScheme = theme;
-    localStorage.setItem('md_portfolio_theme', theme);
-  }, [theme, mounted]);
 
   useEffect(() => {
     if (!mounted) return;
@@ -62,7 +52,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }, [lang, mounted]);
 
   const toggleTheme = () => {
-    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+    // Portfolio is permanently optimized for Apple Pro Dark OLED
   };
 
   const toggleLang = () => {
@@ -89,8 +79,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         t,
       }}
     >
-      {/* Avoid flash of unstyled content during SSR hydration */}
-      <div className={theme}>
+      <div className="dark">
         {children}
       </div>
     </AppContext.Provider>
