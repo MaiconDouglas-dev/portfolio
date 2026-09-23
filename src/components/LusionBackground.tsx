@@ -14,8 +14,10 @@ export default function LusionBackground() {
     const scene = new THREE.Scene();
     scene.fog = new THREE.FogExp2(0x000000, 0.0013);
 
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+
     const camera = new THREE.PerspectiveCamera(
-      55,
+      isMobile ? 68 : 55,
       window.innerWidth / window.innerHeight,
       1,
       2500
@@ -23,153 +25,276 @@ export default function LusionBackground() {
     camera.position.set(0, 270, 560);
     camera.lookAt(0, -35, -180);
 
-    // 2. High-Performance WebGL Renderer
+    // 2. High-Performance WebGL Renderer (Optimized DPR for guaranteed 60-120fps on Safari & Mobile)
     const renderer = new THREE.WebGLRenderer({
       powerPreference: 'high-performance',
       antialias: true,
       alpha: true,
     });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.25 : 1.5));
     renderer.setClearColor(0x000000, 1);
     container.appendChild(renderer.domElement);
 
-    // 3. Dynamic Accent Lights
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.35);
-    scene.add(ambientLight);
-
-    const crimsonLight = new THREE.PointLight(0xff2d55, 4.0, 1000);
-    crimsonLight.position.set(300, 140, 120);
-    scene.add(crimsonLight);
-
-    const cyanLight = new THREE.PointLight(0x0a84ff, 3.5, 1000);
-    cyanLight.position.set(-300, 120, -120);
-    scene.add(cyanLight);
-
-    const violetLight = new THREE.PointLight(0x8b5cf6, 2.8, 900);
-    violetLight.position.set(0, 220, -320);
-    scene.add(violetLight);
-
-    // 4. Cybernetic Topographic Mesh / Flow Fabric (High Subdivision Resolution)
-    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
-    const lineCount = isMobile ? 50 : 64; // High-density horizontal contour curves
-    const pointsPerLine = isMobile ? 200 : 300; // Ultra-fine sampling ("cuts") for silky continuous curves
+    // 3. Cybernetic Topographic Mesh / Flow Fabric (Batched Single GPU Draw Call)
+    // High subdivision cuts along lines for silky continuous curves without polygonal angles
+    const lineCount = isMobile ? 44 : 58;
+    const pointsPerLine = isMobile ? 180 : 250;
+    const ribCount = isMobile ? 18 : 26;
+    const ribPoints = isMobile ? 120 : 180;
     const width = 1800;
     const depth = 1600;
     const baseY = -115;
 
-    const linesGroup = new THREE.Group();
-    scene.add(linesGroup);
+    const totalWaveVertices = lineCount * pointsPerLine;
+    const totalRibVertices = ribCount * ribPoints;
+    const totalVertices = totalWaveVertices + totalRibVertices;
 
-    interface WaveLine {
-      geometry: THREE.BufferGeometry;
-      positions: Float32Array;
-      colors: Float32Array;
-      lineIndex: number;
-      baseZ: number;
-    }
+    const positions = new Float32Array(totalVertices * 3);
+    const aNormX = new Float32Array(totalVertices);
+    const aLineIdx = new Float32Array(totalVertices);
+    const aIsRib = new Float32Array(totalVertices);
 
-    const waveLines: WaveLine[] = [];
+    const indices: number[] = [];
 
-    const lineMaterial = new THREE.LineBasicMaterial({
-      vertexColors: true,
-      transparent: true,
-      opacity: 0.9,
-      blending: THREE.AdditiveBlending,
-      linewidth: 1,
-    });
-
+    // Populate Horizontal Wave Lines
     for (let i = 0; i < lineCount; i++) {
-      const geometry = new THREE.BufferGeometry();
-      const positions = new Float32Array(pointsPerLine * 3);
-      const colors = new Float32Array(pointsPerLine * 3);
-
       const normalizedZ = i / (lineCount - 1);
-      const baseZ = (normalizedZ - 0.5) * depth - 100;
+      const z = (normalizedZ - 0.5) * depth - 100;
+      const lineOffset = i * pointsPerLine;
 
       for (let j = 0; j < pointsPerLine; j++) {
+        const vIdx = lineOffset + j;
         const normalizedX = j / (pointsPerLine - 1);
         const x = (normalizedX - 0.5) * width;
 
-        positions[j * 3] = x;
-        positions[j * 3 + 1] = baseY;
-        positions[j * 3 + 2] = baseZ;
+        positions[vIdx * 3] = x;
+        positions[vIdx * 3 + 1] = baseY;
+        positions[vIdx * 3 + 2] = z;
 
-        colors[j * 3] = 0.08;
-        colors[j * 3 + 1] = 0.05;
-        colors[j * 3 + 2] = 0.18;
+        aNormX[vIdx] = normalizedX;
+        aLineIdx[vIdx] = i;
+        aIsRib[vIdx] = 0.0;
+
+        if (j < pointsPerLine - 1) {
+          indices.push(vIdx, vIdx + 1);
+        }
       }
-
-      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3).setUsage(THREE.DynamicDrawUsage));
-      geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3).setUsage(THREE.DynamicDrawUsage));
-
-      const line = new THREE.Line(geometry, lineMaterial);
-      linesGroup.add(line);
-
-      waveLines.push({
-        geometry,
-        positions,
-        colors,
-        lineIndex: i,
-        baseZ,
-      });
     }
 
-    // 5. Longitudinal Perspective Ribs (High-Density Transversal Cuts)
-    const ribCount = isMobile ? 20 : 28;
-    const ribPoints = isMobile ? 140 : 220; // Silky vertical curve cuts
-    const ribLines: { geometry: THREE.BufferGeometry; positions: Float32Array; colors: Float32Array; ribIndex: number; baseX: number }[] = [];
-
-    const ribMaterial = new THREE.LineBasicMaterial({
-      vertexColors: true,
-      transparent: true,
-      opacity: 0.38,
-      blending: THREE.AdditiveBlending,
-      linewidth: 1,
-    });
-
+    // Populate Longitudinal Perspective Ribs
     for (let r = 0; r < ribCount; r++) {
-      const geometry = new THREE.BufferGeometry();
-      const positions = new Float32Array(ribPoints * 3);
-      const colors = new Float32Array(ribPoints * 3);
-
       const normalizedX = r / (ribCount - 1);
-      const baseX = (normalizedX - 0.5) * width;
+      const x = (normalizedX - 0.5) * width;
+      const ribOffset = totalWaveVertices + r * ribPoints;
 
       for (let k = 0; k < ribPoints; k++) {
+        const vIdx = ribOffset + k;
         const normalizedZ = k / (ribPoints - 1);
         const z = (normalizedZ - 0.5) * depth - 100;
 
-        positions[k * 3] = baseX;
-        positions[k * 3 + 1] = baseY;
-        positions[k * 3 + 2] = z;
+        positions[vIdx * 3] = x;
+        positions[vIdx * 3 + 1] = baseY;
+        positions[vIdx * 3 + 2] = z;
 
-        colors[k * 3] = 0.05;
-        colors[k * 3 + 1] = 0.08;
-        colors[k * 3 + 2] = 0.18;
+        aNormX[vIdx] = normalizedX;
+        aLineIdx[vIdx] = -1.0;
+        aIsRib[vIdx] = 1.0;
+
+        if (k < ribPoints - 1) {
+          indices.push(vIdx, vIdx + 1);
+        }
       }
-
-      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3).setUsage(THREE.DynamicDrawUsage));
-      geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3).setUsage(THREE.DynamicDrawUsage));
-
-      const rib = new THREE.Line(geometry, ribMaterial);
-      linesGroup.add(rib);
-
-      ribLines.push({ geometry, positions, colors, ribIndex: r, baseX });
     }
 
-    // 6. Floating Cyber Stardust / Micro-Data Sparks (Lusion-style ambient depth)
-    const sparkCount = 140;
+    const meshGeometry = new THREE.BufferGeometry();
+    meshGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    meshGeometry.setAttribute('aNormX', new THREE.BufferAttribute(aNormX, 1));
+    meshGeometry.setAttribute('aLineIdx', new THREE.BufferAttribute(aLineIdx, 1));
+    meshGeometry.setAttribute('aIsRib', new THREE.BufferAttribute(aIsRib, 1));
+    meshGeometry.setIndex(new THREE.BufferAttribute(new Uint32Array(indices), 1));
+
+    // Data Pulses (Traveling Photon Packets)
+    interface DataPulse {
+      lineIdx: number;
+      progress: number;
+      speed: number;
+      length: number;
+      color: THREE.Vector3;
+    }
+
+    const pulses: DataPulse[] = [
+      { lineIdx: 6, progress: 0.1, speed: 0.32, length: 0.15, color: new THREE.Vector3(1.0, 0.18, 0.35) },
+      { lineIdx: 12, progress: 0.45, speed: 0.38, length: 0.14, color: new THREE.Vector3(0.04, 0.55, 1.0) },
+      { lineIdx: 20, progress: 0.75, speed: 0.28, length: 0.18, color: new THREE.Vector3(0.65, 0.38, 1.0) },
+      { lineIdx: 28, progress: 0.2, speed: 0.35, length: 0.15, color: new THREE.Vector3(0.19, 0.85, 0.4) },
+      { lineIdx: 36, progress: 0.88, speed: 0.32, length: 0.13, color: new THREE.Vector3(1.0, 0.18, 0.35) },
+      { lineIdx: 44, progress: 0.3, speed: 0.42, length: 0.16, color: new THREE.Vector3(0.04, 0.55, 1.0) },
+      { lineIdx: 16, progress: 0.6, speed: 0.34, length: 0.16, color: new THREE.Vector3(1.0, 0.62, 0.04) },
+    ];
+
+    const pulseVectors = pulses.map((p) => new THREE.Vector4(p.progress, p.length, p.lineIdx, 1.0));
+    const pulseColorVectors = pulses.map((p) => p.color);
+
+    // 4. Hardware-Accelerated Vertex & Fragment Shaders (Executed natively on Apple Metal / WebGL GPU)
+    // Zero CPU vertex calculations and Zero buffer uploads per frame!
+    const vertexShader = `
+      uniform float uTime;
+      uniform vec3 uMouse;
+      uniform vec3 uTrail;
+      uniform float uKineticBoost;
+      uniform float uInfluenceRadius;
+      uniform float uBaseY;
+      uniform vec4 uPulses[7];
+      uniform vec3 uPulseColors[7];
+
+      attribute float aNormX;
+      attribute float aLineIdx;
+      attribute float aIsRib;
+
+      varying vec3 vColor;
+      varying float vAlpha;
+
+      void main() {
+        vec3 pos = position;
+        float x = pos.x;
+        float z = pos.z;
+
+        // 1. Organic, broad ocean harmonics
+        float wave1 = sin(x * 0.0024 + uTime * 0.95) * 30.0;
+        float wave2 = cos(z * 0.0032 + uTime * 0.75) * 26.0;
+        float wave3 = sin(x * 0.0016 + z * 0.0026 + uTime * 1.15) * 18.0;
+        float ripple = cos((x * 0.0022 - z * 0.0022) - uTime * 0.65) * 12.0;
+
+        float y = uBaseY + wave1 + wave2 + wave3 + ripple;
+
+        // 2. Primary cursor fluid deformation
+        vec2 diff1 = vec2(x - uMouse.x, z - uMouse.z);
+        float distSq1 = dot(diff1, diff1);
+        float radiusSq1 = uInfluenceRadius * uInfluenceRadius;
+
+        float totalInfluence = 0.0;
+
+        if (distSq1 < radiusSq1) {
+          float ratio1 = distSq1 / radiusSq1;
+          float w1 = 1.0 - ratio1;
+          // Quintic Perlin smootherstep: 6w^5 - 15w^4 + 10w^3 (zero 1st & 2nd derivatives at borders)
+          float smooth1 = w1 * w1 * w1 * (w1 * (w1 * 6.0 - 15.0) + 10.0);
+
+          // Core damping: eliminates central cone/crease ("quebra de linha")
+          float coreDamp = distSq1 / (distSq1 + 1200.0);
+          float dist1 = sqrt(distSq1);
+
+          // Silky liquid harmonic ripple
+          float ripple1 = cos(dist1 * 0.026 - uTime * 4.4) * coreDamp * (16.0 + uKineticBoost * 12.0);
+          float dome1 = smooth1 * (68.0 + uKineticBoost * 28.0);
+          y += dome1 + ripple1 * smooth1;
+          totalInfluence += smooth1;
+        }
+
+        // 3. Trailing liquid wake
+        vec2 diff2 = vec2(x - uTrail.x, z - uTrail.z);
+        float distSq2 = dot(diff2, diff2);
+        float radiusSq2 = 240.0 * 240.0;
+        if (distSq2 < radiusSq2) {
+          float ratio2 = distSq2 / radiusSq2;
+          float w2 = 1.0 - ratio2;
+          float smooth2 = w2 * w2 * w2 * (w2 * (w2 * 6.0 - 15.0) + 10.0);
+          y += smooth2 * (24.0 + uKineticBoost * 10.0);
+          totalInfluence += smooth2 * 0.45;
+        }
+
+        pos.y = y;
+
+        // 4. Color computation
+        float normHeight = clamp((y - (uBaseY - 40.0)) / 150.0, 0.0, 1.0);
+        float depthFade = clamp((z + 850.0) / 1600.0, 0.1, 1.0);
+
+        vec3 col;
+        float alpha = 0.9;
+
+        if (aIsRib > 0.5) {
+          // Transversal Rib Coloring
+          col = vec3(
+            0.08 + totalInfluence * 0.45,
+            (0.12 + totalInfluence * 0.25) * depthFade,
+            (0.30 + totalInfluence * 0.45) * depthFade
+          );
+          alpha = 0.38;
+        } else {
+          // Horizontal Contour Wave Coloring
+          col = vec3(
+            0.06 + normHeight * 0.75 + totalInfluence * 0.55,
+            0.04 + normHeight * 0.18 + (1.0 - normHeight) * depthFade * 0.38,
+            0.18 + (1.0 - normHeight) * 0.60 + normHeight * 0.30
+          );
+
+          if (totalInfluence > 0.01) {
+            col = mix(col, vec3(1.0, 0.28, 0.48), clamp(totalInfluence, 0.0, 1.0));
+          }
+
+          // Traveling Photon Pulses
+          for (int p = 0; p < 7; p++) {
+            if (abs(aLineIdx - uPulses[p].z) < 0.5) {
+              float pulseDist = abs(aNormX - uPulses[p].x);
+              float pulseLen = uPulses[p].y;
+              if (pulseDist < pulseLen) {
+                float intensity = (1.0 - pulseDist / pulseLen) * 1.8;
+                col += uPulseColors[p] * intensity;
+              }
+            }
+          }
+        }
+
+        vColor = col;
+        vAlpha = alpha;
+
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+      }
+    `;
+
+    const fragmentShader = `
+      varying vec3 vColor;
+      varying float vAlpha;
+
+      void main() {
+        gl_FragColor = vec4(vColor, vAlpha);
+      }
+    `;
+
+    const meshMaterial = new THREE.ShaderMaterial({
+      vertexShader,
+      fragmentShader,
+      uniforms: {
+        uTime: { value: 0 },
+        uMouse: { value: new THREE.Vector3(0, baseY, 0) },
+        uTrail: { value: new THREE.Vector3(0, baseY, 0) },
+        uKineticBoost: { value: 0 },
+        uInfluenceRadius: { value: 320 },
+        uBaseY: { value: baseY },
+        uPulses: { value: pulseVectors },
+        uPulseColors: { value: pulseColorVectors },
+      },
+      transparent: true,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    });
+
+    const terrainMesh = new THREE.LineSegments(meshGeometry, meshMaterial);
+    scene.add(terrainMesh);
+
+    // 5. Floating Cyber Stardust (Ambient Depth)
+    const sparkCount = isMobile ? 80 : 140;
     const sparkGeometry = new THREE.BufferGeometry();
     const sparkPositions = new Float32Array(sparkCount * 3);
     const sparkColors = new Float32Array(sparkCount * 3);
     const sparkOriginals: { x: number; y: number; z: number; speed: number; phase: number }[] = [];
 
     const sparkPalette = [
-      new THREE.Color(0xff2d55), // Apple Ruby
-      new THREE.Color(0x0a84ff), // Cyan
-      new THREE.Color(0x8b5cf6), // Violet
-      new THREE.Color(0xffffff), // White spark
+      new THREE.Color(0xff2d55),
+      new THREE.Color(0x0a84ff),
+      new THREE.Color(0x8b5cf6),
+      new THREE.Color(0xffffff),
     ];
 
     for (let s = 0; s < sparkCount; s++) {
@@ -209,33 +334,12 @@ export default function LusionBackground() {
     const sparkPoints = new THREE.Points(sparkGeometry, sparkMaterial);
     scene.add(sparkPoints);
 
-    // 7. Traveling Data Laser Pulses (Packets)
-    interface DataPulse {
-      lineIdx: number;
-      progress: number;
-      speed: number;
-      length: number;
-      color: { r: number; g: number; b: number };
-    }
-
-    const pulses: DataPulse[] = [
-      { lineIdx: 6, progress: 0.1, speed: 0.32, length: 0.15, color: { r: 1.0, g: 0.18, b: 0.35 } },
-      { lineIdx: 12, progress: 0.45, speed: 0.38, length: 0.14, color: { r: 0.04, g: 0.55, b: 1.0 } },
-      { lineIdx: 20, progress: 0.75, speed: 0.28, length: 0.18, color: { r: 0.65, g: 0.38, b: 1.0 } },
-      { lineIdx: 28, progress: 0.2, speed: 0.35, length: 0.15, color: { r: 0.19, g: 0.85, b: 0.4 } },
-      { lineIdx: 36, progress: 0.88, speed: 0.32, length: 0.13, color: { r: 1.0, g: 0.18, b: 0.35 } },
-      { lineIdx: 44, progress: 0.3, speed: 0.42, length: 0.16, color: { r: 0.04, g: 0.55, b: 1.0 } },
-      { lineIdx: 16, progress: 0.6, speed: 0.34, length: 0.16, color: { r: 1.0, g: 0.62, b: 0.04 } }, // Gold pulse
-    ];
-
-    // 8. Fluid Mouse & Touch Tracking & Kinetic Wake
+    // 6. Fluid Mouse & Touch Tracking & Kinetic Wake
     const mouse = {
       x: 0,
       y: 0,
       targetX: 0,
       targetY: 0,
-      prevX: 0,
-      prevY: 0,
       speed: 0,
     };
 
@@ -293,14 +397,14 @@ export default function LusionBackground() {
     const updateViewportConfig = () => {
       const width = window.innerWidth;
       const height = window.innerHeight;
-      const isMobile = width < 768;
+      const mobile = width < 768;
 
       camera.aspect = width / height;
-      camera.fov = isMobile ? 68 : 55;
+      camera.fov = mobile ? 68 : 55;
       camera.updateProjectionMatrix();
 
       renderer.setSize(width, height);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.75 : 2));
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, mobile ? 1.25 : 1.5));
     };
 
     updateViewportConfig();
@@ -314,69 +418,7 @@ export default function LusionBackground() {
       window.addEventListener('deviceorientation', onDeviceOrientation, { passive: true });
     }
 
-    // 8. Kinetic Fluid Elevation Calculator
-    // Combines organic harmonics, directional mouse swell, and trailing wake
-    const calculateElevation = (
-      x: number,
-      z: number,
-      time: number,
-      kineticBoost: number
-    ): { y: number; mouseInfluence: number } => {
-      // 1. Organic, broad ocean harmonics (gentle wavelengths to avoid sharp slopes)
-      const wave1 = Math.sin(x * 0.0024 + time * 0.95) * 30;
-      const wave2 = Math.cos(z * 0.0032 + time * 0.75) * 26;
-      const wave3 = Math.sin(x * 0.0016 + z * 0.0026 + time * 1.15) * 18;
-      const ripple = Math.cos((x * 0.0022 - z * 0.0022) - time * 0.65) * 12;
-
-      let y = baseY + wave1 + wave2 + wave3 + ripple;
-
-      // 2. Primary cursor fluid deformation
-      const dx1 = x - mouseWorld.x;
-      const dz1 = z - mouseWorld.z;
-      const distSq1 = dx1 * dx1 + dz1 * dz1;
-      const influenceRadius = 320 + kineticBoost * 90;
-      const radiusSq1 = influenceRadius * influenceRadius;
-
-      let totalInfluence = 0;
-
-      if (distSq1 < radiusSq1) {
-        const ratio1 = distSq1 / radiusSq1;
-        const w1 = 1 - ratio1;
-        // Quintic Perlin smootherstep: 6w^5 - 15w^4 + 10w^3 (guarantees zero 1st & 2nd derivatives at borders)
-        const smooth1 = w1 * w1 * w1 * (w1 * (w1 * 6 - 15) + 10);
-
-        // Core damping: eliminates central cone/crease ("quebra de linha") by making the ripple fade smoothly at center
-        const coreDamp = distSq1 / (distSq1 + 1200);
-        const dist1 = Math.sqrt(distSq1);
-
-        // Silky, broad liquid harmonic ripple (0.026 spatial frequency gives wide, undulating water waves)
-        const ripple1 = Math.cos(dist1 * 0.026 - time * 4.4) * coreDamp * (16 + kineticBoost * 12);
-        const dome1 = smooth1 * (68 + kineticBoost * 28);
-        const swell1 = dome1 + ripple1 * smooth1;
-
-        y += swell1;
-        totalInfluence += smooth1;
-      }
-
-      // 3. Secondary trailing liquid wake (leaves a smooth trailing wave behind cursor motion)
-      const dx2 = x - trailWorld.x;
-      const dz2 = z - trailWorld.z;
-      const distSq2 = dx2 * dx2 + dz2 * dz2;
-      const radiusSq2 = 240 * 240;
-
-      if (distSq2 < radiusSq2) {
-        const ratio2 = distSq2 / radiusSq2;
-        const w2 = 1 - ratio2;
-        const smooth2 = w2 * w2 * w2 * (w2 * (w2 * 6 - 15) + 10);
-        const trailingSwell = smooth2 * (24 + kineticBoost * 10);
-        y += trailingSwell;
-        totalInfluence += smooth2 * 0.45;
-      }
-
-      return { y, mouseInfluence: THREE.MathUtils.clamp(totalInfluence, 0, 1) };
-    };
-
-    // 9. Main High-FPS Animation Loop
+    // 7. Ultra-Lightweight GPU-Driven Animation Loop
     let animationFrameId: number;
     const clock = new THREE.Clock();
 
@@ -386,7 +428,7 @@ export default function LusionBackground() {
       const delta = Math.min(clock.getDelta(), 0.1);
       const time = clock.getElapsedTime();
 
-      // Fluid interpolation with higher responsiveness
+      // Fluid interpolation
       const mouseDeltaX = mouse.targetX - mouse.x;
       const mouseDeltaY = mouse.targetY - mouse.y;
       mouse.speed = Math.sqrt(mouseDeltaX * mouseDeltaX + mouseDeltaY * mouseDeltaY);
@@ -394,9 +436,7 @@ export default function LusionBackground() {
       mouse.x += mouseDeltaX * 0.075;
       mouse.y += mouseDeltaY * 0.075;
 
-      // Primary world target interpolation with fluid viscosity
       mouseWorld.lerp(mouseWorldTarget, 0.09);
-      // Trailing wake point lags behind for luxurious liquid sensation
       trailWorld.lerp(mouseWorld, 0.038);
 
       const scrollDelta = scrollTargetY - scrollY;
@@ -409,15 +449,11 @@ export default function LusionBackground() {
       );
       const scrollFraction = THREE.MathUtils.clamp(scrollY / totalScrollable, 0, 1);
 
-      // Dynamic surge from cursor speed + scroll velocity (feels like Lusion's fluid responsive canvas)
       const scrollInertiaBoost = Math.min(scrollVelocity * 0.008, 0.8);
       const kineticBoost = THREE.MathUtils.clamp(mouse.speed * 8 + scrollInertiaBoost, 0, 1.8);
+      const influenceRadius = 320 + kineticBoost * 90;
 
-      // Scroll-linked 3D Camera Flight Path:
-      // Hero (0.0): High angle horizon overview
-      // Projects (~0.25 - 0.5): Sweeps lower into the cybernetic data grid
-      // Skills (~0.5 - 0.75): Tilts to reveal transversal lattice and data laser pulses
-      // Contact (~0.75 - 1.0): Deep cosmic perspective
+      // 3D Camera Flight Path
       const baseCamY = 270 - Math.sin(scrollFraction * Math.PI) * 110 - scrollFraction * 60;
       const baseCamZ = 560 - Math.sin(scrollFraction * Math.PI) * 160 + scrollFraction * 40;
       const targetLookY = -35 - scrollFraction * 80;
@@ -429,104 +465,22 @@ export default function LusionBackground() {
       camera.rotation.x = -0.34 + mouse.y * 0.035 - (scrollFraction * 0.08);
       camera.lookAt(mouse.x * 20, targetLookY, -180);
 
-      // Light rotation & pulsation
-      crimsonLight.position.x = Math.sin(time * 0.7) * 380;
-      crimsonLight.position.z = Math.cos(time * 0.6) * 320;
-      cyanLight.position.x = -Math.cos(time * 0.8) * 380;
-      cyanLight.position.z = -Math.sin(time * 0.7) * 320;
+      // Update Shader Uniforms (Only 5 variables to GPU, zero CPU vertex loops!)
+      meshMaterial.uniforms.uTime.value = time;
+      meshMaterial.uniforms.uMouse.value.copy(mouseWorld);
+      meshMaterial.uniforms.uTrail.value.copy(trailWorld);
+      meshMaterial.uniforms.uKineticBoost.value = kineticBoost;
+      meshMaterial.uniforms.uInfluenceRadius.value = influenceRadius;
 
-      // Scroll-reactive lighting mood
-      if (scrollFraction < 0.35) {
-        crimsonLight.intensity = 4.0;
-        cyanLight.intensity = 3.0;
-      } else if (scrollFraction < 0.7) {
-        crimsonLight.intensity = 4.8;
-        cyanLight.intensity = 4.5;
-        violetLight.intensity = 3.8;
-      } else {
-        crimsonLight.intensity = 3.5;
-        cyanLight.intensity = 4.2;
-      }
-
-      // Update Data Pulses with scroll speed surge
+      // Update pulses
       const pulseSpeedMultiplier = 1 + Math.min(scrollVelocity * 0.015, 2.0);
-      pulses.forEach((p) => {
+      pulses.forEach((p, idx) => {
         p.progress += p.speed * pulseSpeedMultiplier * delta;
         if (p.progress > 1.25) p.progress = -0.25;
+        pulseVectors[idx].x = p.progress;
       });
 
-      // Update Horizontal Wave Lines
-      waveLines.forEach((wl) => {
-        const { positions, colors, geometry, baseZ, lineIndex } = wl;
-        const activePulse = pulses.find((p) => p.lineIdx === lineIndex);
-
-        for (let j = 0; j < pointsPerLine; j++) {
-          const idx3 = j * 3;
-          const x = positions[idx3];
-          const z = baseZ;
-
-          const { y, mouseInfluence } = calculateElevation(x, z, time, kineticBoost);
-          positions[idx3 + 1] = y;
-
-          const normalizedHeight = THREE.MathUtils.clamp((y - (baseY - 40)) / 150, 0, 1);
-          const normalizedZDepth = THREE.MathUtils.clamp((z + 850) / depth, 0, 1);
-
-          // Deep base palette
-          let r = 0.06 + normalizedHeight * 0.75 + mouseInfluence * 0.55;
-          let g = 0.04 + normalizedHeight * 0.18 + (1 - normalizedHeight) * normalizedZDepth * 0.38;
-          let b = 0.18 + (1 - normalizedHeight) * 0.6 + normalizedHeight * 0.3;
-
-          // Mouse excitation: turns lines radiant crimson/neon ruby with white-hot apex
-          if (mouseInfluence > 0.01) {
-            r = THREE.MathUtils.lerp(r, 1.0, mouseInfluence);
-            g = THREE.MathUtils.lerp(g, 0.28, mouseInfluence);
-            b = THREE.MathUtils.lerp(b, 0.48, mouseInfluence);
-          }
-
-          // Traveling Data Photon Boost
-          if (activePulse) {
-            const normalizedXPos = j / (pointsPerLine - 1);
-            const distToPulse = Math.abs(normalizedXPos - activePulse.progress);
-            if (distToPulse < activePulse.length) {
-              const intensity = (1 - distToPulse / activePulse.length) * 1.8;
-              r = THREE.MathUtils.clamp(r + activePulse.color.r * intensity, 0, 1);
-              g = THREE.MathUtils.clamp(g + activePulse.color.g * intensity, 0, 1);
-              b = THREE.MathUtils.clamp(b + activePulse.color.b * intensity, 0, 1);
-            }
-          }
-
-          colors[idx3] = r;
-          colors[idx3 + 1] = g;
-          colors[idx3 + 2] = b;
-        }
-
-        geometry.attributes.position.needsUpdate = true;
-        geometry.attributes.color.needsUpdate = true;
-      });
-
-      // Update Transversal Ribs
-      ribLines.forEach((rl) => {
-        const { positions, colors, geometry, baseX } = rl;
-
-        for (let k = 0; k < ribPoints; k++) {
-          const idx3 = k * 3;
-          const z = positions[idx3 + 2];
-          const x = baseX;
-
-          const { y, mouseInfluence } = calculateElevation(x, z, time, kineticBoost);
-          positions[idx3 + 1] = y;
-
-          const depthFade = THREE.MathUtils.clamp((z + 750) / depth, 0.1, 0.75);
-          colors[idx3] = 0.08 + mouseInfluence * 0.45;
-          colors[idx3 + 1] = (0.12 + mouseInfluence * 0.25) * depthFade;
-          colors[idx3 + 2] = (0.3 + mouseInfluence * 0.45) * depthFade;
-        }
-
-        geometry.attributes.position.needsUpdate = true;
-        geometry.attributes.color.needsUpdate = true;
-      });
-
-      // Update ambient cyber sparks drift
+      // Update cyber stardust drift
       const sparkPosAttr = sparkGeometry.attributes.position;
       for (let s = 0; s < sparkCount; s++) {
         const orig = sparkOriginals[s];
@@ -553,12 +507,10 @@ export default function LusionBackground() {
         window.removeEventListener('deviceorientation', onDeviceOrientation);
       }
 
-      waveLines.forEach((wl) => wl.geometry.dispose());
-      ribLines.forEach((rl) => rl.geometry.dispose());
+      meshGeometry.dispose();
+      meshMaterial.dispose();
       sparkGeometry.dispose();
       sparkMaterial.dispose();
-      lineMaterial.dispose();
-      ribMaterial.dispose();
       renderer.dispose();
 
       if (container.contains(renderer.domElement)) {

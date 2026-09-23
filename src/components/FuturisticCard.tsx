@@ -68,14 +68,14 @@ export default function FuturisticCard({
           ? 'transform 0.12s cubic-bezier(0.25, 1, 0.5, 1)'
           : 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
       }}
-      className={`relative group rounded-3xl overflow-hidden border border-white/[0.08] bg-black/60 backdrop-blur-2xl transition-all duration-300 shadow-[0_4px_24px_rgba(0,0,0,0.6)] hover:border-white/20 hover:shadow-[0_12px_40px_rgba(0,0,0,0.8)] ${className}`}
+      className={`relative group rounded-3xl overflow-hidden border border-white/[0.08] bg-black/80 backdrop-blur-md transition-all duration-300 shadow-[0_4px_24px_rgba(0,0,0,0.6)] hover:border-white/20 hover:shadow-[0_12px_40px_rgba(0,0,0,0.8)] will-change-transform ${className}`}
       {...rest}
     >
       {/* 1. Animated Continuous Border Beam (Optional for featured cards) */}
       {withBorderBeam && (
         <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-3xl">
           <div className="absolute -inset-[100%] animate-[spin_8s_linear_infinite] opacity-40 group-hover:opacity-75 transition-opacity bg-[conic-gradient(from_0deg_at_50%_50%,transparent_0deg,transparent_280deg,rgba(255,45,85,0.7)_320deg,rgba(139,92,246,0.8)_350deg,transparent_360deg)]" />
-          <div className="absolute inset-[1px] rounded-3xl bg-[#0a0a0e]/95 backdrop-blur-2xl" />
+          <div className="absolute inset-[1px] rounded-3xl bg-[#0a0a0e]/95 backdrop-blur-md" />
         </div>
       )}
 

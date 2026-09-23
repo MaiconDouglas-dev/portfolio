@@ -11,7 +11,7 @@ export default function CustomCursor() {
 
   useEffect(() => {
     // Only enable on desktop pointer devices
-    if (window.matchMedia('(pointer: coarse)').matches) {
+    if (window.matchMedia('(pointer: coarse)').matches || window.innerWidth < 1024) {
       return;
     }
 
@@ -106,7 +106,7 @@ export default function CustomCursor() {
           isClicking
             ? 'w-7 h-7 border-white/80 bg-white/40'
             : cursorText
-            ? 'w-20 h-20 border-white/70 bg-white/15 backdrop-blur-[2px]'
+            ? 'w-20 h-20 border-white/70 bg-white/20'
             : isHovered
             ? 'w-14 h-14 border-white/60 bg-white/10'
             : 'w-8 h-8 border-white/40 bg-transparent'
