@@ -15,6 +15,9 @@ export default function AudioEqualizer() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
+    // Attempt auto-play immediately on load
+    soundManager.initAutoPlay();
+
     // Sync initial state and subscribe to changes
     setStatus(soundManager.getStatus());
     const unsubscribe = soundManager.subscribe((newStatus) => {

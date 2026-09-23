@@ -5,6 +5,9 @@ import { soundManager } from '@/utils/audio';
 
 export default function SoundFXListener() {
   useEffect(() => {
+    // Initialize auto-play immediately on client load
+    soundManager.initAutoPlay();
+
     let lastHoverTime = 0;
 
     const handleMouseOver = (e: MouseEvent) => {

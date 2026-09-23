@@ -15,7 +15,7 @@
 [![Vercel](https://img.shields.io/badge/Vercel-Deploy_Live-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://maicondouglas-dev.vercel.app)
 
 <p align="center">
-  <b>Portfólio interativo moderno inspirado nas linguagens visuais da Apple Pro Dark e Lusion.co, unindo excelência em engenharia Backend Java a uma experiência sensorial com áudio procedural no estilo Interestelar e gráficos WebGL.</b>
+  <b>Portfólio interativo moderno inspirado nas linguagens visuais da Apple Pro Dark e Lusion.co, unindo excelência em engenharia Backend Java a uma experiência sensorial com áudio procedural espacial cósmico e gráficos WebGL.</b>
 </p>
 
 [🌐 Acessar Portfólio Online](https://maicondouglas-dev.vercel.app) • [👨‍💻 Perfil Profissional](#-perfil-profissional--formação) • [⚡ Projetos em Destaque](#-projetos-em-destaque) • [🌌 Experiência Criativa & Áudio](#-experiência-criativa--tecnológica) • [🛠 Tecnologias](#-tecnologias--conhecimentos) • [📬 Contato](#-contato)
@@ -84,17 +84,18 @@ Localizado na seção inicial do portfólio, este card interativo permite ao vis
 
 Inspirado nas técnicas dos estúdios **[Lusion.co](https://lusion.co/)** e na elegância do **Design System Apple Pro Dark**, o portfólio entrega uma experiência sensorial imersiva:
 
-### 🎼 Trilha Sonora Procedural "Interestelar" (Web Audio API)
-* **Composição Inspirada em Hans Zimmer**:
-  - Síntese pura de **Órgão de Tubos de Catedral** (com harmônicos em flauta 8', principal 4' e oitava 2' com chorus acústico de pipes).
-  - **Ostinato Hipnótico em Movimento ("Ticking Time")**: Arpejos pulsantes em 68 BPM sobre a icônica progressão harmônica:
-    $$\text{Am (Lá menor)} \longrightarrow \text{F (Fá maior)} \longrightarrow \text{C (Dó maior)} \longrightarrow \text{G (Sol maior)}$$
-  - **Sub-graves de Gargantua**: Drones de frequência sub-baixa (27Hz a 55Hz) reproduzindo a sensação física da gravidade de um buraco negro.
-  - **Rede de Delay Espacial**: Simulação de reflexão acústica de nave com feedback suave.
+### 🎼 Trilha Sonora Procedural "COSMOS — Relaxing Universe Ambient" (Web Audio API)
+* **Composição Espacial Relaxante (Foco, Estudo & Navegação Contemplativa)**:
+  - Síntese de **Pads Celestiais Analógicos** flutuantes com microafinação em chorus estéreo amplo (`±2.8 cents`).
+  - **Sinos Estelares de Diamante**: Harmônicos cristalinos em alta frequência que ecoam suavemente no espaço simulando estrelas cintilantes.
+  - **Progressão Harmônica Espacial Contínua**:
+    $$\text{Cmaj9 (Lar Celestial)} \longrightarrow \text{Am9 (Nebulosa Profunda)} \longrightarrow \text{Fmaj7\#11 (Lídio Galáctico)} \longrightarrow \text{Gsus2 (Horizonte Infinito)}$$
+  - **Drones Sub-graves de Nebulosa**: Frequências suaves (32Hz a 65Hz) que proporcionam sensação de imersão e gravidade zero sem fadiga auditiva.
+  - **Rede de Delay Espacial**: Simulação de eco cósmico com 450ms e amortecimento suave.
 * **100% Royalty-Free & Zero Latência**: Sem downloads de arquivos MP3 pesados; todo o som é gerado matematicamente pelo navegador em tempo real.
-* **Controle Inteligente & Desbloqueio em 1 Clique**:
+* **Início Automático & Controle Inteligente**:
+  - O áudio é configurado para iniciar automaticamente junto com a página (`initAutoPlay`), ativando música de fundo e efeitos táteis para que o visitante possa relaxar e, caso queira, silenciar a qualquer momento com apenas 1 clique.
   - Pílula de controle com ícone inconfundível (`Volume2` / `VolumeX`), rótulo bilíngue explícito (`SOM` / `MUDO`) e equalizador animado via Canvas 2D.
-  - **Sincronização Perfeita**: Em conformidade com as políticas de autoplay dos navegadores modernos, o som inicia suavemente no primeiro toque ou clique na página, ou imediatamente com apenas 1 clique no botão (sem necessidade de mutar e desmutar).
 
 ### 🪐 Universo Diamond WebGL 3D & Malha Gravitacional
 * **850 Estrelas em Branco Diamante**: Distribuição volumétrica 3D com brilhos astronômicos autênticos, cintilação natural e tamanhos calibrados para não interferir na legibilidade do conteúdo.
