@@ -1,9 +1,9 @@
 'use client';
 
 // ============================================================================
-// Procedural Web Audio Engine: Sci-Fi SFX + NASA Black Hole Gravitational Soundscape
+// Procedural Web Audio Engine: Sci-Fi SFX + Deep Cosmic Space Drone
 // 100% Royalty-Free, Zero Network Latency, Pure Mathematical Web Audio Synthesis
-// Inspired by NASA Chandra X-Ray Perseus Cluster Sonification & Interstellar
+// Audible on ALL devices: laptops, phones, tablets, headphones, monitors
 // ============================================================================
 
 class AudioManager {
@@ -12,9 +12,10 @@ class AudioManager {
   private isPlayingAmbience: boolean = false;
   private listeners: Set<(enabled: boolean) => void> = new Set();
 
-  // Black Hole Ambient Nodes
+  // Ambient Drone Nodes
   private ambientGain: GainNode | null = null;
   private droneOscillators: OscillatorNode[] = [];
+  private droneGains: GainNode[] = [];
   private lfoOsc: OscillatorNode | null = null;
   private ambientFilter: BiquadFilterNode | null = null;
   private noiseSource: AudioBufferSourceNode | null = null;
@@ -23,7 +24,6 @@ class AudioManager {
   constructor() {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('md_portfolio_audio');
-      // Default false to respect browser autoplay policies until user gesture
       this.isEnabled = saved === 'true';
     }
   }
@@ -84,7 +84,6 @@ class AudioManager {
   // UI Sound Effects (Procedural High-Tech Synth)
   // ============================================================================
 
-  // 1. Subtle High-Tech Precision Hover Tick (warm, non-piercing)
   public playHover() {
     if (!this.isEnabled) return;
     try {
@@ -115,7 +114,6 @@ class AudioManager {
     } catch {}
   }
 
-  // 2. Resonant Cybernetic Click / Button Chime
   public playClick() {
     if (!this.isEnabled) return;
     try {
@@ -124,7 +122,6 @@ class AudioManager {
 
       const now = ctx.currentTime;
 
-      // Primary tone
       const osc1 = ctx.createOscillator();
       const gain1 = ctx.createGain();
       osc1.type = 'sine';
@@ -137,7 +134,6 @@ class AudioManager {
       osc1.connect(gain1);
       gain1.connect(ctx.destination);
 
-      // Soft harmonic warmth
       const osc2 = ctx.createOscillator();
       const gain2 = ctx.createGain();
       osc2.type = 'triangle';
@@ -155,7 +151,6 @@ class AudioManager {
     } catch {}
   }
 
-  // 3. Tab / Stepper Shift Chirp
   public playTab() {
     if (!this.isEnabled) return;
     try {
@@ -181,7 +176,6 @@ class AudioManager {
     } catch {}
   }
 
-  // 4. Modal Open Aperture Whoosh
   public playModalOpen() {
     if (!this.isEnabled) return;
     try {
@@ -213,7 +207,6 @@ class AudioManager {
     } catch {}
   }
 
-  // 5. Modal Close Sweep
   public playModalClose() {
     if (!this.isEnabled) return;
     try {
@@ -239,14 +232,13 @@ class AudioManager {
     } catch {}
   }
 
-  // 6. Action / Swagger Confirmation Chord
   public playSuccess() {
     if (!this.isEnabled) return;
     try {
       const ctx = this.getContext();
       if (!ctx) return;
 
-      const notes = [440, 554.37, 659.25]; // A4, C#5, E5
+      const notes = [440, 554.37, 659.25];
       const now = ctx.currentTime;
 
       notes.forEach((freq, idx) => {
@@ -269,7 +261,6 @@ class AudioManager {
     } catch {}
   }
 
-  // Audio Toggle Feedback Chimes
   private playActivateChime() {
     try {
       const ctx = this.getContext();
@@ -280,7 +271,7 @@ class AudioManager {
         const gain = ctx.createGain();
         osc.type = 'sine';
         osc.frequency.setValueAtTime(freq, now + i * 0.06);
-        gain.gain.setValueAtTime(0.025, now + i * 0.06);
+        gain.gain.setValueAtTime(0.035, now + i * 0.06);
         gain.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.06 + 0.2);
         osc.connect(gain);
         gain.connect(ctx.destination);
@@ -300,7 +291,7 @@ class AudioManager {
         const gain = ctx.createGain();
         osc.type = 'sine';
         osc.frequency.setValueAtTime(freq, now + i * 0.05);
-        gain.gain.setValueAtTime(0.02, now + i * 0.05);
+        gain.gain.setValueAtTime(0.025, now + i * 0.05);
         gain.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.05 + 0.14);
         osc.connect(gain);
         gain.connect(ctx.destination);
@@ -311,8 +302,10 @@ class AudioManager {
   }
 
   // ============================================================================
-  // NASA Black Hole Gravitational Sonification (Deep, Organic, Soothing Sub-Bass)
-  // Continuous Event Horizon Rumble & Sub-Harmonic Resonance (Zero Harsh Chimes)
+  // Deep Cosmic Space Drone (Audible on ALL speakers: laptop, phone, headphones)
+  // Warm, enveloping, soothing — inspired by Interstellar / Chandra sonification
+  // Frequencies: 82Hz (E2) + 123Hz (B2) + 165Hz (E3) + 220Hz (A3) harmonic
+  // These are within the audible range of every speaker made in the last 15 years
   // ============================================================================
 
   public startAmbience() {
@@ -323,58 +316,62 @@ class AudioManager {
 
       const now = ctx.currentTime;
 
-      // Master Ambient Gain with 2.2s gentle logarithmic fade-in
+      // Master Ambient Gain: 20% volume — clearly audible but never overwhelming
       const masterGain = ctx.createGain();
       masterGain.gain.setValueAtTime(0.0001, now);
-      masterGain.gain.exponentialRampToValueAtTime(0.05, now + 2.2);
+      masterGain.gain.exponentialRampToValueAtTime(0.20, now + 2.5);
       masterGain.connect(ctx.destination);
       this.ambientGain = masterGain;
 
-      // Resonant Lowpass Filter tuned to gravitational sub-frequencies (cutoff 140Hz)
+      // Warm resonant lowpass filter (cutoff 320Hz — lets fundamental + harmonics through)
       const filter = ctx.createBiquadFilter();
       filter.type = 'lowpass';
-      filter.frequency.setValueAtTime(140, now);
-      filter.Q.setValueAtTime(2.2, now);
+      filter.frequency.setValueAtTime(320, now);
+      filter.Q.setValueAtTime(1.8, now);
       filter.connect(masterGain);
       this.ambientFilter = filter;
 
-      // Very slow 24-second ultra-smooth breathing cycle (gravitational expansion)
+      // Slow 20-second breathing LFO modulating filter cutoff by ±60Hz
       const lfo = ctx.createOscillator();
       const lfoGain = ctx.createGain();
       lfo.type = 'sine';
-      lfo.frequency.setValueAtTime(0.042, now); // ~24s period
-      lfoGain.gain.setValueAtTime(35, now);     // Modulate filter by +/- 35Hz
+      lfo.frequency.setValueAtTime(0.05, now); // ~20s period
+      lfoGain.gain.setValueAtTime(60, now);
       lfo.connect(lfoGain);
       lfoGain.connect(filter.frequency);
       lfo.start(now);
       this.lfoOsc = lfo;
 
-      // Deep Gravitational Sub-Bass Oscillators (39.5Hz fundamental, 59.25Hz perfect fifth, 79Hz octave)
-      // Pure sine waves only — warm, soothing, zero dissonant high frequencies
-      const blackHolePitches = [39.5, 59.25, 79.0];
-      this.droneOscillators = [];
+      // Gravitational Drone Chord: E2-B2-E3-A3 (82, 123, 165, 220 Hz)
+      // All pure sine waves — warm, dark, cosmic — audible on laptop speakers
+      const dronePitches = [
+        { freq: 82.41, vol: 0.32, type: 'sine' as OscillatorType, detune: 0 },       // E2 — deep anchor
+        { freq: 123.47, vol: 0.24, type: 'sine' as OscillatorType, detune: 2.0 },     // B2 — perfect fifth warmth
+        { freq: 164.81, vol: 0.18, type: 'sine' as OscillatorType, detune: -1.5 },    // E3 — octave presence
+        { freq: 220.0, vol: 0.10, type: 'triangle' as OscillatorType, detune: 1.0 },  // A3 — subtle harmonic shimmer
+      ];
 
-      blackHolePitches.forEach((freq, idx) => {
+      this.droneOscillators = [];
+      this.droneGains = [];
+
+      dronePitches.forEach((p) => {
         const osc = ctx.createOscillator();
         const oscGain = ctx.createGain();
 
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(freq, now);
-        // Subtle micro-detune for organic spacetime warmth
-        const detune = idx === 0 ? 0 : (idx === 1 ? 1.5 : -2.0);
-        osc.detune.setValueAtTime(detune, now);
+        osc.type = p.type;
+        osc.frequency.setValueAtTime(p.freq, now);
+        osc.detune.setValueAtTime(p.detune, now);
 
-        const vol = idx === 0 ? 0.38 : (idx === 1 ? 0.22 : 0.12);
-        oscGain.gain.setValueAtTime(vol, now);
+        oscGain.gain.setValueAtTime(p.vol, now);
 
         osc.connect(oscGain);
         oscGain.connect(filter);
         osc.start(now);
         this.droneOscillators.push(osc);
+        this.droneGains.push(oscGain);
       });
 
-      // Accretion Disk Matter Rumble: Pure Brownian (Red) Noise
-      // Integrated random walk produces rich, deep, velvety rumble without harsh hiss
+      // Accretion Disk Brownian Noise (deep rumble texture, lowpass filtered at 200Hz)
       try {
         const sampleRate = ctx.sampleRate;
         const bufferSize = sampleRate * 3;
@@ -383,10 +380,9 @@ class AudioManager {
         let lastOut = 0.0;
         for (let i = 0; i < bufferSize; i++) {
           const white = Math.random() * 2 - 1;
-          // Leaky integrator filter for authentic Brownian rumble
           output[i] = (lastOut + 0.022 * white) / 1.022;
           lastOut = output[i];
-          output[i] *= 3.2;
+          output[i] *= 3.5;
         }
 
         const noise = ctx.createBufferSource();
@@ -396,11 +392,11 @@ class AudioManager {
 
         const noiseFilter = ctx.createBiquadFilter();
         noiseFilter.type = 'lowpass';
-        noiseFilter.frequency.setValueAtTime(110, now);
-        noiseFilter.Q.setValueAtTime(1.4, now);
+        noiseFilter.frequency.setValueAtTime(200, now);
+        noiseFilter.Q.setValueAtTime(1.2, now);
 
         const noiseGain = ctx.createGain();
-        noiseGain.gain.setValueAtTime(0.02, now);
+        noiseGain.gain.setValueAtTime(0.06, now);
 
         noise.connect(noiseFilter);
         noiseFilter.connect(noiseGain);
@@ -415,8 +411,7 @@ class AudioManager {
   }
 
   // ============================================================================
-  // Kinetic Audio-Visual Modulation (Interactive Gravitational Disturbance)
-  // Reacts smoothly to mouse velocity, touch swipe, and 3D terrain perturbation
+  // Kinetic Audio-Visual Modulation
   // ============================================================================
 
   public onKineticDisturbance(speed: number) {
@@ -426,17 +421,15 @@ class AudioManager {
     const clampedSpeed = Math.min(Math.max(speed, 0), 2.0);
     if (clampedSpeed < 0.08) return;
 
-    // Throttle to 75ms to avoid redundant audio graph re-schedules
     if (now - this.lastKineticTime < 0.075) return;
     this.lastKineticTime = now;
 
     try {
-      // Modulate the lowpass cutoff slightly upward (140Hz up to 230Hz max)
-      const targetFreq = 140 + clampedSpeed * 50;
+      const targetFreq = 320 + clampedSpeed * 80;
       this.ambientFilter.frequency.cancelScheduledValues(now);
       this.ambientFilter.frequency.setValueAtTime(this.ambientFilter.frequency.value, now);
       this.ambientFilter.frequency.exponentialRampToValueAtTime(targetFreq, now + 0.08);
-      this.ambientFilter.frequency.exponentialRampToValueAtTime(140, now + 0.75);
+      this.ambientFilter.frequency.exponentialRampToValueAtTime(320, now + 0.75);
     } catch {}
   }
 
@@ -457,6 +450,7 @@ class AudioManager {
             } catch {}
           });
           this.droneOscillators = [];
+          this.droneGains = [];
 
           if (this.noiseSource) {
             try {
