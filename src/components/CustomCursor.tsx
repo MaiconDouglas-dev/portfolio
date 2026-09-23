@@ -5,9 +5,8 @@ import React, { useEffect, useState, useRef } from 'react';
 export default function CustomCursor() {
   const [mounted, setMounted] = useState(false);
   const [isClicking, setIsClicking] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const [cursorText, setCursorText] = useState('');
-  const [isInteractive, setIsInteractive] = useState(false);
   const [ripples, setRipples] = useState<Array<{ id: number; x: number; y: number }>>([]);
 
   const nextRippleId = useRef(0);
@@ -19,9 +18,7 @@ export default function CustomCursor() {
     }
 
     setMounted(true);
-    document.body.classList.add('has-custom-cursor');
 
-    const dot = document.getElementById('lusion-cursor-dot');
     const ring = document.getElementById('lusion-cursor-ring');
 
     let mouseX = -100;
@@ -35,42 +32,28 @@ export default function CustomCursor() {
       mouseY = e.clientY;
       if (!isVisible) setIsVisible(true);
 
-      if (dot) {
-        dot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
-      }
-
-      // Check if hovering over interactive elements or elements with custom cursor text
       const target = e.target as HTMLElement | null;
       if (target) {
-        // Look for data-cursor-text on the element or any ancestor up to 4 levels
-        const textEl = target.closest('[data-cursor-text]') as HTMLElement | null;
-        if (textEl) {
-          setCursorText(textEl.getAttribute('data-cursor-text') || '');
-        } else {
-          setCursorText('');
-        }
-
         const interactiveEl = target.closest(
-          'a, button, input, [role="button"], .cursor-pointer, .interactive-hover'
+          'a, button, input, select, [role="button"], .cursor-pointer, .interactive-hover'
         );
-        setIsInteractive(Boolean(interactiveEl));
+        setIsHovered(Boolean(interactiveEl));
       }
     };
 
     const onMouseDown = (e: MouseEvent) => {
       setIsClicking(true);
       const id = ++nextRippleId.current;
-      setRipples((prev) => [...prev.slice(-2), { id, x: e.clientX, y: e.clientY }]);
+      setRipples((prev) => [...prev.slice(-1), { id, x: e.clientX, y: e.clientY }]);
     };
 
     const onMouseUp = () => setIsClicking(false);
     const onMouseLeave = () => setIsVisible(false);
 
-    // Smooth inertia render loop for the outer ring (always centered on mouseX, mouseY)
+    // High-responsiveness trackpad tracking loop (0.65 interpolation factor gives instant, crisp tracking)
     const renderLoop = () => {
-      // Direct smooth spring-follow without disjointed magnetic offset
-      ringX += (mouseX - ringX) * 0.22;
-      ringY += (mouseY - ringY) * 0.22;
+      ringX += (mouseX - ringX) * 0.65;
+      ringY += (mouseY - ringY) * 0.65;
 
       if (ring) {
         ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0)`;
@@ -87,7 +70,6 @@ export default function CustomCursor() {
     renderLoop();
 
     return () => {
-      document.body.classList.remove('has-custom-cursor');
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('mousedown', onMouseDown);
       window.removeEventListener('mouseup', onMouseUp);
@@ -100,49 +82,33 @@ export default function CustomCursor() {
 
   return (
     <div
-      className={`fixed inset-0 pointer-events-none z-[9999] transition-opacity duration-300 ${
+      className={`fixed inset-0 pointer-events-none z-[9999] transition-opacity duration-200 ${
         isVisible ? 'opacity-100' : 'opacity-0'
       }`}
       aria-hidden="true"
     >
-      {/* Precision Center Dot (fades when expanding with text to avoid overlapping letters) */}
+      {/* Precision Trackpad Aura Ring (native OS cursor remains 100% visible & sharp) */}
       <div
-        id="lusion-cursor-dot"
-        className={`fixed top-0 left-0 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white pointer-events-none mix-blend-difference will-change-transform shadow-[0_0_8px_rgba(255,255,255,0.9)] transition-all duration-200 ${
-          cursorText ? 'w-1 h-1 opacity-0' : isClicking ? 'w-2 h-2 opacity-80' : 'w-2 h-2 opacity-100'
+        id="lusion-cursor-ring"
+        className={`fixed top-0 left-0 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none will-change-transform transition-[width,height,border-color,background-color] duration-150 ease-out ${
+          isClicking
+            ? 'w-4 h-4 border border-appleRed-500/80 bg-appleRed-500/20'
+            : isHovered
+            ? 'w-9 h-9 border border-white/50 bg-white/[0.04] shadow-[0_0_16px_rgba(255,255,255,0.12)]'
+            : 'w-5 h-5 border border-white/30 bg-transparent'
         }`}
       />
 
-      {/* Sleek Outer Ring: small and unobtrusive by default, ONLY expands when cursorText is present */}
-      <div
-        id="lusion-cursor-ring"
-        className={`fixed top-0 left-0 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none mix-blend-difference will-change-transform flex items-center justify-center transition-all duration-200 ease-out ${
-          isClicking
-            ? 'w-4 h-4 border-2 border-white bg-white/60'
-            : cursorText
-            ? 'w-20 h-20 border border-white/80 bg-white/15 backdrop-blur-sm shadow-[0_0_24px_rgba(255,255,255,0.2)]'
-            : isInteractive
-            ? 'w-4 h-4 border border-white/60 bg-transparent' // Discrete 16px when hovering links without text
-            : 'w-3 h-3 border border-white/35 bg-transparent' // Subtle 12px resting ring
-        }`}
-      >
-        {cursorText && (
-          <span className="text-[10px] font-mono font-black tracking-widest text-white uppercase text-center block pointer-events-none select-none px-2 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] animate-fadeIn">
-            {cursorText}
-          </span>
-        )}
-      </div>
-
-      {/* Click Shockwave Pulses */}
+      {/* Subtle Click Pulse */}
       {ripples.map((r) => (
         <span
           key={r.id}
-          className="fixed rounded-full border border-white/60 pointer-events-none animate-shockwave mix-blend-difference"
+          className="fixed rounded-full border border-appleRed-500/60 pointer-events-none animate-shockwave"
           style={{
             left: `${r.x}px`,
             top: `${r.y}px`,
-            width: '40px',
-            height: '40px',
+            width: '32px',
+            height: '32px',
           }}
           onAnimationEnd={() => {
             setRipples((prev) => prev.filter((item) => item.id !== r.id));

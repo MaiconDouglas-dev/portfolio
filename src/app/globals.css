@@ -12,19 +12,6 @@
   }
 }
 
-/* Lusion-style Custom Cursor: hide default OS arrow on desktop when active */
-@media (pointer: fine) and (min-width: 1024px) {
-  body.has-custom-cursor,
-  body.has-custom-cursor a,
-  body.has-custom-cursor button,
-  body.has-custom-cursor input,
-  body.has-custom-cursor [role="button"],
-  body.has-custom-cursor .cursor-pointer,
-  body.has-custom-cursor .interactive-hover {
-    cursor: none !important;
-  }
-}
-
 /* Accessible focus ring */
 :focus-visible {
   outline: 2px solid rgba(255, 45, 85, 0.7);
