@@ -4,7 +4,8 @@
 
 @layer base {
   html {
-    scroll-behavior: smooth;
+    /* Lenis provides hardware-accelerated smooth scrolling; native smooth scroll conflicts with virtual physics */
+    scroll-behavior: auto !important;
   }
 
   body {

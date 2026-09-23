@@ -36,7 +36,11 @@ export default function Navbar() {
     setMobileMenuOpen(false);
     const element = document.querySelector(href);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      if ((window as any).__lenis) {
+        (window as any).__lenis.scrollTo(element, { offset: -70, duration: 1.2 });
+      } else {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
     }
   };
 

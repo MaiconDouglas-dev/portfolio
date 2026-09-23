@@ -669,9 +669,6 @@ export default function LusionBackground() {
     const raycaster = new THREE.Raycaster();
     const groundPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), -baseY);
 
-    let scrollTargetY = 0;
-    let scrollY = 0;
-
     const projectPointerTo3D = (clientX: number, clientY: number) => {
       mouse.targetX = (clientX / window.innerWidth) * 2 - 1;
       mouse.targetY = -(clientY / window.innerHeight) * 2 + 1;
@@ -709,9 +706,24 @@ export default function LusionBackground() {
       }
     };
 
+    let scrollTargetY = 0;
+    let scrollY = 0;
+    let scrollVelocity = 0;
+
+    const onLenisScroll = (e: Event) => {
+      const detail = (e as CustomEvent).detail;
+      if (detail) {
+        scrollTargetY = detail.scroll;
+        scrollVelocity = Math.abs(detail.velocity || 0);
+      }
+    };
+
     const onScroll = () => {
       scrollTargetY = window.scrollY;
     };
+
+    window.addEventListener('lenis-scroll', onLenisScroll);
+    window.addEventListener('scroll', onScroll, { passive: true });
 
     const updateViewportConfig = () => {
       const w = window.innerWidth;
@@ -786,8 +798,8 @@ export default function LusionBackground() {
       trailWorld.lerp(mouseWorld, 0.038);
 
       const scrollDelta = scrollTargetY - scrollY;
-      const scrollVelocity = Math.abs(scrollDelta);
-      scrollY += scrollDelta * 0.08;
+      scrollY += scrollDelta * 0.4;
+      const activeVelocity = scrollVelocity > 0.01 ? scrollVelocity : Math.abs(scrollDelta);
 
       const totalScrollable = Math.max(
         (typeof document !== 'undefined' ? document.documentElement.scrollHeight : 2000) - window.innerHeight,
@@ -795,7 +807,7 @@ export default function LusionBackground() {
       );
       const scrollFraction = THREE.MathUtils.clamp(scrollY / totalScrollable, 0, 1);
 
-      const scrollInertiaBoost = Math.min(scrollVelocity * 0.008, 0.8);
+      const scrollInertiaBoost = Math.min(activeVelocity * 0.008, 0.8);
       const kineticBoost = THREE.MathUtils.clamp(mouse.speed * 8 + scrollInertiaBoost, 0, 1.8);
       const influenceRadius = 340 + kineticBoost * 90;
 
@@ -889,6 +901,7 @@ export default function LusionBackground() {
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('touchmove', onTouchMove);
       window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('lenis-scroll', onLenisScroll);
       window.removeEventListener('resize', updateViewportConfig);
       if (typeof window !== 'undefined' && 'DeviceOrientationEvent' in window) {
         window.removeEventListener('deviceorientation', onDeviceOrientation);

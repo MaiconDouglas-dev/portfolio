@@ -11,13 +11,25 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
     }
 
     const lenis = new Lenis({
-      duration: 1.35,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: 'vertical',
-      gestureOrientation: 'vertical',
+      lerp: 0.08,
       smoothWheel: true,
-      wheelMultiplier: 0.95,
-      touchMultiplier: 1.25,
+      wheelMultiplier: 0.9,
+      touchMultiplier: 1.5,
+      infinite: false,
+    });
+
+    (window as any).__lenis = lenis;
+
+    lenis.on('scroll', (e: any) => {
+      window.dispatchEvent(
+        new CustomEvent('lenis-scroll', {
+          detail: {
+            scroll: e.scroll,
+            velocity: e.velocity,
+            progress: e.progress,
+          },
+        })
+      );
     });
 
     let rafId: number;

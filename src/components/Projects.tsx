@@ -42,12 +42,16 @@ export default function Projects() {
     const el = document.getElementById(`project-card-${id}`);
     if (el) {
       const navAndStepperOffset = 152;
-      const elementPosition = el.getBoundingClientRect().top + window.scrollY;
-      const offsetPosition = elementPosition - navAndStepperOffset;
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth',
-      });
+      if ((window as any).__lenis) {
+        (window as any).__lenis.scrollTo(el, { offset: -navAndStepperOffset, duration: 1.1 });
+      } else {
+        const elementPosition = el.getBoundingClientRect().top + window.scrollY;
+        const offsetPosition = elementPosition - navAndStepperOffset;
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth',
+        });
+      }
     }
   };
 

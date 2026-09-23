@@ -6,7 +6,6 @@ import { Mail, Phone, Linkedin, Github, Copy, Check, ArrowUpRight } from 'lucide
 import KineticText from './KineticText';
 import MagneticButton from './MagneticButton';
 import FuturisticCard from './FuturisticCard';
-import SpaceExplorerCanvas from './SpaceExplorerCanvas';
 import { soundManager } from '@/utils/audio';
 
 export default function Contact() {
@@ -76,17 +75,30 @@ export default function Contact() {
     <section id="contact" className="py-24 sm:py-32 border-t border-white/[0.06] relative overflow-hidden">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-10">
         
-        {/* 3D Zero-G Space Explorer Canvas (Lusion Finale Feature) */}
-        <div className="relative flex flex-col items-center justify-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-cyan-500/30 bg-cyan-950/40 text-cyan-300 text-[10px] font-mono tracking-wider mb-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
-            <span>{lang === 'pt' ? 'EXPLORADOR ESPACIAL 3D // INTERATIVO' : '3D ZERO-G EXPLORER // INTERACTIVE'}</span>
+        {/* Header & Floating Engineering Stack Pills */}
+        <div className="space-y-4 max-w-3xl mx-auto">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-appleRed-500/20 bg-appleRed-500/10">
+            <span className="w-1.5 h-1.5 rounded-full bg-appleRed-500 animate-pulse" />
+            <span className="text-xs font-mono font-bold text-appleRed-400 uppercase tracking-widest">
+              {lang === 'pt' ? 'CONTATO & PARCERIAS' : 'GET IN TOUCH & CONNECT'}
+            </span>
           </div>
 
-          <SpaceExplorerCanvas />
+          <KineticText
+            text={lang === 'pt' ? 'Vamos construir algo incrível juntos!' : "Let's build something extraordinary together!"}
+            as="h2"
+            staggerDelayMs={16}
+            className="text-3xl sm:text-5xl font-black text-white tracking-tight"
+          />
 
-          {/* Floating Technology Pills */}
-          <div className="flex flex-wrap items-center justify-center gap-2 max-w-2xl mt-2">
+          <p className="text-sm sm:text-base text-neutral-400 max-w-xl mx-auto leading-relaxed">
+            {lang === 'pt'
+              ? 'Aberto a novas oportunidades em Backend Java, microsserviços e sistemas de alta performance. Escolha seu canal preferido:'
+              : 'Open to new opportunities in Java Backend, microservices, and high-scale challenges. Choose your preferred channel:'}
+          </p>
+
+          {/* Technology Stack Pills */}
+          <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
             {techBadges.map((badge) => (
               <span
                 key={badge.label}
@@ -96,24 +108,6 @@ export default function Contact() {
               </span>
             ))}
           </div>
-        </div>
-
-        {/* Grand Finale Typography (Lusion "Let's Work Together" Aesthetic) */}
-        <div className="space-y-3 max-w-3xl mx-auto">
-          <span className="text-xs font-mono font-bold text-appleRed-500 uppercase tracking-widest">
-            {lang === 'pt' ? 'CONTATO & PARCERIAS' : 'GET IN TOUCH & CONNECT'}
-          </span>
-          <KineticText
-            text={lang === 'pt' ? 'Vamos construir algo incrível juntos!' : "Let's build something extraordinary together!"}
-            as="h2"
-            staggerDelayMs={16}
-            className="text-3xl sm:text-5xl font-black text-white tracking-tight"
-          />
-          <p className="text-sm sm:text-base text-neutral-400 max-w-xl mx-auto leading-relaxed">
-            {lang === 'pt'
-              ? 'Aberto a novas oportunidades em Backend Java, microsserviços e desafios de alta escala. Escolha seu canal preferido:'
-              : 'Open to new opportunities in Java Backend, microservices, and high-scale challenges. Choose your preferred channel:'}
-          </p>
         </div>
 
         {/* 4 Clean Action Pills with Magnetic Touch & Cursor Badges */}

@@ -15,8 +15,12 @@ export default function Hero() {
     soundManager.playTab();
     const el = document.getElementById('projects');
     if (el) {
-      const top = el.getBoundingClientRect().top + window.scrollY - 80;
-      window.scrollTo({ top, behavior: 'smooth' });
+      if ((window as any).__lenis) {
+        (window as any).__lenis.scrollTo(el, { offset: -80, duration: 1.2 });
+      } else {
+        const top = el.getBoundingClientRect().top + window.scrollY - 80;
+        window.scrollTo({ top, behavior: 'smooth' });
+      }
     }
   };
 
