@@ -7,6 +7,7 @@ export default function CustomCursor() {
   const [isHovered, setIsHovered] = useState(false);
   const [isClicking, setIsClicking] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [cursorText, setCursorText] = useState('');
 
   useEffect(() => {
     // Only enable on desktop pointer devices
@@ -34,13 +35,20 @@ export default function CustomCursor() {
         dot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
       }
 
-      // Check if hovering over interactive elements
+      // Check if hovering over interactive elements or elements with custom cursor text
       const target = e.target as HTMLElement | null;
       if (target) {
         const isInteractive = Boolean(
           target.closest('a, button, input, [role="button"], .cursor-pointer, .interactive-hover')
         );
         setIsHovered(isInteractive);
+
+        const textEl = target.closest('[data-cursor-text]') as HTMLElement | null;
+        if (textEl) {
+          setCursorText(textEl.getAttribute('data-cursor-text') || '');
+        } else {
+          setCursorText('');
+        }
       }
     };
 
@@ -94,14 +102,22 @@ export default function CustomCursor() {
       {/* Fluid Trailing Aura Ring */}
       <div
         id="lusion-cursor-ring"
-        className={`fixed top-0 left-0 -translate-x-1/2 -translate-y-1/2 rounded-full border pointer-events-none mix-blend-difference will-change-transform transition-[width,height,border-color,background-color] duration-200 ease-out ${
+        className={`fixed top-0 left-0 -translate-x-1/2 -translate-y-1/2 rounded-full border pointer-events-none mix-blend-difference will-change-transform flex items-center justify-center transition-[width,height,border-color,background-color] duration-200 ease-out ${
           isClicking
-            ? 'w-6 h-6 border-white/80 bg-white/40'
+            ? 'w-7 h-7 border-white/80 bg-white/40'
+            : cursorText
+            ? 'w-20 h-20 border-white/70 bg-white/15 backdrop-blur-[2px]'
             : isHovered
             ? 'w-14 h-14 border-white/60 bg-white/10'
             : 'w-8 h-8 border-white/40 bg-transparent'
         }`}
-      />
+      >
+        {cursorText && (
+          <span className="text-[9px] font-mono font-bold tracking-widest text-white uppercase text-center block pointer-events-none select-none px-1">
+            {cursorText}
+          </span>
+        )}
+      </div>
     </div>
   );
 }

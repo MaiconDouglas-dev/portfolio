@@ -17,13 +17,14 @@ export interface Project {
   githubUrl?: string;
   hasSwaggerModal?: boolean;
   hasArchitectureModal?: boolean;
+  isPlaceholder?: boolean;
   metrics?: {
     labelPt: string;
     labelEn: string;
     value: string;
   }[];
-  architectureHighlightsPt: string[];
-  architectureHighlightsEn: string[];
+  architectureHighlightsPt?: string[];
+  architectureHighlightsEn?: string[];
 }
 
 export interface SkillCategory {

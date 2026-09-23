@@ -26,6 +26,7 @@ export const projects: Project[] = [
     githubUrl: 'https://github.com/MaiconDouglas-dev',
     hasSwaggerModal: true,
     hasArchitectureModal: true,
+    isPlaceholder: false,
     metrics: [
       { labelPt: 'Controle de Acesso', labelEn: 'Access Control', value: 'RBAC (Roles)' },
       { labelPt: 'Banco de Dados', labelEn: 'Database', value: 'Oracle Database' },
@@ -43,6 +44,100 @@ export const projects: Project[] = [
       'Appointment scheduling rules: pet ownership verification by authenticated tutor and doctor schedule conflict prevention.',
       'Structured clinical electronic health record persistence linked to completed consultations.',
       'Relational data modeling and data integrity on Oracle Database with Spring Data JPA.'
+    ]
+  },
+  {
+    id: 'backend-project-02',
+    featured: false,
+    number: '02',
+    badgePt: 'SLOT 02 • EM BREVE',
+    badgeEn: 'SLOT 02 • UPCOMING',
+    titlePt: 'Projeto 02 — [Título a Definir]',
+    titleEn: 'Project 02 — [Title TBD]',
+    subtitlePt: 'Slot reservado para novo projeto Backend Java / APIs REST',
+    subtitleEn: 'Reserved slot for upcoming Java Backend / REST APIs project',
+    descPt: 'Espaço estruturado e reservado para a inclusão do seu próximo projeto backend. Este slot está pronto para receber regras de negócio, modelagem de banco de dados, documentação Swagger e especificações de arquitetura.',
+    descEn: 'Structured slot reserved for your next backend development project. Ready to receive business logic, database design, Swagger API documentation, and architecture specs.',
+    tags: [
+      'Java 21',
+      'Spring Boot 3',
+      'APIs REST',
+      'Spring Data JPA',
+      'Banco Relacional',
+      'Docker',
+      'Swagger / OpenAPI'
+    ],
+    githubUrl: 'https://github.com/MaiconDouglas-dev',
+    hasSwaggerModal: false,
+    hasArchitectureModal: false,
+    isPlaceholder: true,
+    metrics: [
+      { labelPt: 'Status', labelEn: 'Status', value: 'Slot Disponível' },
+      { labelPt: 'Arquitetura', labelEn: 'Architecture', value: 'RESTful API' },
+      { labelPt: 'Persistência', labelEn: 'Persistence', value: 'JPA / Hibernate' },
+      { labelPt: 'Deploy', labelEn: 'Deployment', value: 'Docker' }
+    ]
+  },
+  {
+    id: 'backend-project-03',
+    featured: false,
+    number: '03',
+    badgePt: 'SLOT 03 • EM BREVE',
+    badgeEn: 'SLOT 03 • UPCOMING',
+    titlePt: 'Projeto 03 — [Título a Definir]',
+    titleEn: 'Project 03 — [Title TBD]',
+    subtitlePt: 'Slot reservado para novo projeto de Integração, Cache ou Mensageria',
+    subtitleEn: 'Reserved slot for integration, caching or messaging project',
+    descPt: 'Espaço estruturado para o terceiro projeto do portfólio. Preparado para demonstração de comunicação assíncrona, cache distribuído, processamento em lote ou microsserviços.',
+    descEn: 'Structured slot for the third portfolio project. Designed for asynchronous communication, distributed caching, batch processing, or microservices.',
+    tags: [
+      'Java',
+      'Spring Boot',
+      'Redis / Cache',
+      'RabbitMQ / Kafka',
+      'JUnit 5',
+      'Docker Compose'
+    ],
+    githubUrl: 'https://github.com/MaiconDouglas-dev',
+    hasSwaggerModal: false,
+    hasArchitectureModal: false,
+    isPlaceholder: true,
+    metrics: [
+      { labelPt: 'Status', labelEn: 'Status', value: 'Slot Disponível' },
+      { labelPt: 'Processamento', labelEn: 'Processing', value: 'Assíncrono' },
+      { labelPt: 'Testes', labelEn: 'Testing', value: 'JUnit 5' },
+      { labelPt: 'Ambiente', labelEn: 'Environment', value: 'Containerizado' }
+    ]
+  },
+  {
+    id: 'backend-project-04',
+    featured: false,
+    number: '04',
+    badgePt: 'SLOT 04 • EM BREVE',
+    badgeEn: 'SLOT 04 • UPCOMING',
+    titlePt: 'Projeto 04 — [Título a Definir]',
+    titleEn: 'Project 04 — [Title TBD]',
+    subtitlePt: 'Slot reservado para novo projeto Cloud Native, DevOps ou Microsserviços',
+    subtitleEn: 'Reserved slot for Cloud Native, DevOps or Microservices project',
+    descPt: 'Espaço estruturado para o quarto projeto backend. Pronto para expor pipelines CI/CD, esteiras de entrega na nuvem (Azure), observabilidade com Spring Actuator e conteinerização.',
+    descEn: 'Structured slot for the fourth backend project. Ready to showcase CI/CD pipelines, cloud deployment (Azure), Actuator observability, and containerization.',
+    tags: [
+      'Java 21',
+      'Spring Boot 3',
+      'Microsoft Azure',
+      'Docker',
+      'CI/CD Pipelines',
+      'Linux'
+    ],
+    githubUrl: 'https://github.com/MaiconDouglas-dev',
+    hasSwaggerModal: false,
+    hasArchitectureModal: false,
+    isPlaceholder: true,
+    metrics: [
+      { labelPt: 'Status', labelEn: 'Status', value: 'Slot Disponível' },
+      { labelPt: 'Nuvem', labelEn: 'Cloud Provider', value: 'Microsoft Azure' },
+      { labelPt: 'CI/CD', labelEn: 'CI/CD', value: 'GitHub Actions' },
+      { labelPt: 'Monitoramento', labelEn: 'Monitoring', value: 'Spring Actuator' }
     ]
   }
 ];

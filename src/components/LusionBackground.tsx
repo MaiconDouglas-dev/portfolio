@@ -300,17 +300,35 @@ export default function LusionBackground() {
       // Trailing wake point lags behind for liquid sensation
       trailWorld.lerp(mouseWorld, 0.045);
 
-      scrollY += (scrollTargetY - scrollY) * 0.06;
+      const scrollDelta = scrollTargetY - scrollY;
+      const scrollVelocity = Math.abs(scrollDelta);
+      scrollY += scrollDelta * 0.08;
 
-      const kineticBoost = THREE.MathUtils.clamp(mouse.speed * 8, 0, 1.2);
+      const totalScrollable = Math.max(
+        (typeof document !== 'undefined' ? document.documentElement.scrollHeight : 2000) - window.innerHeight,
+        1
+      );
+      const scrollFraction = THREE.MathUtils.clamp(scrollY / totalScrollable, 0, 1);
 
-      // Camera gyro micro-tilt & depth travel
-      camera.position.x = mouse.x * 85;
-      camera.position.y = 270 - scrollY * 0.12 + mouse.y * 42;
-      camera.position.z = 560 + scrollY * 0.05;
-      camera.rotation.z = -mouse.x * 0.028;
-      camera.rotation.x = -0.36 + mouse.y * 0.035;
-      camera.lookAt(mouse.x * 25, -35 - scrollY * 0.08, -180);
+      // Dynamic surge from cursor speed + scroll velocity (feels like Lusion's fluid responsive canvas)
+      const scrollInertiaBoost = Math.min(scrollVelocity * 0.008, 0.8);
+      const kineticBoost = THREE.MathUtils.clamp(mouse.speed * 8 + scrollInertiaBoost, 0, 1.8);
+
+      // Scroll-linked 3D Camera Flight Path:
+      // Hero (0.0): High angle horizon overview
+      // Projects (~0.25 - 0.5): Sweeps lower into the cybernetic data grid
+      // Skills (~0.5 - 0.75): Tilts to reveal transversal lattice and data laser pulses
+      // Contact (~0.75 - 1.0): Deep cosmic perspective
+      const baseCamY = 270 - Math.sin(scrollFraction * Math.PI) * 110 - scrollFraction * 60;
+      const baseCamZ = 560 - Math.sin(scrollFraction * Math.PI) * 160 + scrollFraction * 40;
+      const targetLookY = -35 - scrollFraction * 80;
+
+      camera.position.x = mouse.x * 75 + Math.sin(scrollFraction * Math.PI * 2) * 40;
+      camera.position.y = baseCamY + mouse.y * 38;
+      camera.position.z = baseCamZ;
+      camera.rotation.z = -mouse.x * 0.025 + Math.sin(scrollFraction * Math.PI) * 0.02;
+      camera.rotation.x = -0.34 + mouse.y * 0.035 - (scrollFraction * 0.08);
+      camera.lookAt(mouse.x * 20, targetLookY, -180);
 
       // Light rotation & pulsation
       crimsonLight.position.x = Math.sin(time * 0.7) * 380;
@@ -318,9 +336,23 @@ export default function LusionBackground() {
       cyanLight.position.x = -Math.cos(time * 0.8) * 380;
       cyanLight.position.z = -Math.sin(time * 0.7) * 320;
 
-      // Update Data Pulses
+      // Scroll-reactive lighting mood
+      if (scrollFraction < 0.35) {
+        crimsonLight.intensity = 4.0;
+        cyanLight.intensity = 3.0;
+      } else if (scrollFraction < 0.7) {
+        crimsonLight.intensity = 4.8;
+        cyanLight.intensity = 4.5;
+        violetLight.intensity = 3.8;
+      } else {
+        crimsonLight.intensity = 3.5;
+        cyanLight.intensity = 4.2;
+      }
+
+      // Update Data Pulses with scroll speed surge
+      const pulseSpeedMultiplier = 1 + Math.min(scrollVelocity * 0.015, 2.0);
       pulses.forEach((p) => {
-        p.progress += p.speed * delta;
+        p.progress += p.speed * pulseSpeedMultiplier * delta;
         if (p.progress > 1.25) p.progress = -0.25;
       });
 
