@@ -1,129 +1,126 @@
 'use client';
 
 // ============================================================================
-// Procedural Web Audio Engine: Ambient Space Piano & Cinematic Neo-Classical
+// Procedural Web Audio Engine: Hans Zimmer "Interstellar" Cathedral Organ & Ostinato
 // 100% Royalty-Free, Zero Network Latency, Pure Mathematical Web Audio Synthesis
-// Composed 4-measure lyrical theme (Fmaj7 -> Am7 -> Cmaj7 -> Em7) in 58 BPM
-// Warm felt-piano timbre with soft acoustic delay tails, zero ear fatigue
+// Composed 4-measure Interstellar theme (Am -> F -> C -> G) in 68 BPM
+// Authentic Temple Church pipe organ timbre, hypnotic ticking ostinato, Gargantua bass
 // ============================================================================
+
+export interface AudioStatus {
+  enabled: boolean;
+  isPlaying: boolean;
+  isSuspended: boolean;
+}
 
 interface MusicalChord {
   name: string;
-  bass: number; // Hz
-  padNotes: number[]; // Hz
-}
-
-interface MelodicNote {
-  beat: number; // 0 to 15.75
-  freq: number; // Hz
-  vol: number;
+  bassFreq: number; // Low pedal tone (Hz)
+  subBassFreq: number; // Sub-octave Gargantua rumble (Hz)
+  organPipes: number[]; // Cathedral pipe cluster (Hz)
+  arpeggioNotes: number[]; // 8-pulse hypnotic ostinato notes (Hz)
 }
 
 class AudioManager {
   private ctx: AudioContext | null = null;
   private isEnabled: boolean = true;
   private isPlayingAmbience: boolean = false;
-  private listeners: Set<(enabled: boolean) => void> = new Set();
+  private listeners: Set<(status: AudioStatus) => void> = new Set();
 
   // Master Audio Nodes
   private masterMusicGain: GainNode | null = null;
   private musicFilter: BiquadFilterNode | null = null;
+  private delayNode: DelayNode | null = null;
+  private delayFeedbackGain: GainNode | null = null;
+  private delayFilter: BiquadFilterNode | null = null;
+
+  // Active Voices
   private currentPadOscs: { osc: OscillatorNode; gain: GainNode }[] = [];
   private currentBassOsc: { osc: OscillatorNode; gain: GainNode }[] = [];
 
   // Musical Sequencer State
   private sequencerTimer: ReturnType<typeof setInterval> | null = null;
   private nextBeatTime: number = 0;
-  private currentStep: number = 0; // 16 beats loop
+  private currentStep: number = 0; // 32 sixteenth-subdivisions per loop (4 measures x 8 pulses)
   private lastKineticTime: number = 0;
 
-  // Lyrical 4-Chord Progression (Fmaj7 -> Am7 -> Cmaj7 -> Em7)
+  // Hans Zimmer Interstellar Chord Progression: Am -> F -> C -> G
   private chords: MusicalChord[] = [
     {
-      name: 'Fmaj7',
-      bass: 87.31, // F2
-      padNotes: [174.61, 220.00, 261.63, 329.63], // F3, A3, C4, E4
+      name: 'Am',
+      bassFreq: 55.00, // A1
+      subBassFreq: 27.50, // A0 (Gargantua sub-drone)
+      organPipes: [110.00, 164.81, 220.00, 261.63, 329.63], // A2, E3, A3, C4, E4
+      arpeggioNotes: [659.25, 440.00, 523.25, 659.25, 880.00, 659.25, 523.25, 659.25], // E5, A4, C5, E5, A5, E5, C5, E5
     },
     {
-      name: 'Am7',
-      bass: 55.00, // A1
-      padNotes: [164.81, 220.00, 261.63, 329.63], // E3, A3, C4, E4
+      name: 'F',
+      bassFreq: 43.65, // F1
+      subBassFreq: 43.65, // F1
+      organPipes: [87.31, 130.81, 174.61, 220.00, 261.63], // F2, C3, F3, A3, C4
+      arpeggioNotes: [698.46, 440.00, 523.25, 698.46, 880.00, 698.46, 523.25, 698.46], // F5, A4, C5, F5, A5, F5, C5, F5
     },
     {
-      name: 'Cmaj7',
-      bass: 65.41, // C2
-      padNotes: [196.00, 246.94, 261.63, 329.63], // G3, B3, C4, E4
+      name: 'C',
+      bassFreq: 65.41, // C2
+      subBassFreq: 32.70, // C1
+      organPipes: [98.00, 130.81, 164.81, 196.00, 261.63], // G2, C3, E3, G3, C4
+      arpeggioNotes: [659.25, 392.00, 523.25, 659.25, 783.99, 659.25, 523.25, 659.25], // E5, G4, C5, E5, G5, E5, C5, E5
     },
     {
-      name: 'Em7',
-      bass: 82.41, // E2
-      padNotes: [164.81, 196.00, 246.94, 293.66], // E3, G3, B3, D4
+      name: 'G',
+      bassFreq: 49.00, // G1
+      subBassFreq: 41.20, // E1
+      organPipes: [98.00, 146.83, 196.00, 246.94, 293.66], // G2, D3, G3, B3, D4
+      arpeggioNotes: [587.33, 392.00, 493.88, 587.33, 783.99, 587.33, 493.88, 587.33], // D5, G4, B4, D5, G5, D5, B4, D5
     },
-  ];
-
-  // Composed 16-beat Piano Melody Theme (emotional, cinematic, relaxing)
-  private melodyTheme: MelodicNote[] = [
-    // Measure 1: Fmaj7 — soulful opening
-    { beat: 0.0, freq: 440.00, vol: 0.08 }, // A4
-    { beat: 1.5, freq: 523.25, vol: 0.06 }, // C5
-    { beat: 2.0, freq: 392.00, vol: 0.07 }, // G4
-    { beat: 3.0, freq: 329.63, vol: 0.06 }, // E4
-
-    // Measure 2: Am7 — introspective peak
-    { beat: 4.0, freq: 659.25, vol: 0.08 }, // E5
-    { beat: 5.5, freq: 587.33, vol: 0.06 }, // D5
-    { beat: 6.0, freq: 523.25, vol: 0.07 }, // C5
-    { beat: 7.0, freq: 440.00, vol: 0.06 }, // A4
-
-    // Measure 3: Cmaj7 — uplifting soaring hope
-    { beat: 8.0, freq: 392.00, vol: 0.08 }, // G4
-    { beat: 9.5, freq: 493.88, vol: 0.06 }, // B4
-    { beat: 10.0, freq: 587.33, vol: 0.07 }, // D5
-    { beat: 11.0, freq: 659.25, vol: 0.07 }, // E5
-
-    // Measure 4: Em7 — cascading resolution
-    { beat: 12.0, freq: 493.88, vol: 0.08 }, // B4
-    { beat: 13.0, freq: 392.00, vol: 0.07 }, // G4
-    { beat: 14.0, freq: 329.63, vol: 0.06 }, // E4
-    { beat: 15.0, freq: 293.66, vol: 0.05 }, // D4
   ];
 
   constructor() {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('md_portfolio_audio');
-      // Audio is ENABLED by default unless the user explicitly muted it previously
+      // Sound is ENABLED by default unless user explicitly chose to mute ('false')
       this.isEnabled = saved !== 'false';
 
-      const unlockAudio = () => {
-        if (!this.isEnabled) return;
-        const ctx = this.getContext();
-        if (ctx) {
-          if (ctx.state === 'suspended') {
-            ctx.resume().then(() => {
-              if (this.isEnabled && !this.isPlayingAmbience) {
-                this.startAmbience();
-              }
-            }).catch(() => {});
-          } else if (!this.isPlayingAmbience) {
+      // Setup bulletproof gesture unlock on window and document
+      this.setupGestureUnlock();
+    }
+  }
+
+  private setupGestureUnlock() {
+    if (typeof window === 'undefined') return;
+
+    const unlock = () => {
+      if (!this.isEnabled) return;
+      const ctx = this.getContext();
+      if (!ctx) return;
+
+      if (ctx.state === 'suspended') {
+        ctx.resume().then(() => {
+          if (this.isEnabled && !this.isPlayingAmbience) {
             this.startAmbience();
           }
-        }
-      };
+          this.notify();
+        }).catch(() => {});
+      } else if (!this.isPlayingAmbience) {
+        this.startAmbience();
+        this.notify();
+      }
+    };
 
-      // Attempt immediate unlock in case browser policy allows autoplay
-      try {
-        if (this.isEnabled) {
-          unlockAudio();
-        }
-      } catch {}
+    // Use capture phase so no DOM element can cancel or stop event propagation
+    const events = ['pointerdown', 'mousedown', 'touchstart', 'keydown', 'click'];
+    events.forEach((ev) => {
+      document.addEventListener(ev, unlock, { capture: true, passive: true });
+      window.addEventListener(ev, unlock, { capture: true, passive: true });
+    });
 
-      // Attach user gesture listeners to unlock and start playback seamlessly
-      window.addEventListener('click', unlockAudio, { passive: true });
-      window.addEventListener('keydown', unlockAudio, { passive: true });
-      window.addEventListener('touchstart', unlockAudio, { passive: true });
-      window.addEventListener('scroll', unlockAudio, { passive: true });
-      window.addEventListener('pointerdown', unlockAudio, { passive: true });
-    }
+    // Immediate attempt if browser permits autoplay
+    try {
+      if (this.isEnabled) {
+        unlock();
+      }
+    } catch {}
   }
 
   public getContext(): AudioContext | null {
@@ -142,9 +139,28 @@ class AudioManager {
     return this.ctx;
   }
 
-  public subscribe(listener: (enabled: boolean) => void): () => void {
+  public getStatus(): AudioStatus {
+    const isPlaying = Boolean(
+      this.isEnabled && this.isPlayingAmbience && this.ctx && this.ctx.state === 'running'
+    );
+    const isSuspended = Boolean(
+      this.isEnabled && (!this.ctx || this.ctx.state === 'suspended' || !this.isPlayingAmbience)
+    );
+    return {
+      enabled: this.isEnabled,
+      isPlaying,
+      isSuspended,
+    };
+  }
+
+  private notify() {
+    const status = this.getStatus();
+    this.listeners.forEach((fn) => fn(status));
+  }
+
+  public subscribe(listener: (status: AudioStatus) => void): () => void {
     this.listeners.add(listener);
-    listener(this.isEnabled);
+    listener(this.getStatus());
     return () => {
       this.listeners.delete(listener);
     };
@@ -155,6 +171,24 @@ class AudioManager {
   }
 
   public toggle(): boolean {
+    // CRITICAL UX FIX: If audio is enabled but waiting for user gesture (suspended after F5):
+    // Clicking the sound button MUST immediately start playback! Never switch to MUDO!
+    if (this.isEnabled && (!this.isPlayingAmbience || this.ctx?.state !== 'running')) {
+      const ctx = this.getContext();
+      if (ctx) {
+        ctx.resume().then(() => {
+          this.startAmbience();
+          this.playActivateChime();
+          this.notify();
+        }).catch(() => {
+          this.startAmbience();
+          this.notify();
+        });
+      }
+      return true;
+    }
+
+    // Normal toggle when playing or explicitly muted
     const nextState = !this.isEnabled;
     this.setEnabled(nextState);
     return nextState;
@@ -172,51 +206,53 @@ class AudioManager {
         ctx.resume().then(() => {
           this.startAmbience();
           this.playActivateChime();
-        });
+          this.notify();
+        }).catch(() => {});
       } else {
         this.startAmbience();
         this.playActivateChime();
+        this.notify();
       }
     } else {
       this.playDeactivateChime();
       this.stopAmbience();
+      this.notify();
     }
-
-    this.listeners.forEach((fn) => fn(this.isEnabled));
   }
 
   // ============================================================================
-  // UI Sound Effects (Tactile, High-Tech, Pleasant Sci-Fi Synthesis)
+  // UI Sound Effects (Tactile, High-Tech, Sci-Fi Synthesis)
   // ============================================================================
 
   public playHover() {
     if (!this.isEnabled) return;
     try {
       const ctx = this.getContext();
-      if (!ctx) return;
+      if (!ctx || ctx.state !== 'running') return;
       const now = ctx.currentTime;
 
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       const filter = ctx.createBiquadFilter();
 
-      filter.type = 'bandpass';
-      filter.frequency.setValueAtTime(950, now);
-      filter.Q.setValueAtTime(1.8, now);
-
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(740, now);
-      osc.frequency.linearRampToValueAtTime(480, now + 0.045);
+      osc.frequency.setValueAtTime(880, now);
+      osc.frequency.exponentialRampToValueAtTime(1320, now + 0.04);
 
-      gain.gain.setValueAtTime(0.06, now);
-      gain.gain.linearRampToValueAtTime(0.0001, now + 0.045);
+      filter.type = 'bandpass';
+      filter.frequency.setValueAtTime(1100, now);
+      filter.Q.setValueAtTime(2.0, now);
+
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.linearRampToValueAtTime(0.045, now + 0.008);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.05);
 
       osc.connect(filter);
       filter.connect(gain);
       gain.connect(ctx.destination);
 
       osc.start(now);
-      osc.stop(now + 0.045);
+      osc.stop(now + 0.055);
     } catch {}
   }
 
@@ -225,36 +261,40 @@ class AudioManager {
     try {
       const ctx = this.getContext();
       if (!ctx) return;
+      if (ctx.state === 'suspended') ctx.resume();
       const now = ctx.currentTime;
 
-      const osc1 = ctx.createOscillator();
-      const gain1 = ctx.createGain();
-      osc1.type = 'sine';
-      osc1.frequency.setValueAtTime(520, now);
-      osc1.frequency.linearRampToValueAtTime(880, now + 0.07);
+      // 1. Thump layer
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(140, now);
+      osc.frequency.exponentialRampToValueAtTime(45, now + 0.06);
 
-      gain1.gain.setValueAtTime(0.12, now);
-      gain1.gain.linearRampToValueAtTime(0.0001, now + 0.07);
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.linearRampToValueAtTime(0.12, now + 0.004);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.07);
 
-      osc1.connect(gain1);
-      gain1.connect(ctx.destination);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.075);
 
-      const osc2 = ctx.createOscillator();
-      const gain2 = ctx.createGain();
-      osc2.type = 'triangle';
-      osc2.frequency.setValueAtTime(240, now);
-      osc2.frequency.linearRampToValueAtTime(120, now + 0.05);
+      // 2. High glass transient
+      const pingOsc = ctx.createOscillator();
+      const pingGain = ctx.createGain();
+      pingOsc.type = 'sine';
+      pingOsc.frequency.setValueAtTime(1760, now);
+      pingOsc.frequency.exponentialRampToValueAtTime(880, now + 0.04);
 
-      gain2.gain.setValueAtTime(0.09, now);
-      gain2.gain.linearRampToValueAtTime(0.0001, now + 0.05);
+      pingGain.gain.setValueAtTime(0.0001, now);
+      pingGain.gain.linearRampToValueAtTime(0.06, now + 0.003);
+      pingGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.045);
 
-      osc2.connect(gain2);
-      gain2.connect(ctx.destination);
-
-      osc1.start(now);
-      osc1.stop(now + 0.07);
-      osc2.start(now);
-      osc2.stop(now + 0.05);
+      pingOsc.connect(pingGain);
+      pingGain.connect(ctx.destination);
+      pingOsc.start(now);
+      pingOsc.stop(now + 0.05);
     } catch {}
   }
 
@@ -262,85 +302,23 @@ class AudioManager {
     if (!this.isEnabled) return;
     try {
       const ctx = this.getContext();
-      if (!ctx) return;
+      if (!ctx || ctx.state !== 'running') return;
       const now = ctx.currentTime;
 
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
-      const filter = ctx.createBiquadFilter();
-
-      filter.type = 'lowpass';
-      filter.frequency.setValueAtTime(1200, now);
-
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(620, now);
-      osc.frequency.linearRampToValueAtTime(440, now + 0.065);
+      osc.frequency.setValueAtTime(587.33, now); // D5
+      osc.frequency.exponentialRampToValueAtTime(880, now + 0.04); // A5
 
-      gain.gain.setValueAtTime(0.08, now);
-      gain.gain.linearRampToValueAtTime(0.0001, now + 0.065);
-
-      osc.connect(filter);
-      filter.connect(gain);
-      gain.connect(ctx.destination);
-
-      osc.start(now);
-      osc.stop(now + 0.065);
-    } catch {}
-  }
-
-  public playModalOpen() {
-    if (!this.isEnabled) return;
-    try {
-      const ctx = this.getContext();
-      if (!ctx) return;
-      const now = ctx.currentTime;
-
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      const filter = ctx.createBiquadFilter();
-
-      filter.type = 'lowpass';
-      filter.frequency.setValueAtTime(280, now);
-      filter.frequency.linearRampToValueAtTime(1100, now + 0.22);
-
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(140, now);
-      osc.frequency.linearRampToValueAtTime(280, now + 0.22);
-
-      gain.gain.setValueAtTime(0.09, now);
-      gain.gain.linearRampToValueAtTime(0.0001, now + 0.24);
-
-      osc.connect(filter);
-      filter.connect(gain);
-      gain.connect(ctx.destination);
-
-      osc.start(now);
-      osc.stop(now + 0.24);
-    } catch {}
-  }
-
-  public playModalClose() {
-    if (!this.isEnabled) return;
-    try {
-      const ctx = this.getContext();
-      if (!ctx) return;
-      const now = ctx.currentTime;
-
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(380, now);
-      osc.frequency.linearRampToValueAtTime(160, now + 0.16);
-
-      gain.gain.setValueAtTime(0.08, now);
-      gain.gain.linearRampToValueAtTime(0.0001, now + 0.16);
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.linearRampToValueAtTime(0.055, now + 0.006);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.05);
 
       osc.connect(gain);
       gain.connect(ctx.destination);
-
       osc.start(now);
-      osc.stop(now + 0.16);
+      osc.stop(now + 0.055);
     } catch {}
   }
 
@@ -348,26 +326,126 @@ class AudioManager {
     if (!this.isEnabled) return;
     try {
       const ctx = this.getContext();
-      if (!ctx) return;
+      if (!ctx || ctx.state !== 'running') return;
       const now = ctx.currentTime;
 
-      const notes = [440, 554.37, 659.25];
-      notes.forEach((freq, idx) => {
+      // Elegant high-tech 3-note ascending chord (E5, G#5, B5)
+      const pitches = [659.25, 830.61, 987.77];
+      pitches.forEach((freq, idx) => {
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
-
         osc.type = 'sine';
-        osc.frequency.setValueAtTime(freq, now + idx * 0.05);
+        osc.frequency.setValueAtTime(freq, now + idx * 0.045);
 
-        gain.gain.setValueAtTime(0, now + idx * 0.05);
-        gain.gain.linearRampToValueAtTime(0.08, now + idx * 0.05 + 0.015);
-        gain.gain.linearRampToValueAtTime(0.0001, now + idx * 0.05 + 0.22);
+        gain.gain.setValueAtTime(0.0001, now + idx * 0.045);
+        gain.gain.linearRampToValueAtTime(0.07, now + idx * 0.045 + 0.015);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.045 + 0.28);
 
         osc.connect(gain);
         gain.connect(ctx.destination);
+        osc.start(now + idx * 0.045);
+        osc.stop(now + idx * 0.045 + 0.29);
+      });
+    } catch {}
+  }
 
-        osc.start(now + idx * 0.05);
-        osc.stop(now + idx * 0.05 + 0.22);
+  public playTerminalBeep() {
+    if (!this.isEnabled) return;
+    try {
+      const ctx = this.getContext();
+      if (!ctx || ctx.state !== 'running') return;
+      const now = ctx.currentTime;
+
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(1244.5, now);
+
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.linearRampToValueAtTime(0.035, now + 0.005);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.045);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.05);
+    } catch {}
+  }
+
+  public playModalOpen() {
+    if (!this.isEnabled) return;
+    try {
+      const ctx = this.getContext();
+      if (!ctx || ctx.state !== 'running') return;
+      const now = ctx.currentTime;
+
+      const notes = [440, 659.25, 880];
+      notes.forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now + idx * 0.04);
+
+        gain.gain.setValueAtTime(0.0001, now + idx * 0.04);
+        gain.gain.linearRampToValueAtTime(0.05, now + idx * 0.04 + 0.015);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.04 + 0.22);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now + idx * 0.04);
+        osc.stop(now + idx * 0.04 + 0.23);
+      });
+    } catch {}
+  }
+
+  public playModalClose() {
+    if (!this.isEnabled) return;
+    try {
+      const ctx = this.getContext();
+      if (!ctx || ctx.state !== 'running') return;
+      const now = ctx.currentTime;
+
+      const notes = [659.25, 440];
+      notes.forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now + idx * 0.035);
+
+        gain.gain.setValueAtTime(0.0001, now + idx * 0.035);
+        gain.gain.linearRampToValueAtTime(0.045, now + idx * 0.035 + 0.012);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.035 + 0.16);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now + idx * 0.035);
+        osc.stop(now + idx * 0.035 + 0.17);
+      });
+    } catch {}
+  }
+
+  public playLanguageSwitch() {
+    if (!this.isEnabled) return;
+    try {
+      const ctx = this.getContext();
+      if (!ctx || ctx.state !== 'running') return;
+      const now = ctx.currentTime;
+
+      const pitches = [587.33, 880];
+      pitches.forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, now + i * 0.05);
+
+        gain.gain.setValueAtTime(0.0001, now + i * 0.05);
+        gain.gain.linearRampToValueAtTime(0.06, now + i * 0.05 + 0.012);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.05 + 0.16);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now + i * 0.05);
+        osc.stop(now + i * 0.05 + 0.17);
       });
     } catch {}
   }
@@ -378,21 +456,21 @@ class AudioManager {
       if (!ctx) return;
       const now = ctx.currentTime;
 
-      const pitches = [329.63, 440.0, 554.37];
+      const pitches = [440.0, 554.37, 659.25, 880.0];
       pitches.forEach((freq, i) => {
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
         osc.type = 'sine';
-        osc.frequency.setValueAtTime(freq, now + i * 0.08);
+        osc.frequency.setValueAtTime(freq, now + i * 0.06);
 
-        gain.gain.setValueAtTime(0.0001, now + i * 0.08);
-        gain.gain.linearRampToValueAtTime(0.12, now + i * 0.08 + 0.02);
-        gain.gain.linearRampToValueAtTime(0.0001, now + i * 0.08 + 0.32);
+        gain.gain.setValueAtTime(0.0001, now + i * 0.06);
+        gain.gain.linearRampToValueAtTime(0.07, now + i * 0.06 + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.06 + 0.28);
 
         osc.connect(gain);
         gain.connect(ctx.destination);
-        osc.start(now + i * 0.08);
-        osc.stop(now + i * 0.08 + 0.32);
+        osc.start(now + i * 0.06);
+        osc.stop(now + i * 0.06 + 0.29);
       });
     } catch {}
   }
@@ -403,28 +481,28 @@ class AudioManager {
       if (!ctx) return;
       const now = ctx.currentTime;
 
-      const pitches = [554.37, 329.63];
+      const pitches = [659.25, 440.0];
       pitches.forEach((freq, i) => {
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
         osc.type = 'sine';
-        osc.frequency.setValueAtTime(freq, now + i * 0.07);
+        osc.frequency.setValueAtTime(freq, now + i * 0.06);
 
-        gain.gain.setValueAtTime(0.0001, now + i * 0.07);
-        gain.gain.linearRampToValueAtTime(0.08, now + i * 0.07 + 0.015);
-        gain.gain.linearRampToValueAtTime(0.0001, now + i * 0.07 + 0.18);
+        gain.gain.setValueAtTime(0.0001, now + i * 0.06);
+        gain.gain.linearRampToValueAtTime(0.06, now + i * 0.06 + 0.015);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.06 + 0.16);
 
         osc.connect(gain);
         gain.connect(ctx.destination);
-        osc.start(now + i * 0.07);
-        osc.stop(now + i * 0.07 + 0.18);
+        osc.start(now + i * 0.06);
+        osc.stop(now + i * 0.06 + 0.17);
       });
     } catch {}
   }
 
   // ============================================================================
-  // Procedural Cinematic Space Piano Engine (58 BPM Relaxing Track)
-  // Composed theme with soft felt piano notes, space echo tails, and warm pads
+  // Procedural Hans Zimmer "Interstellar" Cathedral Organ & Ostinato Engine
+  // 68 BPM Tempo, 4-Chord Journey: Am -> F -> C -> G
   // ============================================================================
 
   public startAmbience() {
@@ -435,75 +513,96 @@ class AudioManager {
 
       const now = ctx.currentTime;
 
-      // 1. Master Music Bus (smooth 1.6s fade-in)
+      // 1. Master Ambient Bus with smooth 1.8s fade-in
       const masterGain = ctx.createGain();
       masterGain.gain.setValueAtTime(0.0001, now);
-      masterGain.gain.linearRampToValueAtTime(0.28, now + 1.6);
+      masterGain.gain.linearRampToValueAtTime(0.24, now + 1.8);
       masterGain.connect(ctx.destination);
       this.masterMusicGain = masterGain;
 
-      // 2. Warm Piano / Felt Filter (1350Hz cutoff)
+      // 2. Cathedral Lowpass Filter (warm pipe acoustic atmosphere)
       const filter = ctx.createBiquadFilter();
       filter.type = 'lowpass';
-      filter.frequency.setValueAtTime(1350, now);
-      filter.Q.setValueAtTime(0.85, now);
+      filter.frequency.setValueAtTime(1450, now);
+      filter.Q.setValueAtTime(0.9, now);
       filter.connect(masterGain);
       this.musicFilter = filter;
+
+      // 3. Cathedral Spatial Echo / Delay Network
+      const delay = ctx.createDelay(1.5);
+      delay.delayTime.setValueAtTime(0.35, now); // ~350ms cathedral echo
+      const feedback = ctx.createGain();
+      feedback.gain.setValueAtTime(0.32, now); // 32% feedback decay
+      const delayFilter = ctx.createBiquadFilter();
+      delayFilter.type = 'lowpass';
+      delayFilter.frequency.setValueAtTime(1600, now);
+
+      filter.connect(delay);
+      delay.connect(delayFilter);
+      delayFilter.connect(feedback);
+      feedback.connect(delay);
+      delay.connect(masterGain);
+
+      this.delayNode = delay;
+      this.delayFeedbackGain = feedback;
+      this.delayFilter = delayFilter;
 
       this.isPlayingAmbience = true;
       this.currentStep = 0;
 
-      // Tempo: 58 BPM -> 1 beat = 1.0345 seconds
-      const secondsPerBeat = 60 / 58;
+      // 68 BPM -> 1 beat = 0.882 seconds. 8 ostinato pulses per chord (0.441s each)
+      const secondsPerPulse = (60 / 68) / 2; // 0.441s per 8th note
       this.nextBeatTime = now + 0.1;
 
-      // Start measure 0 immediately
-      this.triggerChord(now, this.chords[0]);
+      // Immediately trigger first chord (Am)
+      this.triggerInterstellarChord(now, this.chords[0]);
 
-      // Sequencer lookahead loop
+      // Sequencer lookahead timer
       this.sequencerTimer = setInterval(() => {
         if (!this.isPlayingAmbience || !this.ctx) return;
         const currentCtxTime = this.ctx.currentTime;
 
-        while (this.nextBeatTime < currentCtxTime + 0.25) {
-          this.scheduleMeasureEvents(this.nextBeatTime, this.currentStep);
-          this.nextBeatTime += secondsPerBeat;
-          this.currentStep = (this.currentStep + 1) % 16;
+        while (this.nextBeatTime < currentCtxTime + 0.3) {
+          this.scheduleInterstellarStep(this.nextBeatTime, this.currentStep);
+          this.nextBeatTime += secondsPerPulse;
+          this.currentStep = (this.currentStep + 1) % 32; // 32 steps (4 chords x 8 pulses)
         }
-      }, 45);
+      }, 40);
 
+      this.notify();
     } catch {
       this.isPlayingAmbience = false;
+      this.notify();
     }
   }
 
   /**
-   * Schedules events for each beat of the 16-beat cycle.
+   * Schedules events for each 8th-note pulse of the Interstellar loop.
    */
-  private scheduleMeasureEvents(time: number, step: number) {
+  private scheduleInterstellarStep(time: number, step: number) {
     if (!this.ctx || !this.musicFilter) return;
 
-    // Chord changes every 4 beats
-    if (step % 4 === 0) {
-      const chordIndex = Math.floor(step / 4) % this.chords.length;
-      this.triggerChord(time, this.chords[chordIndex]);
+    const chordIndex = Math.floor(step / 8) % this.chords.length;
+    const pulseInChord = step % 8;
+    const currentChord = this.chords[chordIndex];
+
+    // Trigger full cathedral organ on the 1st pulse of each chord (downbeat)
+    if (pulseInChord === 0) {
+      this.triggerInterstellarChord(time, currentChord);
     }
 
-    // Check for melodic notes in the theme at this step
-    this.melodyTheme.forEach((note) => {
-      if (Math.abs(note.beat - step) < 0.25) {
-        this.triggerPianoNote(time, note.freq, note.vol);
-      }
-    });
+    // Trigger hypnotic Hans Zimmer ticking arpeggio note on every pulse
+    const noteFreq = currentChord.arpeggioNotes[pulseInChord];
+    this.triggerOstinatoNote(time, noteFreq, pulseInChord);
   }
 
   /**
-   * Triggers a warm sustained pad chord and supporting acoustic bass.
+   * Triggers the grand Cathedral Pipe Organ voicing and Gargantua sub-bass.
    */
-  private triggerChord(time: number, chord: MusicalChord) {
+  private triggerInterstellarChord(time: number, chord: MusicalChord) {
     if (!this.ctx || !this.musicFilter) return;
 
-    // Fade out previous pad voices gently over 1.4s
+    // Fade out previous organ voices gently over 1.4s
     const oldPads = [...this.currentPadOscs];
     const oldBass = [...this.currentBassOsc];
     this.currentPadOscs = [];
@@ -525,114 +624,123 @@ class AudioManager {
       } catch {}
     });
 
-    // 1. Deep Round Acoustic Bass
+    // 1. Gargantua Deep Sub-Bass Pedal Tone (3.52s measure duration)
     try {
       const bassOsc = this.ctx.createOscillator();
       const bassGain = this.ctx.createGain();
 
       bassOsc.type = 'sine';
-      bassOsc.frequency.setValueAtTime(chord.bass, time);
+      bassOsc.frequency.setValueAtTime(chord.bassFreq, time);
 
       bassGain.gain.setValueAtTime(0.0001, time);
-      bassGain.gain.linearRampToValueAtTime(0.24, time + 0.35);
-      bassGain.gain.linearRampToValueAtTime(0.12, time + 2.8);
-      bassGain.gain.linearRampToValueAtTime(0.0001, time + 4.1);
+      bassGain.gain.linearRampToValueAtTime(0.22, time + 0.4);
+      bassGain.gain.linearRampToValueAtTime(0.14, time + 2.5);
+      bassGain.gain.linearRampToValueAtTime(0.0001, time + 3.5);
 
       bassOsc.connect(bassGain);
       bassGain.connect(this.musicFilter);
       bassOsc.start(time);
-      bassOsc.stop(time + 4.1);
+      bassOsc.stop(time + 3.5);
 
       this.currentBassOsc.push({ osc: bassOsc, gain: bassGain });
+
+      // Sub-octave drone
+      const subOsc = this.ctx.createOscillator();
+      const subGain = this.ctx.createGain();
+      subOsc.type = 'sine';
+      subOsc.frequency.setValueAtTime(chord.subBassFreq, time);
+
+      subGain.gain.setValueAtTime(0.0001, time);
+      subGain.gain.linearRampToValueAtTime(0.12, time + 0.6);
+      subGain.gain.linearRampToValueAtTime(0.0001, time + 3.5);
+
+      subOsc.connect(subGain);
+      subGain.connect(this.musicFilter);
+      subOsc.start(time);
+      subOsc.stop(time + 3.5);
+
+      this.currentBassOsc.push({ osc: subOsc, gain: subGain });
     } catch {}
 
-    // 2. Ethereal Pad Chord
-    chord.padNotes.forEach((freq, idx) => {
+    // 2. Temple Church Pipe Organ Cluster (8' Flute + 4' Principal harmonics)
+    chord.organPipes.forEach((freq, idx) => {
       if (!this.ctx || !this.musicFilter) return;
       try {
-        const padOsc = this.ctx.createOscillator();
-        const padGain = this.ctx.createGain();
+        const pipeOsc = this.ctx.createOscillator();
+        const pipeGain = this.ctx.createGain();
 
-        padOsc.type = idx % 2 === 0 ? 'sine' : 'triangle';
-        padOsc.frequency.setValueAtTime(freq, time);
-        padOsc.detune.setValueAtTime(idx === 0 ? 0 : (idx % 2 === 0 ? 1.5 : -1.5), time);
+        // Alternating Sine (Flute 8') and Triangle (Principal 4')
+        pipeOsc.type = idx % 2 === 0 ? 'sine' : 'triangle';
+        pipeOsc.frequency.setValueAtTime(freq, time);
 
-        const targetVol = idx === 0 ? 0.14 : 0.09;
-        padGain.gain.setValueAtTime(0.0001, time);
-        padGain.gain.linearRampToValueAtTime(targetVol, time + 1.2);
-        padGain.gain.linearRampToValueAtTime(targetVol * 0.75, time + 3.2);
-        padGain.gain.linearRampToValueAtTime(0.0001, time + 4.1);
+        // Subtle pipe chorus detune (-2 cents / +2 cents)
+        const detuneValue = idx === 0 ? 0 : (idx % 2 === 0 ? 2.5 : -2.5);
+        pipeOsc.detune.setValueAtTime(detuneValue, time);
 
-        padOsc.connect(padGain);
-        padGain.connect(this.musicFilter);
-        padOsc.start(time);
-        padOsc.stop(time + 4.1);
+        const targetVol = idx === 0 ? 0.08 : 0.055;
+        pipeGain.gain.setValueAtTime(0.0001, time);
+        pipeGain.gain.linearRampToValueAtTime(targetVol, time + 0.7);
+        pipeGain.gain.linearRampToValueAtTime(targetVol * 0.8, time + 2.6);
+        pipeGain.gain.linearRampToValueAtTime(0.0001, time + 3.5);
 
-        this.currentPadOscs.push({ osc: padOsc, gain: padGain });
+        pipeOsc.connect(pipeGain);
+        pipeGain.connect(this.musicFilter);
+        pipeOsc.start(time);
+        pipeOsc.stop(time + 3.5);
+
+        this.currentPadOscs.push({ osc: pipeOsc, gain: pipeGain });
       } catch {}
     });
   }
 
   /**
-   * Triggers a warm felt-piano note with acoustic hammer overtone and dreamy space echo.
+   * Triggers a single pulse of the Hans Zimmer Interstellar arpeggio ostinato.
    */
-  private triggerPianoNote(time: number, freq: number, volume: number = 0.08) {
+  private triggerOstinatoNote(time: number, freq: number, pulseIndex: number) {
     if (!this.ctx || !this.musicFilter) return;
     try {
-      // Primary felt-piano tone (Sine fundamental)
+      // 1. Primary Reed / Bell Organ Note
       const osc = this.ctx.createOscillator();
       const gain = this.ctx.createGain();
 
-      osc.type = 'sine';
+      osc.type = pulseIndex % 4 === 0 ? 'sine' : 'triangle';
       osc.frequency.setValueAtTime(freq, time);
 
-      // Acoustic piano felt envelope: 25ms soft hammer attack, smooth 1.8s decay
+      // Accent downbeats slightly for that driving, galloping Interstellar clockwork feel
+      const isAccent = pulseIndex === 0 || pulseIndex === 4;
+      const noteVol = isAccent ? 0.075 : 0.05;
+
       gain.gain.setValueAtTime(0.0001, time);
-      gain.gain.linearRampToValueAtTime(volume, time + 0.025);
-      gain.gain.exponentialRampToValueAtTime(0.0001, time + 1.8);
+      gain.gain.linearRampToValueAtTime(noteVol, time + 0.015);
+      gain.gain.exponentialRampToValueAtTime(0.0001, time + 0.42);
 
       osc.connect(gain);
       gain.connect(this.musicFilter);
       osc.start(time);
-      osc.stop(time + 1.8);
+      osc.stop(time + 0.43);
 
-      // Subtle hammer overtone (triangle 1 octave up, quick 180ms decay)
-      const overtoneOsc = this.ctx.createOscillator();
-      const overtoneGain = this.ctx.createGain();
+      // 2. High Shimmer Harmonics (octave harmonic for ethereal cathedral space)
+      if (isAccent) {
+        const shimmerOsc = this.ctx.createOscillator();
+        const shimmerGain = this.ctx.createGain();
 
-      overtoneOsc.type = 'triangle';
-      overtoneOsc.frequency.setValueAtTime(freq * 2, time);
+        shimmerOsc.type = 'sine';
+        shimmerOsc.frequency.setValueAtTime(freq * 2, time);
 
-      overtoneGain.gain.setValueAtTime(0.0001, time);
-      overtoneGain.gain.linearRampToValueAtTime(volume * 0.18, time + 0.015);
-      overtoneGain.gain.exponentialRampToValueAtTime(0.0001, time + 0.22);
+        shimmerGain.gain.setValueAtTime(0.0001, time);
+        shimmerGain.gain.linearRampToValueAtTime(0.02, time + 0.02);
+        shimmerGain.gain.exponentialRampToValueAtTime(0.0001, time + 0.28);
 
-      overtoneOsc.connect(overtoneGain);
-      overtoneGain.connect(this.musicFilter);
-      overtoneOsc.start(time);
-      overtoneOsc.stop(time + 0.22);
-
-      // Dreamy space echo repeat (+380ms delay at 30% volume)
-      const echoOsc = this.ctx.createOscillator();
-      const echoGain = this.ctx.createGain();
-
-      echoOsc.type = 'sine';
-      echoOsc.frequency.setValueAtTime(freq, time + 0.38);
-
-      echoGain.gain.setValueAtTime(0.0001, time + 0.38);
-      echoGain.gain.linearRampToValueAtTime(volume * 0.28, time + 0.40);
-      echoGain.gain.exponentialRampToValueAtTime(0.0001, time + 1.6);
-
-      echoOsc.connect(echoGain);
-      echoGain.connect(this.musicFilter);
-      echoOsc.start(time + 0.38);
-      echoOsc.stop(time + 1.6);
-
+        shimmerOsc.connect(shimmerGain);
+        shimmerGain.connect(this.musicFilter);
+        shimmerOsc.start(time);
+        shimmerOsc.stop(time + 0.29);
+      }
     } catch {}
   }
 
   /**
-   * Kinetic interaction: moving the mouse or scrolling smoothly opens the music filter.
+   * Kinetic interaction: moving the mouse or scrolling opens the cathedral filter swell.
    */
   public onKineticDisturbance(speed: number) {
     if (!this.isEnabled || !this.isPlayingAmbience || !this.ctx || !this.musicFilter) return;
@@ -645,11 +753,11 @@ class AudioManager {
     this.lastKineticTime = now;
 
     try {
-      const targetFreq = 1350 + clampedSpeed * 180;
+      const targetFreq = 1450 + clampedSpeed * 220;
       this.musicFilter.frequency.cancelScheduledValues(now);
       this.musicFilter.frequency.setValueAtTime(this.musicFilter.frequency.value, now);
-      this.musicFilter.frequency.linearRampToValueAtTime(targetFreq, now + 0.1);
-      this.musicFilter.frequency.linearRampToValueAtTime(1350, now + 0.9);
+      this.musicFilter.frequency.linearRampToValueAtTime(targetFreq, now + 0.12);
+      this.musicFilter.frequency.linearRampToValueAtTime(1450, now + 0.9);
     } catch {}
   }
 
@@ -665,7 +773,7 @@ class AudioManager {
         const now = this.ctx.currentTime;
         this.masterMusicGain.gain.cancelScheduledValues(now);
         this.masterMusicGain.gain.setValueAtTime(this.masterMusicGain.gain.value, now);
-        this.masterMusicGain.gain.linearRampToValueAtTime(0.0001, now + 0.5);
+        this.masterMusicGain.gain.linearRampToValueAtTime(0.0001, now + 0.4);
 
         setTimeout(() => {
           this.currentPadOscs.forEach(({ osc }) => {
@@ -689,12 +797,15 @@ class AudioManager {
             this.masterMusicGain = null;
           }
           this.isPlayingAmbience = false;
-        }, 550);
+          this.notify();
+        }, 450);
       } else {
         this.isPlayingAmbience = false;
+        this.notify();
       }
     } catch {
       this.isPlayingAmbience = false;
+      this.notify();
     }
   }
 }

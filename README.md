@@ -1,21 +1,24 @@
 <div align="center">
 
 # 🚀 Maicon Douglas — Portfólio Profissional
-### *Desenvolvedor Backend Java em Formação | Java 21 • Spring Boot 3 • Oracle Database (PL/SQL) • Docker • Azure*
+### *Desenvolvedor Backend Java em Formação | Java 21 • Spring Boot 3 • Oracle Database (PL/SQL) • PostgreSQL • Docker • Azure*
 
 [![Next.js](https://img.shields.io/badge/Next.js-14.2-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178c6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Three.js](https://img.shields.io/badge/Three.js-WebGL-000000?style=for-the-badge&logo=three.js&logoColor=white)](https://threejs.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38bdf8?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![Java](https://img.shields.io/badge/Java-21-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)](https://openjdk.org/)
 [![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.3+-6DB33F?style=for-the-badge&logo=spring&logoColor=white)](https://spring.io/projects/spring-boot)
 [![Oracle Database](https://img.shields.io/badge/Oracle_DB-19c-F80000?style=for-the-badge&logo=oracle&logoColor=white)](https://www.oracle.com/database/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16+-336791?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![Docker](https://img.shields.io/badge/Docker-Container-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
+[![Three.js](https://img.shields.io/badge/Three.js-WebGL-000000?style=for-the-badge&logo=three.js&logoColor=white)](https://threejs.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38bdf8?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![Vercel](https://img.shields.io/badge/Vercel-Deploy_Live-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://maicondouglas-dev.vercel.app)
 
 <p align="center">
-  <b>Portfólio interativo moderno inspirado nas linguagens visuais da Lusion.co e Apple Pro Dark, desenvolvido para demonstrar competências reais em desenvolvimento Backend Java e engenharia de software.</b>
+  <b>Portfólio interativo moderno inspirado nas linguagens visuais da Apple Pro Dark e Lusion.co, unindo excelência em engenharia Backend Java a uma experiência sensorial com áudio procedural no estilo Interestelar e gráficos WebGL.</b>
 </p>
 
-[Visualizar Demonstração](#-como-executar-o-projeto-localmente) • [Perfil Profissional](#-perfil-profissional--formação) • [Projetos](#-projetos--desenvolvimento) • [Contato](#-contato)
+[🌐 Acessar Portfólio Online](https://maicondouglas-dev.vercel.app) • [👨‍💻 Perfil Profissional](#-perfil-profissional--formação) • [⚡ Projetos em Destaque](#-projetos-em-destaque) • [🌌 Experiência Criativa & Áudio](#-experiência-criativa--tecnológica) • [🛠 Tecnologias](#-tecnologias--conhecimentos) • [📬 Contato](#-contato)
 
 </div>
 
@@ -23,84 +26,107 @@
 
 ## 👨‍💻 Perfil Profissional & Formação
 
-Sou desenvolvedor Backend Java em formação, cursando Análise e Desenvolvimento de Sistemas, com foco no desenvolvimento de aplicações utilizando Java e Spring Boot.
+Sou desenvolvedor Backend Java em formação, cursando **Análise e Desenvolvimento de Sistemas (ADS)**, com foco dedicado na construção de aplicações escaláveis, resilientes e orientadas a boas práticas de engenharia de software utilizando o ecossistema **Java** e **Spring Boot**.
 
-Ao longo da graduação, construí uma base em programação orientada a objetos, desenvolvimento de APIs REST, persistência de dados, segurança, bancos de dados relacionais, versionamento e fundamentos de DevOps e Cloud.
-
-* **Ecossistema Java**: Minha principal área de estudo e aprofundamento, trabalhando com conceitos como POO, Collections, tratamento de exceções, JDBC, Spring Boot, Spring MVC, Spring Security, JPA, DTOs, validações e desenvolvimento de APIs REST.
-* **Banco de Dados**: Conhecimentos em banco de dados, principalmente SQL, Oracle e PL/SQL, incluindo modelagem relacional, normalização, consultas, relacionamentos e objetos de banco como procedures, functions e triggers.
-* **Infraestrutura e Entrega**: Experiência acadêmica e prática com Git, GitHub, Linux, Docker, Docker Compose e Microsoft Azure, incluindo containerização de aplicações Spring Boot, integração com bancos de dados e fundamentos de deploy e CI/CD.
-* **Visão Multidisciplinar**: Durante a graduação também tive contato com outras áreas e tecnologias, como C#/.NET, React, React Native, Python, Inteligência Artificial, Machine Learning e IoT. Esses conhecimentos fazem parte da minha formação acadêmica, mas atualmente meu desenvolvimento profissional está direcionado ao Backend com Java.
-* 🎯 **Objetivo Profissional**: Busco minha primeira oportunidade como Desenvolvedor Backend Java, onde possa aplicar e aprofundar meus conhecimentos em Java, Spring Boot, APIs REST e bancos de dados, contribuindo com o desenvolvimento de software e evoluindo através da experiência prática em equipe.
-
----
-
-## 💎 Identidade Visual & Design System (Apple Pro Dark)
-
-O portfólio foi desenhado com ergonomia visual e contraste refinado:
-
-* **Preto Profundo & OLED (`#000000`)**: Superfície escura com visual cinematográfico e alta legibilidade.
-* **Gradiente de Keynote Apple**: Transição vibrante e harmoniosa:
-  $$\text{Vermelho Carmesim (\#ff2d55)} \longrightarrow \text{Rubi (\#e11d48)} \longrightarrow \text{Violeta (\#8b5cf6)} \longrightarrow \text{Azul Elétrico (\#0a84ff)}$$
-* **Apple System Green (`#30d158`)**: Aplicado estrategicamente em badges de status ativo (*"Aberto a oportunidades em Backend Java"*), endpoints de verificação e WhatsApp.
-* **Tipografia Apple**: Textos primários em platina suave (`#f5f5f7`) e secundários em cinza neutro (`#a1a1a6`).
+* **Ecossistema Java**: Minha principal área de especialização prática. Trabalho ativamente com Programação Orientada a Objetos (POO), Collections, tratamento robusto de exceções com `@ControllerAdvice`, Spring Boot 3, Spring Data JPA / Hibernate, Spring Security (autenticação stateless JWT e controle RBAC), DTOs, Bean Validation e documentação interativa com Swagger / OpenAPI.
+* **Bancos de Dados Relacionais**:
+  * **Oracle Database & PL/SQL**: Modelagem relacional, normalização, consultas analíticas com JOINs complexos, integridade referencial e criação de rotinas no banco como stored procedures, functions e triggers.
+  * **PostgreSQL**: Integração com Spring Boot via JPA, versionamento de schemas com **Flyway Migrations** e containerização.
+* **DevOps, Infraestrutura e Nuvem**: Experiência prática com **Docker** e **Docker Compose** para criação de ambientes locais consistentes, **Testcontainers** para testes de integração com bancos reais, Linux, Git/GitHub e fundamentos de nuvem na **Microsoft Azure** (Azure Container Registry e Azure Container Instances).
+* **Visão Multidisciplinar**: Formação acadêmica ampla com vivência em C#/.NET, React, React Native, Python, Inteligência Artificial e IoT, permitindo comunicação de alto nível com times de Frontend, Mobile e Infraestrutura.
+* 🎯 **Objetivo**: Atuar profissionalmente como **Desenvolvedor Backend Java**, contribuindo no design de microsserviços e APIs REST de alto impacto, persistência segura e arquitetura limpa.
 
 ---
 
-## ✨ Inovações Criativas (Lusion-Inspired)
+## ⚡ Projetos em Destaque
 
-Inspirado nas técnicas de **Creative Development** do estúdio **[Lusion.co](https://lusion.co/)**, o portfólio integra soluções visuais e físicas avançadas:
+### 1. 🏥 Clyvo — Sistema de Gestão Veterinária
+> **Projeto Principal • Arquitetura Backend Completa**
 
-1. **Malha Topográfica Cybernética 3D WebGL (`LusionBackground`)**:
-   - Canvas tridimensional full-viewport com uma malha fluida de curvas de dados e linhas de contorno ondulantes inspiradas em topografia digital.
-   - **Onda Gravitacional Interativa do Mouse**: O cursor projeta um raio 3D no plano que cria ondulações fluidas elásticas na malha e acende pulsos luminosos de alta velocidade em vermelho carmesim, azul elétrico e violeta.
-   - **Câmera 3D Guiada por Scroll**: Inclinação de horizonte e perspectiva de profundidade que respondem dinamicamente à navegação.
+Aplicação backend desenvolvida para gerenciar com segurança o ecossistema de clínicas veterinárias, médicos com registro CRMV, tutores e pacientes (pets). Foco em integridade de dados no Oracle Database, validação rigorosa de regras de negócio e controle de acessos.
 
-2. **Tipografia Cinética Mascarada (`KineticText`)**:
-   - Títulos divididos em caracteres individuais com máscaras de corte (`overflow: hidden`) e animação com curvas cubic-bezier elásticas.
-
-3. **Cursor Dinâmico Magnético (`CustomCursor`)**:
-   - Cursor duplo com ponto central imediato e anel externo de aura fluida.
-
-4. **Botões com Atração Magnética (`MagneticButton`)**:
-   - Botões que se atraem fisicamente em direção ao cursor quando o mouse se aproxima.
-
-5. **Visualizador de Áudio (`AudioEqualizer`)**:
-   - Mini canvas 2D no header com barras de equalização senoidais e síntese sutil com a Web Audio API.
-
-6. **Rolagem Inercial com Lenis Smooth Scroll (`SmoothScroll`)**:
-   - Momentum scroll suave e sem atritos em 60-120fps.
+* **Console Swagger / OpenAPI Interativo Embutido**: Recrutadores e engenheiros podem inspecionar schemas e simular a execução de requisições REST da API (`/auth/login`, `/veterinarios/{id}/clinicas`, `/consultas`, `/consultas/{id}/concluir`) diretamente dentro do modal interativo no portfólio.
+* **Diagrama Interativo de Arquitetura**: Visualizador gráfico demonstrando o pipeline de dados:
+  $$\text{Cliente (Mobile / Web)} \longrightarrow \text{Spring Security (JWT / RBAC)} \longrightarrow \text{Service Layer (Regras de Negócio)} \longrightarrow \text{Spring Data JPA} \longrightarrow \text{Oracle Database}$$
+* **Regras de Negócio Implementadas**:
+  - Prevenção de conflito de horários de atendimento entre veterinários.
+  - Verificação rigorosa de titularidade do pet pelo tutor autenticado.
+  - Persistência estruturada de Prontuários Clínicos vinculados a atendimentos concluídos.
+* **Stack**: *Java 21, Spring Boot 3, Spring Security, Oracle Database 19c, PL/SQL, Docker, Swagger / OpenAPI.*
 
 ---
 
-## ⚡ Projetos & Desenvolvimento
+### 2. 🍔 FoodFlow — Sistema de Delivery & Pedidos em Tempo Real
+> **Em Desenvolvimento • Arquitetura Profissional & Domínio Rico (DDD)**  
+> 🔗 Repositório GitHub: **[github.com/MaiconDouglas-dev/FoodFlow](https://github.com/MaiconDouglas-dev/FoodFlow.git)**
 
-### 1. Terminal Interativo de Backend (`TerminalCard`)
-No topo da página, um terminal interativo simula a execução de requisições REST da aplicação:
-- `GET /actuator/health` ➔ Status dos componentes, conexão com Oracle Database e segurança com Spring Security.
-- `POST /api/v1/auth/login` ➔ Autenticação stateless com Spring Security emitindo tokens JWT com controle por roles.
+Aplicação Full Stack estilo iFood estruturada em etapas incrementais planejadas ("Dias de Desenvolvimento") com foco em arquitetura profissional para alta volumetria de pedidos.
 
-### 2. Projeto Principal: **Clyvo — Sistema de Gestão Veterinária**
-Aplicação backend desenvolvida para gerenciar o ecossistema de clínicas veterinárias, médicos com registro CRMV, tutores e pacientes (pets). Foco em modelagem relacional no Oracle, validação de regras de negócio, persistência com JPA e controle de permissões por roles com Spring Security.
-* **Console Swagger / OpenAPI Interativo Embutido**: Recrutadores e tech leads podem inspecionar rotas, schemas JSON de requisição e simular o disparo de endpoints (`/auth/login`, `/veterinarios/{id}/clinicas`, `/consultas`, `/consultas/{id}/concluir`) diretamente no modal.
-* **Diagrama Interativo de Arquitetura**: Visualizador visual do pipeline de dados:
-  $$\text{Client (React Native)} \longrightarrow \text{Spring Security (JWT/RBAC)} \longrightarrow \text{Domain Services} \longrightarrow \text{Oracle Database}$$
-* **Regras de Negócio e Integridade**: Validação de posse do pet pelo tutor autenticado, prevenção de colisões de agenda médica e persistência estruturada de prontuários clínicos.
+* **Arquitetura & Boas Práticas**:
+  - **Ambiente Containerizado**: Banco de dados PostgreSQL 16 provisionado automaticamente via `docker-compose.yml`.
+  - **Evolução de Schemas com Flyway**: Versionamento rigoroso de migrações DDL e DML para tabelas de restaurantes, cardápios, clientes e pedidos.
+  - **Testes Confiáveis com Testcontainers**: Testes de repositório e serviços executados contra uma instância real de PostgreSQL em container Docker via JUnit 5.
+  - **Domínio Rico (DDD)**: Aggregate raiz `Order` encapsulando transições válidas de ciclo de vida (Criado $\rightarrow$ Confirmado $\rightarrow$ Em Preparo $\rightarrow$ Saiu para Entrega $\rightarrow$ Entregue).
+  - **Observabilidade**: Endpoints de monitoramento de métricas e integridade com **Spring Boot Actuator** (`/actuator/health`).
+* **Próximos Passos Planejados**: Máquina de estados de pedidos, cálculo de precificação com cupons de desconto, pagamentos idempotentes, mensageria de eventos com Pub/Sub e painel administrativo em React.
+* **Stack**: *Java 21, Spring Boot, PostgreSQL, Docker Compose, Flyway, Testcontainers, Spring Data JPA, Actuator.*
+
+---
+
+### 3. 💻 Terminal Interativo Spring Boot (`TerminalCard`)
+Localizado na seção inicial do portfólio, este card interativo permite ao visitante simular requisições HTTP reais de endpoints da aplicação:
+- `GET /actuator/health` ➔ Exibe o status `UP` dos microsserviços, conexão de banco de dados e disco.
+- `POST /api/v1/auth/login` ➔ Simula a autenticação stateless emitindo payload JWT assinado com claims e perfil `ROLE_VETERINARIO`.
+
+---
+
+## 🌌 Experiência Criativa & Tecnológica
+
+Inspirado nas técnicas dos estúdios **[Lusion.co](https://lusion.co/)** e na elegância do **Design System Apple Pro Dark**, o portfólio entrega uma experiência sensorial imersiva:
+
+### 🎼 Trilha Sonora Procedural "Interestelar" (Web Audio API)
+* **Composição Inspirada em Hans Zimmer**:
+  - Síntese pura de **Órgão de Tubos de Catedral** (com harmônicos em flauta 8', principal 4' e oitava 2' com chorus acústico de pipes).
+  - **Ostinato Hipnótico em Movimento ("Ticking Time")**: Arpejos pulsantes em 68 BPM sobre a icônica progressão harmônica:
+    $$\text{Am (Lá menor)} \longrightarrow \text{F (Fá maior)} \longrightarrow \text{C (Dó maior)} \longrightarrow \text{G (Sol maior)}$$
+  - **Sub-graves de Gargantua**: Drones de frequência sub-baixa (27Hz a 55Hz) reproduzindo a sensação física da gravidade de um buraco negro.
+  - **Rede de Delay Espacial**: Simulação de reflexão acústica de nave com feedback suave.
+* **100% Royalty-Free & Zero Latência**: Sem downloads de arquivos MP3 pesados; todo o som é gerado matematicamente pelo navegador em tempo real.
+* **Controle Inteligente & Desbloqueio em 1 Clique**:
+  - Pílula de controle com ícone inconfundível (`Volume2` / `VolumeX`), rótulo bilíngue explícito (`SOM` / `MUDO`) e equalizador animado via Canvas 2D.
+  - **Sincronização Perfeita**: Em conformidade com as políticas de autoplay dos navegadores modernos, o som inicia suavemente no primeiro toque ou clique na página, ou imediatamente com apenas 1 clique no botão (sem necessidade de mutar e desmutar).
+
+### 🪐 Universo Diamond WebGL 3D & Malha Gravitacional
+* **850 Estrelas em Branco Diamante**: Distribuição volumétrica 3D com brilhos astronômicos autênticos, cintilação natural e tamanhos calibrados para não interferir na legibilidade do conteúdo.
+* **Malha Topográfica Fluida 3D**: Deformação física por onda gravitacional interativa que responde à velocidade e posição do mouse.
+* **Câmera 3D Reativa ao Scroll**: Profundidade e horizonte que se movem com suavidade durante a rolagem.
+
+### 🖱️ Ergonomia & Navegação de Alta Precisão
+* **Cursor Nativo do SO Preservado**: Seta original do macOS/Windows com resposta imediata de hardware, acompanhada por uma aura fluida translúcida de rastreio ultra-responsivo (lerp 0.65).
+* **Botões Magnéticos Calibrados**: Efeito físico elástico sutil nos botões de navegação, sem sobreposições incômodas.
+* **Rolagem Inercial com Lenis**: Momentum scroll suave e sem engasgos a 60-120fps.
+* **Internacionalização Fluida (i18n)**: Suporte completo e instantâneo a Português do Brasil (`PT-BR`) e Inglês (`EN-US`) em todos os componentes e modais.
 
 ---
 
 ## 🛠 Tecnologias & Conhecimentos
 
-Organização com hierarquia clara e honesta:
+### Backend & Arquitetura
+* **Linguagens**: Java 21 (LTS), C# (.NET Core), TypeScript, JavaScript, SQL, PL/SQL.
+* **Frameworks & Libs**: Spring Boot 3, Spring Data JPA, Spring Security, Spring MVC, Hibernate, Bean Validation, JUnit 5, Testcontainers, Flyway, Swagger / OpenAPI.
+* **Conceitos de Engenharia**: RESTful APIs, Domain-Driven Design (DDD), Clean Architecture, Padrões GoF (Factory, Strategy, Builder, Singleton), Autenticação JWT, RBAC, Tratamento de Exceções Centralizado.
 
-### 1. Foco Principal (Backend & Infraestrutura)
-* **Backend Java**: Java 21, Spring Boot, Spring MVC, Spring Security, APIs REST / RESTful, Spring Data JPA, Hibernate, JDBC, DTOs, Bean Validation, Exception Handling, Swagger / OpenAPI.
-* **Banco de Dados**: SQL, Oracle Database, PL/SQL, Modelagem Relacional, Normalização, JOINs, Procedures, Functions, Triggers.
-* **DevOps, Cloud e Ferramentas**: Git, GitHub, Docker, Docker Compose, Linux, Microsoft Azure, Azure CLI, Azure Container Registry, Azure Container Instances, Fundamentos de CI/CD, Deploy em Nuvem.
+### Bancos de Dados & Persistência
+* **Relacionais**: Oracle Database 19c (PL/SQL, Stored Procedures, Triggers, Views, Normalização), PostgreSQL 16.
+* **NoSQL / Outros**: MongoDB, Redis (conceitual).
 
-### 2. Conhecimentos Complementares & Contato Acadêmico
-* **Conhecimentos Complementares**: C#, .NET, ASP.NET Core, React, React Native, Python, MongoDB.
-* **Contato Acadêmico**: Inteligência Artificial, Machine Learning, Ciência de Dados, IoT, LLMs, RAG, Embeddings (conceitos explorados durante a graduação em ADS).
+### DevOps, Nuvem & Ferramentas
+* **Containers & Ambientes**: Docker, Docker Compose, Linux (Ubuntu/Debian, Bash).
+* **Cloud**: Microsoft Azure (Azure Container Registry, Azure Container Instances, Azure CLI).
+* **Versionamento & Deploy**: Git, GitHub, GitHub Actions (CI/CD), Vercel.
+
+### Frontend Criativo & Sensorial
+* Next.js 14 (App Router), React 18, Three.js, Web Audio API, Tailwind CSS, Framer Motion, Lenis Scroll, Lucide Icons.
 
 ---
 
@@ -109,41 +135,44 @@ Organização com hierarquia clara e honesta:
 ```text
 maicon-portfolio/
 ├── public/
-│   ├── favicon.svg               # Ícone vetorial com monograma "MD"
+│   ├── favicon.svg               # Monograma vetorial estilizado "MD"
 │   └── og-image.svg              # Card de compartilhamento social
 ├── src/
 │   ├── app/
-│   │   ├── globals.css           # Estilos globais e kinetic keyframes
-│   │   ├── layout.tsx            # RootLayout com Lenis e CustomCursor
-│   │   └── page.tsx              # Composição principal
+│   │   ├── globals.css           # Estilos base, gradientes Apple e keyframes
+│   │   ├── layout.tsx            # Layout mestre com SmoothScroll, Navbar e Footer
+│   │   └── page.tsx              # Estrutura principal da página
 │   ├── components/
-│   │   ├── LusionBackground.tsx  # Canvas WebGL/Three.js
-│   │   ├── CustomCursor.tsx      # Cursor magnético com física de inércia
-│   │   ├── MagneticButton.tsx    # Atração física vetorial para botões
-│   │   ├── KineticText.tsx       # Tipografia cinética com máscara
-│   │   ├── AudioEqualizer.tsx    # Mini equalizador em canvas 2D
-│   │   ├── SmoothScroll.tsx      # Provedor Lenis para momentum scrolling
-│   │   ├── Navbar.tsx            # Header com áudio, idioma e navegação
-│   │   ├── Hero.tsx              # Hero com títulos cinéticos e TerminalCard
-│   │   ├── TerminalCard.tsx      # Terminal interativo com simulação de endpoints
-│   │   ├── About.tsx             # Trajetória, formação e pilares
-│   │   ├── Projects.tsx          # Projetos com Swagger e Arquitetura
-│   │   ├── ArchitectureModal.tsx # Diagrama interativo da API Clyvo
-│   │   ├── ApiSwaggerModal.tsx   # Swagger interativo para teste de endpoints
-│   │   ├── Skills.tsx            # Tecnologias & Conhecimentos categorizados
-│   │   ├── Contact.tsx           # Canais diretos de contato
-│   │   └── Footer.tsx            # Rodapé minimalista
+│   │   ├── LusionBackground.tsx  # Canvas Three.js (estrelas diamante + malha gravitacional)
+│   │   ├── AudioEqualizer.tsx    # Controle de áudio em pílula com espectro 2D
+│   │   ├── CustomCursor.tsx      # Aura de rastreio de alta precisão para o mouse
+│   │   ├── MagneticButton.tsx    # Atração magnética física para botões
+│   │   ├── KineticText.tsx       # Títulos com tipografia cinética
+│   │   ├── Navbar.tsx            # Header com controles de áudio, idioma e WhatsApp
+│   │   ├── Hero.tsx              # Apresentação principal e TerminalCard
+│   │   ├── TerminalCard.tsx      # Terminal interativo com simulação de endpoints Spring Boot
+│   │   ├── About.tsx             # Trajetória, formação em ADS e competências
+│   │   ├── Projects.tsx          # Vitrine de projetos (Clyvo e FoodFlow)
+│   │   ├── ArchitectureModal.tsx # Diagrama interativo de arquitetura da API
+│   │   ├── ApiSwaggerModal.tsx   # Console OpenAPI para simulação de requisições
+│   │   ├── Skills.tsx            # Matriz detalhada de competências e stacks
+│   │   ├── Contact.tsx           # Canais diretos de contato e formulário
+│   │   ├── Footer.tsx            # Rodapé elegante e minimalista
+│   │   ├── SoundFXListener.tsx   # Gatilhos globais de feedback sonoro tátil
+│   │   └── SmoothScroll.tsx      # Integração com Lenis Scroll
 │   ├── context/
-│   │   └── AppContext.tsx        # Gerenciamento de idioma (i18n) e estado global
+│   │   └── AppContext.tsx        # Provedor global de estado e idioma (PT/EN)
 │   ├── data/
-│   │   ├── projects.ts           # Metadados de projetos e mocks de API
-│   │   ├── skills.ts             # Estrutura categorizada de competências
-│   │   └── translations.ts       # Traduções completas PT-BR e EN-US
-│   └── types/
-│       └── index.ts              # Interfaces TypeScript
-├── tailwind.config.js            # Cores personalizadas e tema
-├── tsconfig.json                 # Configuração rigorosa do TypeScript
-└── package.json                  # Dependências Next.js, Three.js e Lenis
+│   │   ├── projects.ts           # Definição e endpoints mockados dos projetos
+│   │   ├── skills.ts             # Dados estruturados de competências
+│   │   └── translations.ts       # Dicionário bilíngue completo
+│   ├── types/
+│   │   └── index.ts              # Definições de tipagem TypeScript
+│   └── utils/
+│       └── audio.ts              # Motor procedural Web Audio (Interstellar Organ & Ostinato)
+├── tailwind.config.js            # Design tokens, cores Apple OLED e animações
+├── tsconfig.json                 # Configuração rigorosa de TypeScript
+└── package.json                  # Dependências do projeto Next.js
 ```
 
 ---
@@ -151,11 +180,11 @@ maicon-portfolio/
 ## 🛠 Como Executar o Projeto Localmente
 
 ### Pré-requisitos
-* **Node.js**: Versão 18 ou superior.
-* **npm** ou **yarn / pnpm**.
+* **Node.js**: Versão 18.17 ou superior instalada.
+* **npm** ou gerenciador equivalente (**pnpm**, **yarn**).
 
 ### Passo a Passo
-1. Clone o repositório:
+1. Clone o repositório do portfólio:
    ```bash
    git clone git@github.com:MaiconDouglas-dev/portfolio.git
    cd portfolio
@@ -166,7 +195,7 @@ maicon-portfolio/
    npm install
    ```
 
-3. Inicie o servidor de desenvolvimento:
+3. Inicie o servidor local de desenvolvimento:
    ```bash
    npm run dev
    ```
@@ -176,7 +205,7 @@ maicon-portfolio/
    http://localhost:3000
    ```
 
-5. Para gerar a build de produção:
+5. Para gerar a versão de produção otimizada:
    ```bash
    npm run build
    npm run start
@@ -186,8 +215,9 @@ maicon-portfolio/
 
 ## 🌐 Deploy Contínuo (Vercel & GitHub)
 
-O projeto está conectado ao GitHub no repositório [MaiconDouglas-dev/portfolio](https://github.com/MaiconDouglas-dev/portfolio). Cada push na branch `main` dispara automaticamente o build e deploy na Vercel:
-👉 **[maicondouglas-dev.vercel.app](https://maicondouglas-dev.vercel.app)**
+O projeto está conectado ao GitHub no repositório [MaiconDouglas-dev/portfolio](https://github.com/MaiconDouglas-dev/portfolio). Cada atualização na branch principal (`main`) dispara um workflow automatizado de compilação, validação estática e publicação imediata na Vercel:
+
+👉 **[https://maicondouglas-dev.vercel.app](https://maicondouglas-dev.vercel.app)**
 
 ---
 
@@ -198,7 +228,7 @@ O projeto está conectado ao GitHub no repositório [MaiconDouglas-dev/portfolio
 **Maicon Douglas**  
 *Desenvolvedor Backend Java em Formação*
 
-📱 **WhatsApp / Telefone**: [(11) 93718-4412](https://wa.me/5511937184412)  
+📱 **WhatsApp**: [(11) 93718-4412](https://wa.me/5511937184412)  
 📧 **E-mail**: [maicondouglasdev1@gmail.com](mailto:maicondouglasdev1@gmail.com)  
 💼 **LinkedIn**: [linkedin.com/in/maicon-douglas-b244571b5](https://www.linkedin.com/in/maicon-douglas-b244571b5/)  
 🐙 **GitHub**: [github.com/MaiconDouglas-dev](https://github.com/MaiconDouglas-dev)
