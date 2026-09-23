@@ -10,9 +10,9 @@ export default function LusionBackground() {
     if (!containerRef.current) return;
     const container = containerRef.current;
 
-    // 1. Scene & Depth Atmosphere
+    // 1. Scene & Atmospheric Cosmic Fog
     const scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(0x000000, 0.0013);
+    scene.fog = new THREE.FogExp2(0x000000, 0.00085);
 
     const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 
@@ -20,7 +20,7 @@ export default function LusionBackground() {
       isMobile ? 68 : 55,
       window.innerWidth / window.innerHeight,
       1,
-      2500
+      3500
     );
     camera.position.set(0, 270, 560);
     camera.lookAt(0, -35, -180);
@@ -36,15 +36,16 @@ export default function LusionBackground() {
     renderer.setClearColor(0x000000, 1);
     container.appendChild(renderer.domElement);
 
-    // 3. Cybernetic Topographic Mesh / Flow Fabric (Batched Single GPU Draw Call)
-    // High subdivision cuts along lines for silky continuous curves without polygonal angles
-    const lineCount = isMobile ? 44 : 58;
-    const pointsPerLine = isMobile ? 180 : 250;
-    const ribCount = isMobile ? 18 : 26;
-    const ribPoints = isMobile ? 120 : 180;
-    const width = 1800;
-    const depth = 1600;
+    // 3. Infinite Cybernetic Expanse (Borderless Horizon)
+    // Scale expanded to 4600x3400 with procedural edge falloff so it never looks bounded
+    const width = 4600;
+    const depth = 3400;
     const baseY = -115;
+
+    const lineCount = isMobile ? 50 : 70;
+    const pointsPerLine = isMobile ? 220 : 320;
+    const ribCount = isMobile ? 22 : 34;
+    const ribPoints = isMobile ? 150 : 220;
 
     const totalWaveVertices = lineCount * pointsPerLine;
     const totalRibVertices = ribCount * ribPoints;
@@ -124,20 +125,20 @@ export default function LusionBackground() {
     }
 
     const pulses: DataPulse[] = [
-      { lineIdx: 6, progress: 0.1, speed: 0.32, length: 0.15, color: new THREE.Vector3(1.0, 0.18, 0.35) },
-      { lineIdx: 12, progress: 0.45, speed: 0.38, length: 0.14, color: new THREE.Vector3(0.04, 0.55, 1.0) },
-      { lineIdx: 20, progress: 0.75, speed: 0.28, length: 0.18, color: new THREE.Vector3(0.65, 0.38, 1.0) },
-      { lineIdx: 28, progress: 0.2, speed: 0.35, length: 0.15, color: new THREE.Vector3(0.19, 0.85, 0.4) },
-      { lineIdx: 36, progress: 0.88, speed: 0.32, length: 0.13, color: new THREE.Vector3(1.0, 0.18, 0.35) },
-      { lineIdx: 44, progress: 0.3, speed: 0.42, length: 0.16, color: new THREE.Vector3(0.04, 0.55, 1.0) },
-      { lineIdx: 16, progress: 0.6, speed: 0.34, length: 0.16, color: new THREE.Vector3(1.0, 0.62, 0.04) },
+      { lineIdx: 8, progress: 0.1, speed: 0.28, length: 0.14, color: new THREE.Vector3(1.0, 0.18, 0.35) },
+      { lineIdx: 18, progress: 0.45, speed: 0.34, length: 0.13, color: new THREE.Vector3(0.04, 0.55, 1.0) },
+      { lineIdx: 28, progress: 0.75, speed: 0.25, length: 0.16, color: new THREE.Vector3(0.65, 0.38, 1.0) },
+      { lineIdx: 38, progress: 0.2, speed: 0.31, length: 0.14, color: new THREE.Vector3(0.19, 0.85, 0.4) },
+      { lineIdx: 48, progress: 0.88, speed: 0.28, length: 0.12, color: new THREE.Vector3(1.0, 0.18, 0.35) },
+      { lineIdx: 58, progress: 0.3, speed: 0.36, length: 0.15, color: new THREE.Vector3(0.04, 0.55, 1.0) },
+      { lineIdx: 22, progress: 0.6, speed: 0.3, length: 0.14, color: new THREE.Vector3(1.0, 0.62, 0.04) },
     ];
 
     const pulseVectors = pulses.map((p) => new THREE.Vector4(p.progress, p.length, p.lineIdx, 1.0));
     const pulseColorVectors = pulses.map((p) => p.color);
 
-    // 4. Hardware-Accelerated Vertex & Fragment Shaders (Executed natively on Apple Metal / WebGL GPU)
-    // Zero CPU vertex calculations and Zero buffer uploads per frame!
+    // 4. Hardware-Accelerated Vertex & Fragment Shaders
+    // Seamless infinite edge falloff + planetary horizon curvature
     const vertexShader = `
       uniform float uTime;
       uniform vec3 uMouse;
@@ -145,6 +146,8 @@ export default function LusionBackground() {
       uniform float uKineticBoost;
       uniform float uInfluenceRadius;
       uniform float uBaseY;
+      uniform float uWidth;
+      uniform float uDepth;
       uniform vec4 uPulses[7];
       uniform vec3 uPulseColors[7];
 
@@ -161,12 +164,16 @@ export default function LusionBackground() {
         float z = pos.z;
 
         // 1. Organic, broad ocean harmonics
-        float wave1 = sin(x * 0.0024 + uTime * 0.95) * 30.0;
-        float wave2 = cos(z * 0.0032 + uTime * 0.75) * 26.0;
-        float wave3 = sin(x * 0.0016 + z * 0.0026 + uTime * 1.15) * 18.0;
-        float ripple = cos((x * 0.0022 - z * 0.0022) - uTime * 0.65) * 12.0;
+        float wave1 = sin(x * 0.0016 + uTime * 0.95) * 32.0;
+        float wave2 = cos(z * 0.0022 + uTime * 0.75) * 28.0;
+        float wave3 = sin(x * 0.0011 + z * 0.0018 + uTime * 1.15) * 20.0;
+        float ripple = cos((x * 0.0015 - z * 0.0015) - uTime * 0.65) * 14.0;
 
-        float y = uBaseY + wave1 + wave2 + wave3 + ripple;
+        // Subtle planetary horizon drop into the fog
+        float farZ = max(0.0, -z - 100.0);
+        float horizonDrop = (farZ * farZ) * 0.000045;
+
+        float y = uBaseY + wave1 + wave2 + wave3 + ripple - horizonDrop;
 
         // 2. Primary cursor fluid deformation
         vec2 diff1 = vec2(x - uMouse.x, z - uMouse.z);
@@ -187,7 +194,7 @@ export default function LusionBackground() {
 
           // Silky liquid harmonic ripple
           float ripple1 = cos(dist1 * 0.026 - uTime * 4.4) * coreDamp * (16.0 + uKineticBoost * 12.0);
-          float dome1 = smooth1 * (68.0 + uKineticBoost * 28.0);
+          float dome1 = smooth1 * (72.0 + uKineticBoost * 28.0);
           y += dome1 + ripple1 * smooth1;
           totalInfluence += smooth1;
         }
@@ -195,34 +202,44 @@ export default function LusionBackground() {
         // 3. Trailing liquid wake
         vec2 diff2 = vec2(x - uTrail.x, z - uTrail.z);
         float distSq2 = dot(diff2, diff2);
-        float radiusSq2 = 240.0 * 240.0;
+        float radiusSq2 = 260.0 * 260.0;
         if (distSq2 < radiusSq2) {
           float ratio2 = distSq2 / radiusSq2;
           float w2 = 1.0 - ratio2;
           float smooth2 = w2 * w2 * w2 * (w2 * (w2 * 6.0 - 15.0) + 10.0);
-          y += smooth2 * (24.0 + uKineticBoost * 10.0);
+          y += smooth2 * (26.0 + uKineticBoost * 10.0);
           totalInfluence += smooth2 * 0.45;
         }
 
         pos.y = y;
 
-        // 4. Color computation
-        float normHeight = clamp((y - (uBaseY - 40.0)) / 150.0, 0.0, 1.0);
-        float depthFade = clamp((z + 850.0) / 1600.0, 0.1, 1.0);
+        // 4. Seamless Boundless Horizon (Edge opacity dissolves to 0 before physical limits)
+        float normDistX = abs(x) / (uWidth * 0.5);
+        float fadeX = smoothstep(1.0, 0.62, normDistX);
+
+        float normDistZFar = clamp((-z - 100.0) / (uDepth * 0.55), 0.0, 1.0);
+        float fadeZFar = smoothstep(1.0, 0.40, normDistZFar);
+
+        float normDistZNear = clamp((z - 250.0) / (uDepth * 0.35), 0.0, 1.0);
+        float fadeZNear = smoothstep(1.0, 0.0, normDistZNear);
+
+        float infiniteFade = fadeX * fadeZFar * fadeZNear;
+
+        // 5. Color computation
+        float normHeight = clamp((y - (uBaseY - 40.0)) / 160.0, 0.0, 1.0);
+        float depthFade = clamp((z + 1400.0) / uDepth, 0.15, 1.0);
 
         vec3 col;
-        float alpha = 0.9;
+        float alpha;
 
         if (aIsRib > 0.5) {
-          // Transversal Rib Coloring
           col = vec3(
             0.08 + totalInfluence * 0.45,
             (0.12 + totalInfluence * 0.25) * depthFade,
             (0.30 + totalInfluence * 0.45) * depthFade
           );
-          alpha = 0.38;
+          alpha = 0.38 * infiniteFade;
         } else {
-          // Horizontal Contour Wave Coloring
           col = vec3(
             0.06 + normHeight * 0.75 + totalInfluence * 0.55,
             0.04 + normHeight * 0.18 + (1.0 - normHeight) * depthFade * 0.38,
@@ -244,6 +261,8 @@ export default function LusionBackground() {
               }
             }
           }
+
+          alpha = 0.92 * infiniteFade;
         }
 
         vColor = col;
@@ -272,6 +291,8 @@ export default function LusionBackground() {
         uKineticBoost: { value: 0 },
         uInfluenceRadius: { value: 320 },
         uBaseY: { value: baseY },
+        uWidth: { value: width },
+        uDepth: { value: depth },
         uPulses: { value: pulseVectors },
         uPulseColors: { value: pulseColorVectors },
       },
@@ -283,8 +304,8 @@ export default function LusionBackground() {
     const terrainMesh = new THREE.LineSegments(meshGeometry, meshMaterial);
     scene.add(terrainMesh);
 
-    // 5. Floating Cyber Stardust (Ambient Depth)
-    const sparkCount = isMobile ? 80 : 140;
+    // 5. Floating Cyber Stardust (Expanded Ambient Depth across 4200x3200)
+    const sparkCount = isMobile ? 90 : 160;
     const sparkGeometry = new THREE.BufferGeometry();
     const sparkPositions = new Float32Array(sparkCount * 3);
     const sparkColors = new Float32Array(sparkCount * 3);
@@ -298,9 +319,9 @@ export default function LusionBackground() {
     ];
 
     for (let s = 0; s < sparkCount; s++) {
-      const sx = (Math.random() - 0.5) * 1600;
-      const sy = baseY + Math.random() * 320;
-      const sz = (Math.random() - 0.5) * 1400 - 100;
+      const sx = (Math.random() - 0.5) * 4200;
+      const sy = baseY + Math.random() * 340;
+      const sz = (Math.random() - 0.5) * 3000 - 100;
 
       sparkPositions[s * 3] = sx;
       sparkPositions[s * 3 + 1] = sy;
@@ -395,15 +416,15 @@ export default function LusionBackground() {
     };
 
     const updateViewportConfig = () => {
-      const width = window.innerWidth;
-      const height = window.innerHeight;
-      const mobile = width < 768;
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const mobile = w < 768;
 
-      camera.aspect = width / height;
+      camera.aspect = w / h;
       camera.fov = mobile ? 68 : 55;
       camera.updateProjectionMatrix();
 
-      renderer.setSize(width, height);
+      renderer.setSize(w, h);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, mobile ? 1.25 : 1.5));
     };
 
@@ -451,7 +472,7 @@ export default function LusionBackground() {
 
       const scrollInertiaBoost = Math.min(scrollVelocity * 0.008, 0.8);
       const kineticBoost = THREE.MathUtils.clamp(mouse.speed * 8 + scrollInertiaBoost, 0, 1.8);
-      const influenceRadius = 320 + kineticBoost * 90;
+      const influenceRadius = 340 + kineticBoost * 90;
 
       // 3D Camera Flight Path
       const baseCamY = 270 - Math.sin(scrollFraction * Math.PI) * 110 - scrollFraction * 60;
@@ -465,7 +486,7 @@ export default function LusionBackground() {
       camera.rotation.x = -0.34 + mouse.y * 0.035 - (scrollFraction * 0.08);
       camera.lookAt(mouse.x * 20, targetLookY, -180);
 
-      // Update Shader Uniforms (Only 5 variables to GPU, zero CPU vertex loops!)
+      // Update Shader Uniforms (GPU execution only)
       meshMaterial.uniforms.uTime.value = time;
       meshMaterial.uniforms.uMouse.value.copy(mouseWorld);
       meshMaterial.uniforms.uTrail.value.copy(trailWorld);
