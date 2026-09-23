@@ -157,7 +157,58 @@ export default function LusionBackground() {
       ribLines.push({ geometry, positions, colors, ribIndex: r, baseX });
     }
 
-    // 6. Traveling Data Laser Pulses (Packets)
+    // 6. Floating Cyber Stardust / Micro-Data Sparks (Lusion-style ambient depth)
+    const sparkCount = 140;
+    const sparkGeometry = new THREE.BufferGeometry();
+    const sparkPositions = new Float32Array(sparkCount * 3);
+    const sparkColors = new Float32Array(sparkCount * 3);
+    const sparkOriginals: { x: number; y: number; z: number; speed: number; phase: number }[] = [];
+
+    const sparkPalette = [
+      new THREE.Color(0xff2d55), // Apple Ruby
+      new THREE.Color(0x0a84ff), // Cyan
+      new THREE.Color(0x8b5cf6), // Violet
+      new THREE.Color(0xffffff), // White spark
+    ];
+
+    for (let s = 0; s < sparkCount; s++) {
+      const sx = (Math.random() - 0.5) * 1600;
+      const sy = baseY + Math.random() * 320;
+      const sz = (Math.random() - 0.5) * 1400 - 100;
+
+      sparkPositions[s * 3] = sx;
+      sparkPositions[s * 3 + 1] = sy;
+      sparkPositions[s * 3 + 2] = sz;
+
+      const col = sparkPalette[Math.floor(Math.random() * sparkPalette.length)];
+      sparkColors[s * 3] = col.r;
+      sparkColors[s * 3 + 1] = col.g;
+      sparkColors[s * 3 + 2] = col.b;
+
+      sparkOriginals.push({
+        x: sx,
+        y: sy,
+        z: sz,
+        speed: 0.2 + Math.random() * 0.6,
+        phase: Math.random() * Math.PI * 2,
+      });
+    }
+
+    sparkGeometry.setAttribute('position', new THREE.BufferAttribute(sparkPositions, 3));
+    sparkGeometry.setAttribute('color', new THREE.BufferAttribute(sparkColors, 3));
+
+    const sparkMaterial = new THREE.PointsMaterial({
+      size: 3.2,
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.75,
+      blending: THREE.AdditiveBlending,
+    });
+
+    const sparkPoints = new THREE.Points(sparkGeometry, sparkMaterial);
+    scene.add(sparkPoints);
+
+    // 7. Traveling Data Laser Pulses (Packets)
     interface DataPulse {
       lineIdx: number;
       progress: number;
@@ -176,7 +227,7 @@ export default function LusionBackground() {
       { lineIdx: 16, progress: 0.6, speed: 0.34, length: 0.16, color: { r: 1.0, g: 0.62, b: 0.04 } }, // Gold pulse
     ];
 
-    // 7. Fluid Mouse Tracking & Kinetic Wake
+    // 8. Fluid Mouse & Touch Tracking & Kinetic Wake
     const mouse = {
       x: 0,
       y: 0,
@@ -197,11 +248,10 @@ export default function LusionBackground() {
     let scrollTargetY = 0;
     let scrollY = 0;
 
-    const onMouseMove = (event: MouseEvent) => {
-      mouse.targetX = (event.clientX / window.innerWidth) * 2 - 1;
-      mouse.targetY = -(event.clientY / window.innerHeight) * 2 + 1;
+    const projectPointerTo3D = (clientX: number, clientY: number) => {
+      mouse.targetX = (clientX / window.innerWidth) * 2 - 1;
+      mouse.targetY = -(clientY / window.innerHeight) * 2 + 1;
 
-      // Project into 3D space
       raycaster.setFromCamera(new THREE.Vector2(mouse.targetX, mouse.targetY), camera);
       const hit = new THREE.Vector3();
       const intersect = raycaster.ray.intersectPlane(groundPlane, hit);
@@ -210,19 +260,58 @@ export default function LusionBackground() {
       }
     };
 
+    const onMouseMove = (event: MouseEvent) => {
+      projectPointerTo3D(event.clientX, event.clientY);
+    };
+
+    const onTouchMove = (event: TouchEvent) => {
+      if (event.touches.length > 0) {
+        projectPointerTo3D(event.touches[0].clientX, event.touches[0].clientY);
+      }
+    };
+
+    const onTouchStart = (event: TouchEvent) => {
+      if (event.touches.length > 0) {
+        projectPointerTo3D(event.touches[0].clientX, event.touches[0].clientY);
+      }
+    };
+
+    const onDeviceOrientation = (event: DeviceOrientationEvent) => {
+      if (event.gamma !== null && event.beta !== null) {
+        const tiltX = THREE.MathUtils.clamp(event.gamma / 28, -1, 1);
+        const tiltY = THREE.MathUtils.clamp((event.beta - 40) / 28, -1, 1);
+        mouse.targetX = tiltX * 0.65;
+        mouse.targetY = -tiltY * 0.65;
+      }
+    };
+
     const onScroll = () => {
       scrollTargetY = window.scrollY;
     };
 
-    const onResize = () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
+    const updateViewportConfig = () => {
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      const isMobile = width < 768;
+
+      camera.aspect = width / height;
+      camera.fov = isMobile ? 68 : 55;
       camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
+
+      renderer.setSize(width, height);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.75 : 2));
     };
 
+    updateViewportConfig();
+
     window.addEventListener('mousemove', onMouseMove, { passive: true });
+    window.addEventListener('touchmove', onTouchMove, { passive: true });
+    window.addEventListener('touchstart', onTouchStart, { passive: true });
     window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onResize);
+    window.addEventListener('resize', updateViewportConfig);
+    if (typeof window !== 'undefined' && 'DeviceOrientationEvent' in window) {
+      window.addEventListener('deviceorientation', onDeviceOrientation, { passive: true });
+    }
 
     // 8. Kinetic Fluid Elevation Calculator
     // Combines organic harmonics, directional mouse swell, and trailing wake
@@ -427,6 +516,17 @@ export default function LusionBackground() {
         geometry.attributes.color.needsUpdate = true;
       });
 
+      // Update ambient cyber sparks drift
+      const sparkPosAttr = sparkGeometry.attributes.position;
+      for (let s = 0; s < sparkCount; s++) {
+        const orig = sparkOriginals[s];
+        const sY = orig.y + Math.sin(time * orig.speed + orig.phase) * 16;
+        const sX = orig.x + Math.cos(time * 0.35 * orig.speed + orig.phase) * 10;
+        sparkPositions[s * 3] = sX;
+        sparkPositions[s * 3 + 1] = sY;
+      }
+      sparkPosAttr.needsUpdate = true;
+
       renderer.render(scene, camera);
     };
 
@@ -435,11 +535,18 @@ export default function LusionBackground() {
     return () => {
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('touchmove', onTouchMove);
+      window.removeEventListener('touchstart', onTouchStart);
       window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onResize);
+      window.removeEventListener('resize', updateViewportConfig);
+      if (typeof window !== 'undefined' && 'DeviceOrientationEvent' in window) {
+        window.removeEventListener('deviceorientation', onDeviceOrientation);
+      }
 
       waveLines.forEach((wl) => wl.geometry.dispose());
       ribLines.forEach((rl) => rl.geometry.dispose());
+      sparkGeometry.dispose();
+      sparkMaterial.dispose();
       lineMaterial.dispose();
       ribMaterial.dispose();
       renderer.dispose();

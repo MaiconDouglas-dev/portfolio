@@ -73,10 +73,18 @@ export default function About() {
             const Icon = item.icon;
             const glow =
               idx === 0
-                ? 'rgba(255, 45, 85, 0.2)'
+                ? 'rgba(255, 45, 85, 0.22)' // Ruby (Java Core)
                 : idx === 1
-                ? 'rgba(59, 130, 246, 0.18)'
-                : 'rgba(16, 185, 129, 0.18)';
+                ? 'rgba(14, 165, 233, 0.22)' // Sky Cyan (Oracle DB)
+                : 'rgba(16, 185, 129, 0.22)'; // Emerald (Docker / Cloud)
+
+            const accentColor =
+              idx === 0
+                ? 'text-appleRed-400 group-hover:text-appleRed-400'
+                : idx === 1
+                ? 'text-sky-400 group-hover:text-sky-400'
+                : 'text-emerald-400 group-hover:text-emerald-400';
+
             return (
               <FuturisticCard
                 key={idx}
@@ -84,13 +92,13 @@ export default function About() {
                 withTilt={true}
                 withCorners={true}
                 className="h-full border-white/[0.08] hover:border-white/25 shadow-[0_4px_24px_rgba(0,0,0,0.6)]"
-                contentClassName="p-6 sm:p-7 flex flex-col justify-between h-full space-y-4 group"
+                contentClassName="p-5 sm:p-7 flex flex-col justify-between h-full space-y-4 group"
               >
                 <div className="space-y-3">
-                  <div className="w-10 h-10 rounded-2xl bg-white/[0.05] border border-white/[0.08] flex items-center justify-center text-appleRed-400 group-hover:scale-110 transition-transform">
+                  <div className={`w-10 h-10 rounded-2xl bg-white/[0.05] border border-white/[0.08] flex items-center justify-center ${accentColor} group-hover:scale-110 transition-transform`}>
                     <Icon size={18} />
                   </div>
-                  <h3 className="text-base font-bold text-white group-hover:text-appleRed-400 transition-colors">
+                  <h3 className={`text-base font-bold text-white transition-colors ${accentColor}`}>
                     {lang === 'pt' ? item.titlePt : item.titleEn}
                   </h3>
                   <p className="text-xs text-neutral-400 leading-relaxed">

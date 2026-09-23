@@ -52,12 +52,12 @@ export default function Skills() {
           </p>
         </div>
 
-        {/* Filter Tabs */}
-        <div className="flex flex-wrap items-center gap-2 pt-2">
+        {/* Filter Tabs (Horizontal Scroll on Mobile, Wrapped on Desktop) */}
+        <div className="flex items-center gap-2 pt-2 overflow-x-auto no-scrollbar max-w-full pb-1 sm:flex-wrap">
           <MagneticButton strength={0.2}>
             <button
               onClick={() => setActiveTab('all')}
-              className={`px-4 py-2 rounded-full text-xs font-mono font-semibold transition-all duration-200 cursor-pointer ${
+              className={`px-4 py-2 rounded-full text-xs font-mono font-semibold transition-all duration-200 cursor-pointer whitespace-nowrap shrink-0 ${
                 activeTab === 'all'
                   ? 'bg-appleRed-600 text-white shadow-md shadow-appleRed-500/25 border border-appleRed-500/40'
                   : 'bg-white/[0.04] text-neutral-400 border border-white/[0.08] hover:text-white hover:border-white/20'
@@ -75,7 +75,7 @@ export default function Skills() {
               <MagneticButton key={group.id} strength={0.2}>
                 <button
                   onClick={() => setActiveTab(group.id)}
-                  className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-mono font-medium transition-all duration-200 cursor-pointer ${
+                  className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-mono font-medium transition-all duration-200 cursor-pointer whitespace-nowrap shrink-0 ${
                     isSelected
                       ? 'bg-appleRed-600 text-white shadow-md shadow-appleRed-500/25 border border-appleRed-500/40'
                       : 'bg-white/[0.04] text-neutral-400 border border-white/[0.08] hover:text-white hover:border-white/20'
@@ -106,14 +106,20 @@ export default function Skills() {
                 .filter((g) => activeTab === 'all' || g.id === activeTab)
                 .map((group) => {
                   const Icon = tabIcons[group.id] || Server;
+                  const glow =
+                    group.id === 'backend-java'
+                      ? 'rgba(255, 45, 85, 0.22)' // Ruby (Java Core)
+                      : group.id === 'database'
+                      ? 'rgba(14, 165, 233, 0.22)' // Sky Cyan (Oracle/SQL)
+                      : 'rgba(16, 185, 129, 0.22)'; // Emerald (Docker/Cloud)
                   return (
                     <FuturisticCard
                       key={group.id}
-                      glowColor="rgba(255, 45, 85, 0.2)"
+                      glowColor={glow}
                       withTilt={true}
                       withCorners={true}
-                      className="h-full border-white/[0.1] hover:border-appleRed-500/40 shadow-[0_4px_24px_rgba(0,0,0,0.6)]"
-                      contentClassName="p-6 flex flex-col justify-between h-full space-y-5"
+                      className="h-full border-white/[0.1] hover:border-white/30 shadow-[0_4px_24px_rgba(0,0,0,0.6)]"
+                      contentClassName="p-5 sm:p-6 flex flex-col justify-between h-full space-y-5"
                     >
                       <div className="space-y-3">
                         <div className="flex items-center justify-between gap-2">
