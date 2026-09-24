@@ -56,7 +56,7 @@ export default function Projects() {
   };
 
   // Color Psychology: Harmonious spectrum across the engineering pipeline
-  // 01: Ruby (Core Engine) | 02: Sky Cyan (APIs/Data) | 03: Electric Violet (Integration/Cache) | 04: Emerald Mint (Cloud/Prod)
+  // 01: Ruby (Core Engine) | 02: Sky Cyan (APIs/Data) | 03: Electric Violet (Cislunar Gateway / Protocol)
   const getGlowColor = (idx: number) => {
     switch (idx) {
       case 0:
@@ -64,10 +64,8 @@ export default function Projects() {
       case 1:
         return 'rgba(14, 165, 233, 0.22)'; // Sky Cyan
       case 2:
-        return 'rgba(139, 92, 246, 0.22)'; // Electric Violet
-      case 3:
       default:
-        return 'rgba(16, 185, 129, 0.22)'; // Emerald Mint
+        return 'rgba(139, 92, 246, 0.22)'; // Electric Violet
     }
   };
 
@@ -78,10 +76,8 @@ export default function Projects() {
       case 1:
         return 'bg-sky-500/10 text-sky-400 border-sky-500/30';
       case 2:
-        return 'bg-purple-500/10 text-purple-400 border-purple-500/30';
-      case 3:
       default:
-        return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30';
+        return 'bg-purple-500/10 text-purple-400 border-purple-500/30';
     }
   };
 
@@ -92,10 +88,8 @@ export default function Projects() {
       case 1:
         return 'bg-sky-600 text-white shadow-lg shadow-sky-500/30 border-sky-500/50';
       case 2:
-        return 'bg-purple-600 text-white shadow-lg shadow-purple-500/30 border-purple-500/50';
-      case 3:
       default:
-        return 'bg-emerald-600 text-white shadow-lg shadow-emerald-500/30 border-emerald-500/50';
+        return 'bg-purple-600 text-white shadow-lg shadow-purple-500/30 border-purple-500/50';
     }
   };
 
@@ -108,7 +102,7 @@ export default function Projects() {
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-appleRed-500/20 bg-appleRed-500/10">
             <span className="w-1.5 h-1.5 rounded-full bg-appleRed-500 animate-pulse" />
             <span className="text-xs font-mono font-bold text-appleRed-400 uppercase tracking-widest">
-              {lang === 'pt' ? 'PROJETOS & DESENVOLVIMENTO // 04 RELEASES' : 'PROJECTS & RELEASES // 04 SLOTS'}
+              {lang === 'pt' ? 'PROJETOS & DESENVOLVIMENTO // 03 RELEASES' : 'PROJECTS & RELEASES // 03 RELEASES'}
             </span>
           </div>
 
@@ -155,7 +149,9 @@ export default function Projects() {
                         ? 'Clyvo (Vet)'
                         : idx === 1
                         ? 'FoodFlow (Delivery)'
-                        : `Slot ${proj.number} (${lang === 'pt' ? 'Em Breve' : 'Upcoming'})`}
+                        : idx === 2
+                        ? 'Chronos DTN (Cislunar)'
+                        : `Slot ${proj.number}`}
                     </span>
                     {proj.isPlaceholder ? (
                       <span className="w-1.5 h-1.5 rounded-full bg-amber-400/90" />
@@ -171,7 +167,7 @@ export default function Projects() {
           <div className="hidden lg:flex items-center gap-2 text-[11px] font-mono text-neutral-400 shrink-0">
             <span className="text-white font-bold">0{activeProjectIdx + 1}</span>
             <span>/</span>
-            <span>04</span>
+            <span>0{projects.length}</span>
           </div>
         </div>
 
@@ -197,7 +193,7 @@ export default function Projects() {
                   withTilt={true}
                   withCorners={true}
                   glowColor={glow}
-                  data-cursor-text={isFirst ? (lang === 'pt' ? 'CLYVO' : 'CLYVO') : proj.id === 'foodflow' ? 'FOODFLOW' : (lang === 'pt' ? `SLOT 0${idx + 1}` : `SLOT 0${idx + 1}`)}
+                  data-cursor-text={isFirst ? 'CLYVO' : proj.id === 'foodflow' ? 'FOODFLOW' : proj.id === 'chronos-dtn' ? 'CHRONOS' : `SLOT 0${idx + 1}`}
                   className={`border border-white/[0.12] bg-[#0c0c12]/95 backdrop-blur-2xl shadow-[0_24px_60px_rgba(0,0,0,0.85)] hover:border-white/30 transition-all duration-300 ${
                     isFirst ? 'border-appleRed-500/40 shadow-[0_24px_70px_rgba(255,45,85,0.12)]' : ''
                   }`}
@@ -223,7 +219,7 @@ export default function Projects() {
                     </div>
 
                     <div className="flex items-center gap-2 text-xs font-mono text-neutral-400">
-                      <span>{proj.number} / 04</span>
+                      <span>{proj.number} / 0{projects.length}</span>
                     </div>
                   </div>
 
@@ -259,7 +255,7 @@ export default function Projects() {
                     </div>
                   )}
 
-                  {/* Placeholder Visual HUD for upcoming project slots (Slots 02, 03, 04) */}
+                  {/* Placeholder Visual HUD for upcoming project slots */}
                   {proj.isPlaceholder && (
                     <div className="p-3.5 sm:p-4 rounded-2xl bg-black/60 border border-dashed border-white/[0.12] space-y-2 relative z-10">
                       <div className="flex items-center justify-between text-[11px] font-mono text-neutral-400">
@@ -330,6 +326,53 @@ export default function Projects() {
                             <span>{lang === 'pt' ? 'GitHub' : 'GitHub'}</span>
                           </a>
                         </MagneticButton>
+                      </>
+                    ) : proj.id === 'chronos-dtn' ? (
+                      <>
+                        {proj.swaggerUrl && (
+                          <MagneticButton strength={0.25} className="w-full sm:w-auto">
+                            <a
+                              href={proj.swaggerUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-semibold text-xs shadow-lg shadow-purple-500/20 hover:scale-[1.02] cursor-pointer transition-all"
+                            >
+                              <Terminal size={14} />
+                              <span>{lang === 'pt' ? 'Swagger UI (API Live)' : 'Swagger UI (Live API)'}</span>
+                              <ArrowUpRight size={13} className="text-white/80" />
+                            </a>
+                          </MagneticButton>
+                        )}
+
+                        {proj.githubUrl && (
+                          <MagneticButton strength={0.25} className="w-full sm:w-auto">
+                            <a
+                              href={proj.githubUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-4 py-2.5 rounded-xl border border-white/[0.12] bg-white/[0.04] text-neutral-200 font-semibold text-xs hover:border-purple-500/40 hover:text-white transition-all cursor-pointer backdrop-blur-md"
+                            >
+                              <Github size={14} />
+                              <span>{lang === 'pt' ? 'Repositório GitHub' : 'GitHub Repository'}</span>
+                              <ArrowUpRight size={13} className="text-neutral-400" />
+                            </a>
+                          </MagneticButton>
+                        )}
+
+                        {proj.deployUrl && (
+                          <MagneticButton strength={0.25} className="w-full sm:w-auto">
+                            <a
+                              href={proj.deployUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center justify-center gap-2 w-full sm:w-auto px-4 py-2.5 rounded-xl border border-white/[0.08] bg-white/[0.02] text-neutral-400 font-medium text-xs hover:text-white hover:border-white/20 transition-all cursor-pointer"
+                            >
+                              <Cloud size={14} className="text-purple-400" />
+                              <span>{lang === 'pt' ? 'Deploy (Render Cloud)' : 'Render Deploy'}</span>
+                              <ArrowUpRight size={13} className="text-neutral-400" />
+                            </a>
+                          </MagneticButton>
+                        )}
                       </>
                     ) : (
                       <>

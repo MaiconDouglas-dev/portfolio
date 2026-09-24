@@ -73,7 +73,24 @@ Aplicação Full Stack estilo iFood estruturada em etapas incrementais planejada
 
 ---
 
-### 3. 💻 Terminal Interativo Spring Boot (`TerminalCard`)
+### 3. 🛰️ Chronos DTN — Gateway Financeiro Cislunar
+> **Gateway Distribuído • DTN (RFC 4838) & Compensação Temporal Relativística**  
+> 🔗 Repositório GitHub: **[github.com/ChronosDTN/backend-java](https://github.com/ChronosDTN/backend-java.git)**  
+> 🌐 Swagger UI (API Live): **[backend-java-1-k1qi.onrender.com/swagger-ui.html](https://backend-java-1-k1qi.onrender.com/swagger-ui.html)**  
+> ☁️ Deploy Cloud (Render): **[backend-java-1-k1qi.onrender.com](https://backend-java-1-k1qi.onrender.com)**  
+
+Gateway financeiro distribuído de alta confiabilidade desenvolvido para liquidação e roteamento de transações financeiras no ambiente espacial cislunar (Terra-Lua), sob arquitetura de redes tolerantes a atrasos e interrupções (**Delay-Tolerant Networking - DTN / RFC 4838**).
+
+* **Arquitetura & Engenharia Backend**:
+  - **Segurança Stateless com Spring Security 6**: Autenticação e autorização via filtro customizado `JwtFilter` com validação de tokens criptográficos JJWT (HMAC-SHA).
+  - **Compensação Temporal Relativística no Oracle Database**: Execução de rotina nativa em **PL/SQL (`SP_CORRIGIR_TEMPO_LUNAR`)** para calibração de carimbos de data/hora frente ao atraso de propagação de sinal orbital (400ms a 2.5s) e efeitos de dilatação temporal gravitacional.
+  - **Maturidade RESTful Nível 3 (HATEOAS)**: Implementação de recursos hipermídia com **Spring HATEOAS (`EntityModel`)**, permitindo aos clientes orbitais navegar pelas ações disponíveis dinamicamente.
+  - **Documentação Interativa OpenAPI 3.0 & Deploy**: Documentação viva com SpringDoc OpenAPI / Swagger UI e deploy ativo em ambiente cloud conteinerizado no **Render**.
+* **Stack**: *Java 21 LTS, Spring Boot 3.2.5, Spring Security 6, Oracle Database, PL/SQL, Spring HATEOAS, Swagger UI, Render Cloud, JJWT.*
+
+---
+
+### 4. 💻 Terminal Interativo Spring Boot (`TerminalCard`)
 Localizado na seção inicial do portfólio, este card interativo permite ao visitante simular requisições HTTP reais de endpoints da aplicação:
 - `GET /actuator/health` ➔ Exibe o status `UP` dos microsserviços, conexão de banco de dados e disco.
 - `POST /api/v1/auth/login` ➔ Simula a autenticação stateless emitindo payload JWT assinado com claims e perfil `ROLE_VETERINARIO`.
@@ -153,7 +170,7 @@ maicon-portfolio/
 │   │   ├── Hero.tsx              # Apresentação principal e TerminalCard
 │   │   ├── TerminalCard.tsx      # Terminal interativo com simulação de endpoints Spring Boot
 │   │   ├── About.tsx             # Trajetória, formação em ADS e competências
-│   │   ├── Projects.tsx          # Vitrine de projetos (Clyvo e FoodFlow)
+│   │   ├── Projects.tsx          # Vitrine de projetos (Clyvo, FoodFlow e Chronos DTN)
 │   │   ├── ArchitectureModal.tsx # Diagrama interativo de arquitetura da API
 │   │   ├── ApiSwaggerModal.tsx   # Console OpenAPI para simulação de requisições
 │   │   ├── Skills.tsx            # Matriz detalhada de competências e stacks

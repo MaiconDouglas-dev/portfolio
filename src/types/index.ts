@@ -25,6 +25,9 @@ export interface Project {
   tagsPt?: string[];
   tagsEn?: string[];
   githubUrl?: string;
+  deployUrl?: string;
+  swaggerUrl?: string;
+  videoUrl?: string;
   hasSwaggerModal?: boolean;
   hasArchitectureModal?: boolean;
   isPlaceholder?: boolean;

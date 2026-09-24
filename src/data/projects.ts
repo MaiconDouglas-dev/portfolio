@@ -120,97 +120,77 @@ export const projects: Project[] = [
     ]
   },
   {
-    id: 'backend-project-03',
+    id: 'chronos-dtn',
     featured: false,
     number: '03',
-    badgePt: 'SLOT 03 • EM BREVE',
-    badgeEn: 'SLOT 03 • UPCOMING',
-    titlePt: 'Projeto 03 — [Título a Definir]',
-    titleEn: 'Project 03 — [Title TBD]',
-    subtitlePt: 'Slot reservado para novo projeto de Integração, Cache ou Mensageria',
-    subtitleEn: 'Reserved slot for integration, caching or messaging project',
-    descPt: 'Espaço estruturado para o terceiro projeto do portfólio. Preparado para demonstração de comunicação assíncrona, cache distribuído, processamento em lote ou microsserviços.',
-    descEn: 'Structured slot for the third portfolio project. Designed for asynchronous communication, distributed caching, batch processing, or microservices.',
-    tags: [
-      'Java',
-      'Spring Boot',
-      'Redis / Cache',
-      'RabbitMQ / Kafka',
-      'JUnit 5',
-      'Docker Compose'
-    ],
-    tagsPt: [
-      'Java',
-      'Spring Boot',
-      'Redis / Cache',
-      'RabbitMQ / Kafka',
-      'JUnit 5',
-      'Docker Compose'
-    ],
-    tagsEn: [
-      'Java',
-      'Spring Boot',
-      'Redis / Cache',
-      'RabbitMQ / Kafka',
-      'JUnit 5',
-      'Docker Compose'
-    ],
-    githubUrl: 'https://github.com/MaiconDouglas-dev',
-    hasSwaggerModal: false,
-    hasArchitectureModal: false,
-    isPlaceholder: true,
-    metrics: [
-      { labelPt: 'Status', labelEn: 'Status', valuePt: 'Slot Disponível', valueEn: 'Available Slot', value: 'Slot Disponível' },
-      { labelPt: 'Processamento', labelEn: 'Processing', valuePt: 'Assíncrono', valueEn: 'Asynchronous', value: 'Assíncrono' },
-      { labelPt: 'Testes', labelEn: 'Testing', valuePt: 'JUnit 5', valueEn: 'JUnit 5', value: 'JUnit 5' },
-      { labelPt: 'Ambiente', labelEn: 'Environment', valuePt: 'Containerizado', valueEn: 'Containerized', value: 'Containerizado' }
-    ]
-  },
-  {
-    id: 'backend-project-04',
-    featured: false,
-    number: '04',
-    badgePt: 'SLOT 04 • EM BREVE',
-    badgeEn: 'SLOT 04 • UPCOMING',
-    titlePt: 'Projeto 04 — [Título a Definir]',
-    titleEn: 'Project 04 — [Title TBD]',
-    subtitlePt: 'Slot reservado para novo projeto Cloud Native, DevOps ou Microsserviços',
-    subtitleEn: 'Reserved slot for Cloud Native, DevOps or Microservices project',
-    descPt: 'Espaço estruturado para o quarto projeto backend. Pronto para expor pipelines CI/CD, esteiras de entrega na nuvem (Azure), observabilidade com Spring Actuator e conteinerização.',
-    descEn: 'Structured slot for the fourth backend project. Ready to showcase CI/CD pipelines, cloud deployment (Azure), Actuator observability, and containerization.',
+    badgePt: 'GATEWAY FINANCEIRO CISLUNAR',
+    badgeEn: 'CISLUNAR FINANCIAL GATEWAY',
+    titlePt: 'Chronos DTN — Gateway Financeiro Cislunar',
+    titleEn: 'Chronos DTN — Cislunar Financial Gateway',
+    subtitlePt: 'Roteamento de transações Terra-Lua com protocolo DTN, compensação relativística e alta tolerância a atrasos',
+    subtitleEn: 'Earth-Moon transaction routing with DTN protocol, relativistic time dilation correction, and delay tolerance',
+    descPt: 'Gateway financeiro distribuído desenvolvido para liquidação de transações no ambiente cislunar sob redes tolerantes a atrasos (DTN - RFC 4838). Arquitetado em Java 21 e Spring Boot 3.2.5, integra Spring Security 6 com autenticação stateless via JWT, persistência no Oracle Database com execução de Stored Procedure PL/SQL (SP_CORRIGIR_TEMPO_LUNAR) para calibração de dilatação temporal relativística, modelo hiperimídia com Spring HATEOAS, documentação interativa com Swagger UI/OpenAPI 2.5.0 e deploy ativo na nuvem (Render).',
+    descEn: 'Distributed financial gateway engineered for transaction settlement in cislunar space over Delay-Tolerant Networks (DTN - RFC 4838). Built with Java 21 and Spring Boot 3.2.5, features Spring Security 6 stateless JWT authentication, Oracle Database persistence integrating PL/SQL stored procedure (SP_CORRIGIR_TEMPO_LUNAR) for relativistic time dilation calibration, hypermedia modeling via Spring HATEOAS, interactive OpenAPI 2.5.0 documentation with Swagger UI, and live cloud deployment on Render.',
     tags: [
       'Java 21',
       'Spring Boot 3',
-      'Microsoft Azure',
-      'Docker',
-      'CI/CD Pipelines',
-      'Linux'
+      'Spring Security 6',
+      'JWT Stateless',
+      'Oracle Database',
+      'PL/SQL',
+      'Spring HATEOAS',
+      'Swagger UI / OpenAPI',
+      'Cloud Render',
+      'DTN Protocol (RFC 4838)'
     ],
     tagsPt: [
       'Java 21',
       'Spring Boot 3',
-      'Microsoft Azure',
-      'Docker',
-      'Pipelines CI/CD',
-      'Linux'
+      'Spring Security 6',
+      'JWT Stateless',
+      'Oracle Database',
+      'PL/SQL',
+      'Spring HATEOAS',
+      'Swagger UI / OpenAPI',
+      'Cloud Render',
+      'Protocolo DTN (RFC 4838)'
     ],
     tagsEn: [
       'Java 21',
       'Spring Boot 3',
-      'Microsoft Azure',
-      'Docker',
-      'CI/CD Pipelines',
-      'Linux'
+      'Spring Security 6',
+      'JWT Stateless',
+      'Oracle Database',
+      'PL/SQL',
+      'Spring HATEOAS',
+      'Swagger UI / OpenAPI',
+      'Cloud Render',
+      'DTN Protocol (RFC 4838)'
     ],
-    githubUrl: 'https://github.com/MaiconDouglas-dev',
+    githubUrl: 'https://github.com/ChronosDTN/backend-java',
+    deployUrl: 'https://backend-java-1-k1qi.onrender.com',
+    swaggerUrl: 'https://backend-java-1-k1qi.onrender.com/swagger-ui.html',
+    videoUrl: 'https://youtu.be/x-QlVsUXwqI',
     hasSwaggerModal: false,
     hasArchitectureModal: false,
-    isPlaceholder: true,
+    isPlaceholder: false,
     metrics: [
-      { labelPt: 'Status', labelEn: 'Status', valuePt: 'Slot Disponível', valueEn: 'Available Slot', value: 'Slot Disponível' },
-      { labelPt: 'Nuvem', labelEn: 'Cloud Provider', valuePt: 'Microsoft Azure', valueEn: 'Microsoft Azure', value: 'Microsoft Azure' },
-      { labelPt: 'CI/CD', labelEn: 'CI/CD', valuePt: 'GitHub Actions', valueEn: 'GitHub Actions', value: 'GitHub Actions' },
-      { labelPt: 'Monitoramento', labelEn: 'Monitoring', valuePt: 'Spring Actuator', valueEn: 'Spring Actuator', value: 'Spring Actuator' }
+      { labelPt: 'Rede & Protocolo', labelEn: 'Network & Protocol', valuePt: 'DTN (RFC 4838)', valueEn: 'DTN (RFC 4838)', value: 'DTN (RFC 4838)' },
+      { labelPt: 'Autenticação', labelEn: 'Authentication', valuePt: 'JWT Stateless', valueEn: 'JWT Stateless', value: 'JWT Stateless' },
+      { labelPt: 'Rotinas & Banco', labelEn: 'DB & Stored Proc', valuePt: 'Oracle + PL/SQL', valueEn: 'Oracle + PL/SQL', value: 'Oracle + PL/SQL' },
+      { labelPt: 'Maturidade REST', labelEn: 'REST Maturity', valuePt: 'HATEOAS (Lvl 3)', valueEn: 'HATEOAS (Lvl 3)', value: 'HATEOAS (Lvl 3)' }
+    ],
+    architectureHighlightsPt: [
+      'Autenticação stateless via Spring Security 6 com filtro customizado JwtFilter e validação de tokens JJWT.',
+      'Execução de Stored Procedure PL/SQL (SP_CORRIGIR_TEMPO_LUNAR) para calibração de carimbo temporal relativístico (400ms a 2.5s de atraso orbital).',
+      'Arquitetura RESTful com navegação hiperimídia através de Spring HATEOAS (EntityModel).',
+      'Documentação OpenAPI 3.0 via Swagger UI e deploy ativo em ambiente cloud conteinerizado (Render).'
+    ],
+    architectureHighlightsEn: [
+      'Stateless authentication via Spring Security 6 with custom JwtFilter and JJWT token validation.',
+      'Execution of Oracle PL/SQL Stored Procedure (SP_CORRIGIR_TEMPO_LUNAR) for relativistic timestamp calibration (400ms to 2.5s orbital delay).',
+      'RESTful architecture with hypermedia resource navigation via Spring HATEOAS (EntityModel).',
+      'OpenAPI 3.0 specification via Swagger UI and active cloud deployment on Render.'
     ]
   }
 ];
