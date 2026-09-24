@@ -131,15 +131,19 @@ export default function Navbar() {
           <AudioEqualizer />
           <button
             onClick={handleToggleLang}
+            title={lang === 'pt' ? 'Mudar idioma para Inglês' : 'Switch language to Portuguese'}
+            aria-label={lang === 'pt' ? 'Mudar idioma para Inglês' : 'Switch language to Portuguese'}
             className="px-2.5 py-1.5 rounded-lg text-xs font-mono font-bold border border-white/[0.08] bg-white/[0.04] text-neutral-200"
           >
             {lang.toUpperCase()}
           </button>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            title={mobileMenuOpen ? (lang === 'pt' ? 'Fechar menu de navegação' : 'Close navigation menu') : (lang === 'pt' ? 'Abrir menu de navegação' : 'Open navigation menu')}
+            aria-label={mobileMenuOpen ? (lang === 'pt' ? 'Fechar menu de navegação' : 'Close navigation menu') : (lang === 'pt' ? 'Abrir menu de navegação' : 'Open navigation menu')}
             className="p-2 rounded-lg border border-white/[0.08] bg-white/[0.04] text-neutral-200"
           >
-            {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+            {mobileMenuOpen ? <X size={20} aria-hidden="true" /> : <Menu size={20} aria-hidden="true" />}
           </button>
         </div>
       </div>
@@ -169,17 +173,23 @@ export default function Navbar() {
               href="https://github.com/MaiconDouglas-dev"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label={lang === 'pt' ? 'Perfil do GitHub de Maicon Douglas' : 'Maicon Douglas GitHub Profile'}
+              title="GitHub"
               className="p-2.5 rounded-lg border border-white/[0.08] text-neutral-300 hover:text-white"
             >
-              <Github size={18} />
+              <Github size={18} aria-hidden="true" />
+              <span className="sr-only">GitHub</span>
             </a>
             <a
               href="https://www.linkedin.com/in/maicon-douglas-b244571b5/"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label={lang === 'pt' ? 'Perfil do LinkedIn de Maicon Douglas' : 'Maicon Douglas LinkedIn Profile'}
+              title="LinkedIn"
               className="p-2.5 rounded-lg border border-white/[0.08] text-neutral-300 hover:text-white"
             >
-              <Linkedin size={18} />
+              <Linkedin size={18} aria-hidden="true" />
+              <span className="sr-only">LinkedIn</span>
             </a>
           </div>
         </div>

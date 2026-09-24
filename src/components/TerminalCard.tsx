@@ -110,6 +110,7 @@ export default function TerminalCard() {
           <button
             onClick={handleCopyRequest}
             title="Copiar comando cURL"
+            aria-label="Copiar comando cURL"
             className="text-neutral-500 hover:text-white shrink-0 p-1 rounded hover:bg-white/[0.08] transition-colors"
           >
             {copied ? <Check size={12} className="text-appleGreen-500" /> : <Copy size={12} />}

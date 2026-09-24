@@ -91,16 +91,19 @@ export default function Hero() {
               </MagneticButton>
 
               {/* Social Icons Inline with Magnetic Physics */}
-              <div className="flex items-center gap-1.5 pl-2">
+              <div className="flex items-center gap-1.5 pl-2" role="group" aria-label={lang === 'pt' ? 'Redes sociais e canais de contato' : 'Social media and contact channels'}>
                 <MagneticButton strength={0.12}>
                   <a
                     href="https://github.com/MaiconDouglas-dev"
                     target="_blank"
                     rel="noopener noreferrer"
                     data-cursor-text="GITHUB"
-                    className="p-2.5 rounded-lg border border-white/[0.08] text-neutral-400 hover:text-white hover:border-white/20 transition-all block"
+                    aria-label={lang === 'pt' ? 'Acessar perfil de Maicon Douglas no GitHub' : 'Visit Maicon Douglas GitHub profile'}
+                    title="GitHub"
+                    className="p-2.5 rounded-lg border border-white/[0.08] text-neutral-400 hover:text-white hover:border-white/20 transition-all block focus:outline-none focus-visible:ring-2 focus-visible:ring-appleRed-500"
                   >
-                    <Github size={16} />
+                    <Github size={16} aria-hidden="true" />
+                    <span className="sr-only">GitHub</span>
                   </a>
                 </MagneticButton>
 
@@ -110,9 +113,12 @@ export default function Hero() {
                     target="_blank"
                     rel="noopener noreferrer"
                     data-cursor-text="LINKEDIN"
-                    className="p-2.5 rounded-lg border border-white/[0.08] text-neutral-400 hover:text-appleBlue-400 hover:border-appleBlue-500/30 transition-all block"
+                    aria-label={lang === 'pt' ? 'Acessar perfil de Maicon Douglas no LinkedIn' : 'Visit Maicon Douglas LinkedIn profile'}
+                    title="LinkedIn"
+                    className="p-2.5 rounded-lg border border-white/[0.08] text-neutral-400 hover:text-appleBlue-400 hover:border-appleBlue-500/30 transition-all block focus:outline-none focus-visible:ring-2 focus-visible:ring-appleBlue-500"
                   >
-                    <Linkedin size={16} />
+                    <Linkedin size={16} aria-hidden="true" />
+                    <span className="sr-only">LinkedIn</span>
                   </a>
                 </MagneticButton>
 
@@ -120,9 +126,12 @@ export default function Hero() {
                   <a
                     href="mailto:maicondouglasdev1@gmail.com"
                     data-cursor-text="E-MAIL"
-                    className="p-2.5 rounded-lg border border-white/[0.08] text-neutral-400 hover:text-appleRed-400 hover:border-appleRed-500/30 transition-all block"
+                    aria-label={lang === 'pt' ? 'Enviar e-mail para Maicon Douglas' : 'Send email to Maicon Douglas'}
+                    title={lang === 'pt' ? 'Enviar E-mail' : 'Send Email'}
+                    className="p-2.5 rounded-lg border border-white/[0.08] text-neutral-400 hover:text-appleRed-400 hover:border-appleRed-500/30 transition-all block focus:outline-none focus-visible:ring-2 focus-visible:ring-appleRed-500"
                   >
-                    <Mail size={16} />
+                    <Mail size={16} aria-hidden="true" />
+                    <span className="sr-only">{lang === 'pt' ? 'Enviar E-mail' : 'Send Email'}</span>
                   </a>
                 </MagneticButton>
               </div>

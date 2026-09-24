@@ -65,7 +65,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="bg-black text-[#f5f5f7] overflow-x-hidden selection:bg-appleRed-600 selection:text-white">
+      <body className="bg-black text-[#f5f5f7] overflow-x-clip selection:bg-appleRed-600 selection:text-white">
         <AppProvider>
           <SmoothScroll>
             <CustomCursor />

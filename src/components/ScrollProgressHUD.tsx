@@ -71,28 +71,10 @@ export default function ScrollProgressHUD() {
   };
 
   return (
-    <>
-      {/* 1. Lusion-style Floating Scrollbar Rail on the Right Viewport Edge */}
-      <div
-        className="fixed right-1 top-0 bottom-0 w-1 pointer-events-none z-50 hidden md:block py-3 select-none"
-        aria-hidden="true"
-      >
-        <div className="relative w-full h-full">
-          <div
-            className="w-1 rounded-full bg-white/75 shadow-[0_0_12px_rgba(255,255,255,0.6)] will-change-transform transition-transform duration-75 ease-out"
-            style={{
-              height: '52px',
-              transform: `translate3d(0, ${scrollProgress * 0.01 * (typeof window !== 'undefined' ? Math.max(window.innerHeight - 80, 200) : 600)}px, 0)`,
-            }}
-          />
-        </div>
-      </div>
-
-      {/* 2. Tactical Monospace HUD Indicator */}
-      <aside
-        aria-label="Scroll Navigation HUD"
-        className="fixed right-3 sm:right-6 top-1/2 -translate-y-1/2 z-40 hidden xl:flex flex-col items-center gap-4 pointer-events-auto select-none"
-      >
+    <aside
+      aria-label="Scroll Navigation HUD"
+      className="fixed right-3 sm:right-6 top-1/2 -translate-y-1/2 z-40 hidden xl:flex flex-col items-center gap-4 pointer-events-auto select-none"
+    >
       {/* Percentage Counter in Monospace */}
       <div className="flex flex-col items-center">
         <span className="text-[10px] font-mono font-bold tracking-widest text-neutral-400">
@@ -142,6 +124,5 @@ export default function ScrollProgressHUD() {
         })}
       </nav>
     </aside>
-    </>
   );
 }

@@ -6,10 +6,14 @@
   html {
     /* Lenis provides hardware-accelerated smooth scrolling; native smooth scroll conflicts with virtual physics */
     scroll-behavior: auto !important;
+    overflow-x: clip;
+    scrollbar-color: rgba(255, 255, 255, 0.2) #000000;
   }
 
   body {
     @apply bg-black text-[#f5f5f7] antialiased font-sans transition-colors duration-300;
+    overflow-x: clip;
+    min-height: 100vh;
   }
 }
 
@@ -74,21 +78,25 @@ html.lenis, html.lenis body {
   border: 1px solid rgba(0, 0, 0, 0.08);
 }
 
-/* Custom sleek scrollbar */
+/* Sleek minimal scrollbar (Global + Utility) */
+::-webkit-scrollbar,
 .custom-scrollbar::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
 }
 
+::-webkit-scrollbar-track,
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
+  background: #000000;
 }
 
+::-webkit-scrollbar-thumb,
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.18);
   border-radius: 9999px;
 }
 
+::-webkit-scrollbar-thumb:hover,
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 45, 85, 0.6);
 }

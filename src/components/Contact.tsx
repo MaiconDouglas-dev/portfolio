@@ -142,6 +142,7 @@ export default function Contact() {
                       <button
                         onClick={() => handleCopy(c.copy, c.key)}
                         title={lang === 'pt' ? 'Copiar para a área de transferência' : 'Copy to clipboard'}
+                        aria-label={lang === 'pt' ? `Copiar ${c.label} para a área de transferência` : `Copy ${c.label} to clipboard`}
                         data-cursor-text={isCopied ? (lang === 'pt' ? 'COPIADO' : 'COPIED') : (lang === 'pt' ? 'COPIAR' : 'COPY')}
                         className="text-neutral-400 hover:text-white cursor-pointer p-1.5 rounded-lg hover:bg-white/[0.08] transition-colors"
                       >
