@@ -116,6 +116,18 @@ class AudioManager {
     }
 
     // 2. Comprehensive gesture unlock on ANY user action (mouse move, wheel, touch, click, scroll)
+    const events = [
+      'pointermove', 'mousemove', 'wheel', 'scroll', 'pointerdown',
+      'mousedown', 'touchstart', 'touchend', 'keydown', 'click', 'focus'
+    ];
+
+    const cleanupUnlockListeners = () => {
+      events.forEach((ev) => {
+        window.removeEventListener(ev, unlock, { capture: true } as any);
+        document.removeEventListener(ev, unlock, { capture: true } as any);
+      });
+    };
+
     const unlock = () => {
       if (!this.isEnabled) return;
       const c = this.getContext();
@@ -127,17 +139,17 @@ class AudioManager {
             this.startAmbience();
           }
           this.notify();
+          cleanupUnlockListeners();
         }).catch(() => {});
       } else if (!this.isPlayingAmbience) {
         this.startAmbience();
         this.notify();
+        cleanupUnlockListeners();
+      } else {
+        cleanupUnlockListeners();
       }
     };
 
-    const events = [
-      'pointermove', 'mousemove', 'wheel', 'scroll', 'pointerdown',
-      'mousedown', 'touchstart', 'touchend', 'keydown', 'click', 'focus'
-    ];
     events.forEach((ev) => {
       window.addEventListener(ev, unlock, { capture: true, passive: true });
       document.addEventListener(ev, unlock, { capture: true, passive: true });

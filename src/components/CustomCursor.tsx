@@ -31,7 +31,7 @@ export default function CustomCursor() {
     const onMouseMove = (e: MouseEvent) => {
       mouseX = e.clientX;
       mouseY = e.clientY;
-      if (!isVisible) setIsVisible(true);
+      setIsVisible(true);
 
       const target = e.target as HTMLElement | null;
       if (target) {
@@ -88,7 +88,7 @@ export default function CustomCursor() {
       document.documentElement.removeEventListener('mouseleave', onMouseLeave);
       cancelAnimationFrame(animId);
     };
-  }, [isVisible]);
+  }, []);
 
   if (!mounted) return null;
 

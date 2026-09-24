@@ -17,16 +17,23 @@ export default function ApiSwaggerModal({ isOpen, onClose }: Props) {
   const [hasExecuted, setHasExecuted] = useState(false);
   const [isExecuting, setIsExecuting] = useState(false);
 
-  useEffect(() => {
-    if (isOpen) {
-      soundManager.playModalOpen();
-    }
-  }, [isOpen]);
-
   const handleClose = () => {
     soundManager.playModalClose();
     onClose();
   };
+
+  useEffect(() => {
+    if (isOpen) {
+      soundManager.playModalOpen();
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') {
+          handleClose();
+        }
+      };
+      window.addEventListener('keydown', handleKeyDown);
+      return () => window.removeEventListener('keydown', handleKeyDown);
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -63,6 +70,9 @@ export default function ApiSwaggerModal({ isOpen, onClose }: Props) {
       className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-md animate-fadeIn"
     >
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="swagger-modal-title"
         className="relative w-full max-w-5xl max-h-[90vh] overflow-y-auto custom-scrollbar bg-[#0c0c11] border border-white/[0.12] rounded-3xl shadow-2xl p-6 sm:p-8"
         onClick={(e) => e.stopPropagation()}
       >
@@ -70,18 +80,22 @@ export default function ApiSwaggerModal({ isOpen, onClose }: Props) {
         <div className="flex items-start justify-between pb-5 border-b border-white/[0.08]">
           <div>
             <div className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-appleRed-500 uppercase tracking-wider mb-1">
-              <Code2 size={15} />
-              <span>{t('modal.swagger.title')}</span>
+              <Code2 size={15} aria-hidden="true" />
+              <span id="swagger-modal-title">{t('modal.swagger.title')}</span>
             </div>
             <p className="text-sm text-neutral-400">
               {t('modal.swagger.desc')}
             </p>
           </div>
           <button
+            type="button"
             onClick={handleClose}
+            title={lang === 'pt' ? 'Fechar modal' : 'Close modal'}
+            aria-label={lang === 'pt' ? 'Fechar console de endpoints Swagger' : 'Close Swagger endpoints console'}
             className="p-2 rounded-xl border border-white/[0.08] hover:bg-neutral-800 text-neutral-400 hover:text-white transition-colors cursor-pointer"
           >
-            <X size={18} />
+            <X size={18} aria-hidden="true" />
+            <span className="sr-only">{lang === 'pt' ? 'Fechar' : 'Close'}</span>
           </button>
         </div>
 
@@ -200,7 +214,8 @@ export default function ApiSwaggerModal({ isOpen, onClose }: Props) {
         {/* Modal Footer */}
         <div className="pt-4 border-t border-white/[0.08] flex justify-end">
           <button
-            onClick={onClose}
+            type="button"
+            onClick={handleClose}
             className="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-semibold transition-colors cursor-pointer"
           >
             {t('modal.swagger.close')}

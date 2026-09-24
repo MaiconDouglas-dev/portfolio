@@ -13,16 +13,23 @@ interface Props {
 export default function ArchitectureModal({ isOpen, onClose }: Props) {
   const { lang, t } = useApp();
 
-  useEffect(() => {
-    if (isOpen) {
-      soundManager.playModalOpen();
-    }
-  }, [isOpen]);
-
   const handleClose = () => {
     soundManager.playModalClose();
     onClose();
   };
+
+  useEffect(() => {
+    if (isOpen) {
+      soundManager.playModalOpen();
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') {
+          handleClose();
+        }
+      };
+      window.addEventListener('keydown', handleKeyDown);
+      return () => window.removeEventListener('keydown', handleKeyDown);
+    }
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -32,6 +39,9 @@ export default function ArchitectureModal({ isOpen, onClose }: Props) {
       className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-md animate-fadeIn"
     >
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="arch-modal-title"
         className="relative w-full max-w-5xl max-h-[90vh] overflow-y-auto custom-scrollbar bg-[#0c0c11] border border-white/[0.12] rounded-3xl shadow-2xl p-6 sm:p-8"
         onClick={(e) => e.stopPropagation()}
       >
@@ -39,18 +49,22 @@ export default function ArchitectureModal({ isOpen, onClose }: Props) {
         <div className="flex items-start justify-between pb-5 border-b border-white/[0.08]">
           <div>
             <div className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-appleRed-500 uppercase tracking-wider mb-1">
-              <Layers size={14} />
-              <span>{t('modal.arch.title')}</span>
+              <Layers size={14} aria-hidden="true" />
+              <span id="arch-modal-title">{t('modal.arch.title')}</span>
             </div>
             <p className="text-sm text-neutral-400">
               {t('modal.arch.desc')}
             </p>
           </div>
           <button
+            type="button"
             onClick={handleClose}
+            title={lang === 'pt' ? 'Fechar modal' : 'Close modal'}
+            aria-label={lang === 'pt' ? 'Fechar modal de arquitetura' : 'Close architecture modal'}
             className="p-2 rounded-xl border border-white/[0.08] hover:bg-neutral-800 text-neutral-400 hover:text-white transition-colors cursor-pointer"
           >
-            <X size={18} />
+            <X size={18} aria-hidden="true" />
+            <span className="sr-only">{lang === 'pt' ? 'Fechar' : 'Close'}</span>
           </button>
         </div>
 
